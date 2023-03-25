@@ -1,0 +1,131 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.nhom1.pojo;
+
+import java.time.LocalDateTime;
+
+/**
+ *
+ * @author HOA TRƯƠNG
+ */
+public class Ticket {
+    private int id;
+    private String chair;
+    private String status;
+    private LocalDateTime start;
+    private int trip_id;
+    private int customer_id;
+    private static int count = 0;
+    
+    {
+        this.id = count++;
+    }
+
+    public Ticket() {
+    }
+
+    public Ticket(String chair, String status, LocalDateTime start, int trip_id, int customer_id) {
+        this.chair = chair;
+        this.status = status;
+        this.start = start;
+        this.trip_id = trip_id;
+        this.customer_id = customer_id;
+    }
+
+    public Ticket(int id, String chair, String status, LocalDateTime start, int trip_id, int customer_id) {
+        this.id = id;
+        this.chair = chair;
+        this.status = status;
+        this.start = start;
+        this.trip_id = trip_id;
+        this.customer_id = customer_id;
+    }
+    
+    
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the chair
+     */
+    public String getChair() {
+        return chair;
+    }
+
+    /**
+     * @param chair the chair to set
+     */
+    public void setChair(String chair) {
+        this.chair = chair;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the start
+     */
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    /**
+     * @param start the start to set
+     */
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    /**
+     * @return the trip_id
+     */
+    public int getTrip_id() {
+        return trip_id;
+    }
+
+    /**
+     * @param trip_id the trip_id to set
+     */
+    public void setTrip_id(int trip_id) {
+        this.trip_id = trip_id;
+    }
+
+    /**
+     * @return the customer_id
+     */
+    public int getCustomer_id() {
+        return customer_id;
+    }
+
+    /**
+     * @param customer_id the customer_id to set
+     */
+    public void setCustomer_id(int customer_id) {
+        this.customer_id = customer_id;
+    }
+    
+}
