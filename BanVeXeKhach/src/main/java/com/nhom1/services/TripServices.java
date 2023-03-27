@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +21,15 @@ public class TripServices {
         List<Trip> list = new ArrayList<>();
         
         try(Connection conn = JDBCUtils.createConn()) {
-            String sql = "SELECT * FROM trip;";
+            String sql = "SELECT * FROM trip";
             if(kw != null && !kw.isEmpty())
-                sql += " WHERE ";
+                sql += " WHERE trip_date between ? and Date_add(?, INTERVAL 1 DAY);";
             
             PreparedStatement stm = conn.prepareStatement(sql);
-            if(kw != null && !kw.isEmpty())
+            if(kw != null && !kw.isEmpty()) {
                 stm.setString(1, kw);
+                stm.setString(2, kw);
+            }
             
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {                
