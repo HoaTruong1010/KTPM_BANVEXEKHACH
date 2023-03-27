@@ -45,12 +45,15 @@
                <children>
                   <VBox layoutX="10.0" layoutY="10.0" prefHeight="66.0" prefWidth="304.0">
                      <children>
-                        <TextField prefHeight="26.0" prefWidth="296.0" promptText="Nhập từ khóa...">
+                        <TextField fx:id="txtKeyword" prefHeight="26.0" prefWidth="296.0" promptText="Nhập từ khóa (yyyy-MM-dd HH:mm:ss)">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                           <font>
+                              <Font size="13.0" />
+                           </font>
                         </TextField>
-                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="37.0" prefWidth="54.0" text="Tìm">
+                        <Button fx:id="btnSearch" alignment="CENTER" mnemonicParsing="false" onAction="#txtSearch_Click" prefHeight="37.0" prefWidth="54.0" text="Tìm">
                            <font>
                               <Font name="Courier New" size="15.0" />
                            </font>
@@ -99,7 +102,7 @@
                               <Font name="Courier New" size="21.0" />
                            </font>
                         </Label>
-                        <TextField promptText="dd/MM/yyyy hh:mm" />
+                        <TextField promptText="yyyy-MM-dd HH:mm:ss" />
                      </children>
                      <opaqueInsets>
                         <Insets right="15.0" />
@@ -191,7 +194,7 @@
                                     <Insets left="40.0" right="20.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="74.0" text="Thoát">
+                              <Button mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="33.0" prefWidth="74.0" text="Thoát">
                                  <font>
                                     <Font name="Courier 10 Pitch BT" size="15.0" />
                                  </font>
