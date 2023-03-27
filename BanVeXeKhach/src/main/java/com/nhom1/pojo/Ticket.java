@@ -26,19 +26,19 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(String chair, String status, LocalDateTime start, int trip_id, int customer_id) {
+    public Ticket(String chair, String status, String start, int trip_id, int customer_id) {
         this.chair = chair;
         this.status = status;
-        this.start = start;
+        this.start = LocalDateTime.parse(start, Trip.formatDate);
         this.trip_id = trip_id;
         this.customer_id = customer_id;
     }
 
-    public Ticket(int id, String chair, String status, LocalDateTime start, int trip_id, int customer_id) {
+    public Ticket(int id, String chair, String status, String start, int trip_id, int customer_id) {
         this.id = id;
         this.chair = chair;
         this.status = status;
-        this.start = start;
+        this.start = LocalDateTime.parse(start, Trip.formatDate);
         this.trip_id = trip_id;
         this.customer_id = customer_id;
     }
