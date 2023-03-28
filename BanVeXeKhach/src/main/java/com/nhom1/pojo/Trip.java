@@ -19,6 +19,10 @@ public class Trip {
     private int route_id;
     private static int count = 0;
     public static DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 6a1e0457dda232a796695826757ea1edd2238c1b
     {
         this.id = count++;
     }
@@ -26,16 +30,16 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(LocalDateTime tripDate, double price, int car_id, int route_id) {
-        this.tripDate = tripDate;
+    public Trip(String tripDate, double price, int car_id, int route_id) {
+        this.tripDate = LocalDateTime.parse(tripDate, formatDate);
         this.price = price;
         this.car_id = car_id;
         this.route_id = route_id;
     }
 
-    public Trip(int id, LocalDateTime tripDate, double price, int car_id, int route_id) {
+    public Trip(int id, String tripDate, double price, int car_id, int route_id) {
         this.id = id;
-        this.tripDate = tripDate;
+        this.tripDate = LocalDateTime.parse(tripDate, formatDate);
         this.price = price;
         this.car_id = car_id;
         this.route_id = route_id;
