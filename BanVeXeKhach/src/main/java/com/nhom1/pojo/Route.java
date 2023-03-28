@@ -31,8 +31,12 @@ public class Route {
         this.start = start;
         this.end = end;
     }
-    
 
+    @Override
+    public String toString() {
+        return String.format("%s - %s", this.start, this.end); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
     /**
      * @return the id
      */

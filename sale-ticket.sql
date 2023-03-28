@@ -108,12 +108,15 @@ CREATE TABLE `ticket` (
   `print_date` datetime DEFAULT NULL,
   `trip_id` int NOT NULL,
   `customer_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk1_trip_ticket` (`trip_id`),
-  KEY `fk2_customer_ticket` (`customer_id`),
+  KEY `fk2_customer_ticket` (`customer_id`) /*!80000 INVISIBLE */,
+  KEY `fk3_user_ticket_idx` (`user_id`),
   CONSTRAINT `fk1_trip_ticket` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk2_customer_ticket` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+  CONSTRAINT `fk2_customer_ticket` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `fk3_user_ticket` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -123,7 +126,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (1,'A10','Sold','2022-11-11 00:00:00',1,1),(2,'A1','Empty',NULL,2,NULL),(3,'A2','Reserved','2022-11-11 00:00:00',1,2),(4,'A3','Sold','2022-11-12 00:00:00',1,3),(5,'A4','Empty',NULL,3,4);
+INSERT INTO `ticket` VALUES (1,'A10','Sold','2022-11-11 00:00:00',1,1,1),(2,'A1','Empty',NULL,2,NULL,NULL),(3,'A2','Reserved','2022-11-11 00:00:00',1,2,3),(4,'A3','Sold','2022-11-12 00:00:00',1,3,4),(5,'A4','Empty',NULL,3,NULL,NULL);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +139,8 @@ DROP TABLE IF EXISTS `trip`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `trip` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `trip_date` datetime NOT NULL,
+  `departing_at` datetime NOT NULL,
+  `arriving_at` datetime NOT NULL,
   `price` double NOT NULL,
   `car_id` int NOT NULL,
   `route_id` int NOT NULL,
@@ -146,7 +150,7 @@ CREATE TABLE `trip` (
   KEY `fk_route_trip` (`route_id`),
   CONSTRAINT `fk_car_trip` FOREIGN KEY (`car_id`) REFERENCES `car` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_route_trip` FOREIGN KEY (`route_id`) REFERENCES `route` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,7 +159,7 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (1,'2022-11-15 00:00:00',150,1,1),(2,'2022-11-15 00:00:00',200,2,3),(3,'2022-11-16 00:00:00',150,3,2),(4,'2022-11-17 00:00:00',150,4,1),(5,'2022-11-17 00:00:00',300,2,2);
+INSERT INTO `trip` VALUES (1,'2022-11-15 00:00:00','2022-11-15 01:00:00',150,1,1),(2,'2023-04-12 13:15:00','2023-04-12 15:15:00',150,3,2),(3,'2022-11-16 20:00:00','2022-11-16 22:00:00',150,4,3),(4,'2022-11-17 00:00:00','2022-11-17 01:00:00',150,2,4),(5,'2023-04-12 13:12:00','2023-04-13 01:12:00',150,1,2);
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-25 13:03:25
+-- Dump completed on 2023-03-28 21:41:41
