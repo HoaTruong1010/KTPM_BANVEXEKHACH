@@ -19,10 +19,7 @@ public class Trip {
     private int route_id;
     private static int count = 0;
     public static DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-<<<<<<< HEAD
-=======
-    
->>>>>>> 6a1e0457dda232a796695826757ea1edd2238c1b
+
     {
         this.id = count++;
     }

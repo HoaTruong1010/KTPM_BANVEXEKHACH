@@ -24,12 +24,7 @@ public class JDBCUtils {
     }
     
     public static Connection createConn() throws SQLException {
-<<<<<<< HEAD
-//        return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "10102002");
-          return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "0979620120@Hau");
-=======
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "10102002");
-//        return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "0979620120@Hau");
->>>>>>> 6a1e0457dda232a796695826757ea1edd2238c1b
+//          return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "10102002");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/sale-ticket", "root", "0979620120@Hau");
     }
 }
