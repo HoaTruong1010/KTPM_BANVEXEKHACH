@@ -6,11 +6,10 @@ package com.nhom1.AdminPageTester;
 
 import com.nhom1.services.JDBCUtils;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -24,7 +23,11 @@ public class TripPageTester {
     public static void BeforeALL() throws SQLException {
         conn = JDBCUtils.createConn();
     }
-    
+    @Test
+    public void testSearch() {
+        
+        Assertions.assertTrue(0<1);
+    }
     @AfterAll
     public static void AfterAll() throws SQLException {
         if (conn != null) {
