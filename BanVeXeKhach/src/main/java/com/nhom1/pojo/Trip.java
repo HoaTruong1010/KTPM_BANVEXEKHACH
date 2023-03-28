@@ -13,7 +13,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class Trip {
     private int id;
-    private LocalDateTime tripDate;
+    private LocalDateTime departing_at;
+    private LocalDateTime arriving_at;
     private double price;
     private int car_id;
     private int route_id;
@@ -27,16 +28,18 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(String tripDate, double price, int car_id, int route_id) {
-        this.tripDate = LocalDateTime.parse(tripDate, formatDate);
+    public Trip(String departing_at, String arriving_at, double price, int car_id, int route_id) {
+        this.departing_at = LocalDateTime.parse(departing_at, formatDate);
+        this.arriving_at = LocalDateTime.parse(arriving_at, formatDate);
         this.price = price;
         this.car_id = car_id;
         this.route_id = route_id;
     }
 
-    public Trip(int id, String tripDate, double price, int car_id, int route_id) {
+    public Trip(int id, String departing_at, String arriving_at, double price, int car_id, int route_id) {
         this.id = id;
-        this.tripDate = LocalDateTime.parse(tripDate, formatDate);
+        this.departing_at = LocalDateTime.parse(departing_at, formatDate);
+        this.arriving_at = LocalDateTime.parse(arriving_at, formatDate);
         this.price = price;
         this.car_id = car_id;
         this.route_id = route_id;
@@ -58,17 +61,31 @@ public class Trip {
     }
 
     /**
-     * @return the tripDate
+     * @return the departing_at
      */
-    public LocalDateTime getTripDate() {
-        return tripDate;
+    public String getDeparting_at() {
+        return this.departing_at.format(formatDate);
     }
 
     /**
-     * @param tripDate the tripDate to set
+     * @param tripDate the departing_at to set
      */
-    public void setTripDate(LocalDateTime tripDate) {
-        this.tripDate = tripDate;
+    public void setDeparting_at(String tripDate) {
+        this.departing_at = LocalDateTime.parse(tripDate, formatDate);
+    }
+    
+    /**
+     * @return the arriving_at
+     */
+    public String getArriving_at() {
+        return this.arriving_at.format(formatDate);
+    }
+
+    /**
+     * @param arriving_at the arriving_at to set
+     */
+    public void setArriving_at(String arriving_at) {
+        this.arriving_at = LocalDateTime.parse(arriving_at, formatDate);
     }
 
     /**
