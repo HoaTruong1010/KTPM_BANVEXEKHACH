@@ -5,6 +5,7 @@
 package com.nhom1.pojo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -17,7 +18,7 @@ public class Trip {
     private int car_id;
     private int route_id;
     private static int count = 0;
-    
+    public static DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     {
         this.id = count++;
     }
