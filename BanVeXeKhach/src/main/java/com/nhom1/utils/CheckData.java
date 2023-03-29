@@ -5,6 +5,7 @@
 package com.nhom1.utils;
 
 import com.nhom1.pojo.Trip;
+import com.nhom1.services.CarServices;
 import com.nhom1.services.TripServices;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -46,21 +47,23 @@ public class CheckData {
     }
     
     
-    public static boolean isValidTrip(Trip t) throws SQLException {
+    public static int isValidTrip(Trip trip) throws SQLException {
         TripServices ts = new TripServices();
         List<Trip> listTrip = ts.loadTrips(null);
-        LocalDateTime tDeparting = LocalDateTime.parse(t.getDeparting_at(), formatter);
+        LocalDateTime tDeparting = LocalDateTime.parse(trip.getDeparting_at(), formatter);
         LocalDateTime tripDeparting;
         LocalDateTime tripArriving;
         
-        for (Trip trip : listTrip) {
-            tripDeparting = LocalDateTime.parse(trip.getDeparting_at(), formatter);
-            tripArriving = LocalDateTime.parse(trip.getArriving_at(), formatter);
-            if(t.getCar_id() == trip.getCar_id())
+        for (Trip t : listTrip) {
+            if(trip.getId() == t.getId() && CarServices.getCarById(trip.getCar_id()).getSumChair() != CarServices.getCarById(t.getCar_id()).getSumChair())
+                return -2;
+            tripDeparting = LocalDateTime.parse(t.getDeparting_at(), formatter);
+            tripArriving = LocalDateTime.parse(t.getArriving_at(), formatter);
+            if(trip.getCar_id() == t.getCar_id() && trip.getId() != t.getId())
                 if(tripDeparting.compareTo(tDeparting) <= 0 && tripArriving.compareTo(tDeparting) >= 0) {
-                    return false;
+                    return -1;
                 }
         }
-        return true;
+        return 0;
     }
 }

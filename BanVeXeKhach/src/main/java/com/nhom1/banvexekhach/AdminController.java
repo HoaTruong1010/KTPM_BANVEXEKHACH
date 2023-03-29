@@ -88,8 +88,8 @@ public class AdminController implements Initializable {
                 this.txtDeparting.setText(trip.getDeparting_at());
                 this.txtArriving.setText(trip.getArriving_at());
                 this.txtPrice.setText(String.format("%.1f", trip.getPrice()));
-                this.cbCar.getSelectionModel().select(trip.getCar_id());
-                this.cbRoute.getSelectionModel().select(trip.getRoute_id());
+                this.cbCar.getSelectionModel().select(trip.getCar_id()-1);
+                this.cbRoute.getSelectionModel().select(trip.getRoute_id()-1);
 
                 btnAdd.setVisible(false);
                 btnEdit.setVisible(true);
@@ -122,7 +122,7 @@ public class AdminController implements Initializable {
         colDeparting.setCellValueFactory(new PropertyValueFactory("departing_at"));
         colDeparting.setPrefWidth(150);
 
-        TableColumn colArriving = new TableColumn("Thời gian khởi hành");
+        TableColumn colArriving = new TableColumn("Thời gian kết thúc");
         colArriving.setCellValueFactory(new PropertyValueFactory("arriving_at"));
         colArriving.setPrefWidth(150);
 
@@ -164,12 +164,13 @@ public class AdminController implements Initializable {
 
         if (CheckData.isDateTimeFormat(departing) && CheckData.isDateTimeFormat(arriving)) {
             if (CheckData.isDouble(this.txtPrice.getText())) {
+                Car c = this.cbCar.getSelectionModel().getSelectedItem();
                 Trip trip = new Trip(departing, arriving, Double.parseDouble(this.txtPrice.getText()),
-                        this.cbCar.getSelectionModel().getSelectedItem().getId(),
+                        c.getId(),
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
                 try {
-                    if (CheckData.isValidTrip(trip)) {
-                        ts.addTrip(trip);
+                    if (CheckData.isValidTrip(trip) == 0) {
+                        ts.addTrip(trip, c.getSumChair());
                         MessageBox.getBox("Information", "Thêm thành công!", Alert.AlertType.INFORMATION).show();
                         this.loadTableData(null);
                         this.reset();
@@ -200,13 +201,16 @@ public class AdminController implements Initializable {
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
 
                 try {
-                    if (CheckData.isValidTrip(trip)) {
+                    if (CheckData.isValidTrip(trip) == 0) {
                         ts.editTrip(trip);
                         MessageBox.getBox("Information", "Sửa thành công!", Alert.AlertType.INFORMATION).show();
                         this.loadTableData(null);
                         this.reset();
-                    } else {
-                        MessageBox.getBox("Error", "Xe đã có lịch đi trong khoảng thời gian này!", Alert.AlertType.ERROR).show();
+                    } else {                        
+                        if (CheckData.isValidTrip(trip) == -1)
+                            MessageBox.getBox("Error", "Xe đã có lịch đi trong khoảng thời gian này!", Alert.AlertType.ERROR).show();
+                        else
+                            MessageBox.getBox("Error", "Vui lòng chọn xe có chung số lượng ghế!", Alert.AlertType.ERROR).show();
                     }
                 } catch (SQLException ex) {
                     MessageBox.getBox("Error", "Sửa thất bại!", Alert.AlertType.ERROR).show();
@@ -227,7 +231,9 @@ public class AdminController implements Initializable {
         confirm.showAndWait().ifPresent(res -> {
             if (res == ButtonType.OK) {
                 try {
-                    ts.deleteTrip(this.tableTrip.getSelectionModel().getSelectedItem().getId());
+                    Trip trip = this.tableTrip.getSelectionModel().getSelectedItem();
+                    Car c = CarServices.getCarById(trip.getCar_id());
+                    ts.deleteTrip(trip.getId(), c.getSumChair());
                     MessageBox.getBox("Information", "Xóa thành công!", Alert.AlertType.INFORMATION).show();
                     this.loadTableData(null);
                     this.reset();
