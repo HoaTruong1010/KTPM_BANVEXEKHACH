@@ -35,20 +35,20 @@ public class CarServices {
         return listCar;
     }
 
-//    public static Car getCarById(int id) throws SQLException {   
-//        Car c = null;
-//        try(Connection conn = JDBCUtils.createConn()) {
-//            PreparedStatement stm = conn.prepareStatement("SELECT * FROM car WHERE id = ?");            
-//            stm.setInt(1, id);
-//            
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                c = new Car(rs.getInt("id"), rs.getString("lisense_plate"), 
-//                        rs.getString("name"), rs.getInt("sum_chair"));
-//                break;
-//            }
-//        }
-//        
-//        return c;
-//    }
+    public static Car getCarById(int id) throws SQLException {   
+        Car c = null;
+        try(Connection conn = JDBCUtils.createConn()) {
+            PreparedStatement stm = conn.prepareStatement("SELECT * FROM car WHERE id = ?");            
+            stm.setInt(1, id);
+            
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                c = new Car(rs.getInt("id"), rs.getString("lisense_plate"), 
+                        rs.getString("name"), rs.getInt("sum_chair"));
+                break;
+            }
+        }
+        
+        return c;
+    }
 }
