@@ -4,9 +4,13 @@
  */
 package com.nhom1.AdminPageTester;
 
+import com.nhom1.pojo.Trip;
 import com.nhom1.services.JDBCUtils;
+import com.nhom1.services.TripServices;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Assertions;
@@ -18,10 +22,12 @@ import org.junit.jupiter.api.Test;
  */
 public class TripPageTester {
     private static Connection conn;
+    private static TripServices tripServies;
     
     @BeforeAll
     public static void BeforeALL() throws SQLException {
         conn = JDBCUtils.createConn();
+        tripServies = new TripServices();
     }
     @Test
     public void testSearch() {
@@ -34,4 +40,10 @@ public class TripPageTester {
             conn.close();
         }
     }
+        
+//    public  void testValidCarSchedule() throws SQLException {
+//        List<Trip> listTrip = tripServies.loadTrips(null);
+//        
+//        
+//    }
 }
