@@ -88,8 +88,8 @@ public class AdminController implements Initializable {
                 this.txtDeparting.setText(trip.getDeparting_at());
                 this.txtArriving.setText(trip.getArriving_at());
                 this.txtPrice.setText(String.format("%.1f", trip.getPrice()));
-                this.cbCar.getSelectionModel().select(trip.getCar_id()-1);
-                this.cbRoute.getSelectionModel().select(trip.getRoute_id()-1);
+                this.cbCar.getSelectionModel().select(trip.getCar_id() - 1);
+                this.cbRoute.getSelectionModel().select(trip.getRoute_id() - 1);
 
                 btnAdd.setVisible(false);
                 btnEdit.setVisible(true);
@@ -169,13 +169,20 @@ public class AdminController implements Initializable {
                         c.getId(),
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
                 try {
-                    if (CheckData.isValidTrip(trip) == 0) {
-                        ts.addTrip(trip, c.getSumChair());
-                        MessageBox.getBox("Information", "Thêm thành công!", Alert.AlertType.INFORMATION).show();
-                        this.loadTableData(null);
-                        this.reset();
-                    } else {
-                        MessageBox.getBox("Error", "Xe đã có lịch đi trong khoảng thời gian này!", Alert.AlertType.ERROR).show();
+                    int isValidtrip = CheckData.isValidTrip(trip);
+                    switch (isValidtrip) {
+                        case 0:
+                            ts.addTrip(trip, c.getSumChair());
+                            MessageBox.getBox("Information", "Thêm thành công!", Alert.AlertType.INFORMATION).show();
+                            this.loadTableData(null);
+                            this.reset();
+                            break;
+                        case -1:
+                            MessageBox.getBox("Error", "Thời gian di chuyển không hợp lệ!", Alert.AlertType.ERROR).show();
+                            break;
+                        case -2:
+                            MessageBox.getBox("Error", "Vui lòng chọn xe có chung số lượng ghế!", Alert.AlertType.ERROR).show();
+                            break;
                     }
                 } catch (SQLException ex) {
 //                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
@@ -201,16 +208,20 @@ public class AdminController implements Initializable {
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
 
                 try {
-                    if (CheckData.isValidTrip(trip) == 0) {
-                        ts.editTrip(trip);
-                        MessageBox.getBox("Information", "Sửa thành công!", Alert.AlertType.INFORMATION).show();
-                        this.loadTableData(null);
-                        this.reset();
-                    } else {                        
-                        if (CheckData.isValidTrip(trip) == -1)
-                            MessageBox.getBox("Error", "Xe đã có lịch đi trong khoảng thời gian này!", Alert.AlertType.ERROR).show();
-                        else
+                    int isValidtrip = CheckData.isValidTrip(trip);
+                    switch (isValidtrip) {
+                        case 0:
+                            ts.editTrip(trip);
+                            MessageBox.getBox("Information", "Sửa thành công!", Alert.AlertType.INFORMATION).show();
+                            this.loadTableData(null);
+                            this.reset();
+                            break;
+                        case -1:
+                            MessageBox.getBox("Error", "Thời gian di chuyển không hợp lệ!", Alert.AlertType.ERROR).show();
+                            break;
+                        case -2:
                             MessageBox.getBox("Error", "Vui lòng chọn xe có chung số lượng ghế!", Alert.AlertType.ERROR).show();
+                            break;
                     }
                 } catch (SQLException ex) {
                     MessageBox.getBox("Error", "Sửa thất bại!", Alert.AlertType.ERROR).show();

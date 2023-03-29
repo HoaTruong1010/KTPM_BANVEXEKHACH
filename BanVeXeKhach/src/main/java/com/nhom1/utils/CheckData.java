@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author HOA TRƯƠNG
  */
-public class CheckData {  
+public class CheckData {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static boolean isDateTimeFormat(String text) {
@@ -46,23 +46,40 @@ public class CheckData {
         }
     }
     
+    public static boolean isValidSumChair(Trip fixedTrip, Trip dynamicTrip) throws SQLException {
+        if(fixedTrip.getId() == dynamicTrip.getId() && 
+                CarServices.getCarById(fixedTrip.getCar_id()).getSumChair() != CarServices.getCarById(dynamicTrip.getCar_id()).getSumChair()) {
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean isValidCarSchedule(Trip fixedTrip, Trip dynamicTrip) {
+        LocalDateTime fixedTripDeparting = LocalDateTime.parse(fixedTrip.getDeparting_at(), formatter);
+        LocalDateTime fixedTripArriving = LocalDateTime.parse(fixedTrip.getArriving_at(), formatter);
+        LocalDateTime dynamicTripDeparting = LocalDateTime.parse(dynamicTrip.getDeparting_at(), formatter);
+        LocalDateTime dynamicTripArriving = LocalDateTime.parse(dynamicTrip.getArriving_at(), formatter);
+        if(fixedTrip.getId() != dynamicTrip.getId() &&
+                fixedTrip.getCar_id() == dynamicTrip.getCar_id()) {
+            if(fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripArriving.isBefore(dynamicTripDeparting))
+                return true;
+            if(fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripDeparting.isAfter(dynamicTripArriving))
+                return true;
+            return false;
+        }
+        return true;
+    }
+    
     
     public static int isValidTrip(Trip trip) throws SQLException {
         TripServices ts = new TripServices();
         List<Trip> listTrip = ts.loadTrips(null);
-        LocalDateTime tDeparting = LocalDateTime.parse(trip.getDeparting_at(), formatter);
-        LocalDateTime tripDeparting;
-        LocalDateTime tripArriving;
         
         for (Trip t : listTrip) {
-            if(trip.getId() == t.getId() && CarServices.getCarById(trip.getCar_id()).getSumChair() != CarServices.getCarById(t.getCar_id()).getSumChair())
+            if(!isValidSumChair(trip, t))
                 return -2;
-            tripDeparting = LocalDateTime.parse(t.getDeparting_at(), formatter);
-            tripArriving = LocalDateTime.parse(t.getArriving_at(), formatter);
-            if(trip.getCar_id() == t.getCar_id() && trip.getId() != t.getId())
-                if(tripDeparting.compareTo(tDeparting) <= 0 && tripArriving.compareTo(tDeparting) >= 0) {
-                    return -1;
-                }
+            if(!isValidCarSchedule(trip, t))
+                return -1;
         }
         return 0;
     }
