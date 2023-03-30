@@ -169,10 +169,9 @@ public class AdminController implements Initializable {
                         c.getId(),
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
                 try {
-                    int isValidtrip = CheckData.isValidTrip(trip);
-                    switch (isValidtrip) {
-                        case 0:
-                            ts.addTrip(trip, c.getSumChair());
+                    int addTripResult = ts.addTrip(trip, c.getSumChair());
+                    switch (addTripResult) {
+                        case 1:
                             MessageBox.getBox("Information", "Thêm thành công!", Alert.AlertType.INFORMATION).show();
                             this.loadTableData(null);
                             this.reset();
@@ -185,7 +184,7 @@ public class AdminController implements Initializable {
                             break;
                     }
                 } catch (SQLException ex) {
-//                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+//                    Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
                     MessageBox.getBox("Error", "Thêm thất bại!", Alert.AlertType.ERROR).show();
                 }
             } else {
@@ -243,11 +242,13 @@ public class AdminController implements Initializable {
             if (res == ButtonType.OK) {
                 try {
                     Trip trip = this.tableTrip.getSelectionModel().getSelectedItem();
-                    Car c = CarServices.getCarById(trip.getCar_id());
-                    ts.deleteTrip(trip.getId(), c.getSumChair());
-                    MessageBox.getBox("Information", "Xóa thành công!", Alert.AlertType.INFORMATION).show();
-                    this.loadTableData(null);
-                    this.reset();
+                    if (ts.deleteTrip(trip)) {
+                        MessageBox.getBox("Information", "Xóa thành công!", Alert.AlertType.INFORMATION).show();
+                        this.loadTableData(null);
+                        this.reset();
+                    } else {
+                        MessageBox.getBox("Error", "Xóa thất bại!", Alert.AlertType.ERROR).show();
+                    }
                 } catch (SQLException ex) {
                     MessageBox.getBox("Error", "Xóa thất bại!", Alert.AlertType.ERROR).show();
 //                    MessageBox.getBox("Error", ex.getMessage(), Alert.AlertType.ERROR).show();

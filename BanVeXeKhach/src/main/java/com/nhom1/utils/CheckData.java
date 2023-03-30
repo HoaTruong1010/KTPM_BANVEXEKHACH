@@ -47,11 +47,8 @@ public class CheckData {
     }
     
     public static boolean isValidSumChair(Trip fixedTrip, Trip dynamicTrip) throws SQLException {
-        if(fixedTrip.getId() == dynamicTrip.getId() && 
-                CarServices.getCarById(fixedTrip.getCar_id()).getSumChair() != CarServices.getCarById(dynamicTrip.getCar_id()).getSumChair()) {
-            return false;
-        }
-        return true;
+        return !(fixedTrip.getId() == dynamicTrip.getId() && 
+                CarServices.getCarById(fixedTrip.getCar_id()).getSumChair() != CarServices.getCarById(dynamicTrip.getCar_id()).getSumChair());
     }
     
     public static boolean isValidCarSchedule(Trip fixedTrip, Trip dynamicTrip) {
@@ -63,9 +60,7 @@ public class CheckData {
                 fixedTrip.getCar_id() == dynamicTrip.getCar_id()) {
             if(fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripArriving.isBefore(dynamicTripDeparting))
                 return true;
-            if(fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripDeparting.isAfter(dynamicTripArriving))
-                return true;
-            return false;
+            return fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripDeparting.isAfter(dynamicTripArriving);
         }
         return true;
     }
@@ -81,6 +76,6 @@ public class CheckData {
             if(!isValidCarSchedule(trip, t))
                 return -1;
         }
-        return 0;
+        return 1;
     }
 }
