@@ -105,6 +105,7 @@ public class AdminController implements Initializable {
         this.txtDeparting.setText("");
         this.txtArriving.setText("");
         this.txtPrice.setText("");
+        this.txtKeyword.setText("");
         this.cbCar.getSelectionModel().select(0);
         this.cbRoute.getSelectionModel().select(0);
 
@@ -207,10 +208,9 @@ public class AdminController implements Initializable {
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
 
                 try {
-                    int isValidtrip = CheckData.isValidTrip(trip);
-                    switch (isValidtrip) {
-                        case 0:
-                            ts.editTrip(trip);
+                    int editTripResult = ts.editTrip(trip);
+                    switch (editTripResult) {
+                        case 1:
                             MessageBox.getBox("Information", "Sửa thành công!", Alert.AlertType.INFORMATION).show();
                             this.loadTableData(null);
                             this.reset();
@@ -266,6 +266,7 @@ public class AdminController implements Initializable {
         }
 
         this.loadTableData(kw);
+        this.reset();
     }
 
     public void btnExit_Click(ActionEvent e) {
