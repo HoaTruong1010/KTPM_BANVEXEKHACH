@@ -23,7 +23,7 @@ HBox.hbSearch {
 }
 
 GridPane.gbBox {
-    -fx-padding: 0 10 0 10;
+    -fx-padding: 0 40 0 40;
     -fx-hgap: 5;
 }
 

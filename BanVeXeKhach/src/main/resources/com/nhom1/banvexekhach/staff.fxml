@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -13,14 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="756.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="937.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
    <children>
-      <Label alignment="CENTER" prefHeight="84.0" prefWidth="756.0" text="Quản lý vé xe" textFill="#199e0a">
+      <Label alignment="CENTER" prefHeight="75.0" prefWidth="982.0" text="Quản lý vé xe" textFill="#199e0a">
          <font>
             <Font name="Arial Bold" size="42.0" />
          </font>
       </Label>
-      <GridPane prefHeight="233.0" prefWidth="756.0" styleClass="gbBox">
+      <GridPane alignment="CENTER" prefHeight="284.0" prefWidth="778.0" styleClass="gbBox">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -92,11 +91,6 @@
             </VBox>
          </children>
       </GridPane>
-      <TableView prefHeight="274.0" prefWidth="756.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
-      </TableView>
+      <TableView fx:id="tbTicket" prefHeight="276.0" prefWidth="778.0" />
    </children>
 </VBox>
