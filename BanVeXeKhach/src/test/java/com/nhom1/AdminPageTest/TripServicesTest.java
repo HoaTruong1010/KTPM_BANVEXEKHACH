@@ -47,10 +47,9 @@ public class TripServicesTest {
         
     @ParameterizedTest
     @CsvFileSource(resources = "/searchdata.csv", numLinesToSkip = 1)
-    public void testSearch(String text, boolean expResult) throws SQLException {
-        List<Trip> listTrip = tripServies.loadTrips(null);
-        List<Trip> listSearch = tripServies.loadTrips(text);
-        boolean result = (!listSearch.isEmpty() && listSearch.size() < listTrip.size());
+    public void testSearch(String text, int routeID, boolean expResult) throws SQLException {
+        List<Trip> listSearch = tripServies.loadTrips(text, routeID);
+        boolean result = !listSearch.isEmpty();
         assertEquals(expResult, result);
     }
     

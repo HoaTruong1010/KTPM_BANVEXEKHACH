@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -19,17 +20,18 @@ import java.util.List;
  */
 public class TripServices {
 
-    public List<Trip> loadTrips(String kw) throws SQLException {
+    public List<Trip> loadTrips(String kw, int routeID) throws SQLException {
         List<Trip> list = new ArrayList<>();
+        boolean isSearch = kw != null && !kw.isEmpty();
 
         try (Connection conn = JDBCUtils.createConn()) {
             String sql = "SELECT * FROM trip";
-            if (kw != null && !kw.isEmpty()) {
+            if (isSearch) {
                 sql += " WHERE departing_at between ? and Date_add(?, INTERVAL 1 DAY);";
             }
 
             PreparedStatement stm = conn.prepareStatement(sql);
-            if (kw != null && !kw.isEmpty()) {
+            if (isSearch) {
                 stm.setString(1, kw);
                 stm.setString(2, kw);
             }
@@ -40,6 +42,10 @@ public class TripServices {
                         rs.getString("arriving_at"), rs.getDouble("price"),
                         rs.getInt("car_id"), rs.getInt("route_id"));
                 list.add(t);
+            }
+            
+            if(isSearch && !list.isEmpty()) {
+                list = list.stream().filter(x -> x.getRoute_id() == routeID).collect(Collectors.toList());
             }
         }
 

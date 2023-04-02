@@ -15,52 +15,108 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="737.0" prefWidth="971.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.AdminController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="971.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.AdminController">
     <stylesheets>
         <URL value="@/com/nhom1/style/admin.css" />
     </stylesheets>
    <children>
-      <GridPane alignment="CENTER" layoutX="14.0" layoutY="2.0" onMouseClicked="#reset" prefHeight="735.0" prefWidth="956.0">
+      <GridPane alignment="CENTER" layoutX="14.0" layoutY="2.0" onMouseClicked="#reset" prefHeight="702.0" prefWidth="956.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="385.20001220703125" minWidth="10.0" prefWidth="281.1999847412109" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="521.0" minWidth="10.0" prefWidth="322.4000152587891" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="366.9999877929688" minWidth="10.0" prefWidth="299.79997558593755" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="223.60001220703126" minHeight="10.0" prefHeight="79.00000762939453" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="667.1999893188477" minHeight="10.0" prefHeight="655.9999923706055" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="223.60001220703126" minHeight="10.0" prefHeight="77.8" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="733.600001525879" minHeight="10.0" prefHeight="561.8" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="733.600001525879" minHeight="10.0" prefHeight="65.5999755859375" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
+            <HBox prefHeight="37.0" prefWidth="289.0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+               <children>
+                  <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnEdit_Click" prefHeight="34.0" prefWidth="74.0" text="Sửa">
+                     <font>
+                        <Font name="Courier New" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="200.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDelete_Click" prefHeight="34.0" prefWidth="74.0" text="Xóa">
+                     <font>
+                        <Font name="Courier 10 Pitch BT" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAdd_Click" prefHeight="33.0" prefWidth="74.0" text="Thêm">
+                     <font>
+                        <Font name="Courier 10 Pitch BT" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="40.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#btnReload_Click" prefHeight="34.0" prefWidth="75.0" text="Reload">
+                     <font>
+                        <Font name="Courier New" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="40.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnExit" mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="33.0" prefWidth="74.0" text="Thoát">
+                     <font>
+                        <Font name="Courier 10 Pitch BT" size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="40.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets top="25.0" />
+               </padding>
+            </HBox>
             <Label prefHeight="51.0" prefWidth="423.0" text="QUẢN LÝ CHUYẾN XE" textAlignment="CENTER" textFill="#199e0a" textOverrun="CENTER_ELLIPSIS" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font name="Courier New Bold" size="41.0" />
                </font>
             </Label>
-            <TableView fx:id="tableTrip" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <GridPane.margin>
-                  <Insets bottom="15.0" right="15.0" />
-               </GridPane.margin>
-            </TableView>
-            <VBox prefHeight="441.0" prefWidth="304.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <children>
-                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="66.0" prefWidth="304.0">
+                  <TableView fx:id="tableTrip" prefHeight="586.0" prefWidth="590.0" />
+               </children>
+               <GridPane.margin>
+                  <Insets right="15.0" />
+               </GridPane.margin>
+            </VBox>
+            <VBox prefHeight="614.0" prefWidth="318.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <VBox prefHeight="66.0" prefWidth="304.0">
                      <children>
-                        <TextField fx:id="txtKeyword" prefHeight="26.0" prefWidth="296.0" promptText="Nhập từ khóa (yyyy-MM-dd HH:mm:ss)">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
+                        <TextField fx:id="txtKeyword" prefHeight="26.0" prefWidth="296.0" promptText="Nhập ngày cần tìm (yyyy-MM-dd HH:mm:ss)">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </TextField>
-                        <Button fx:id="btnSearch" alignment="CENTER" mnemonicParsing="false" onAction="#txtSearch_Click" prefHeight="37.0" prefWidth="54.0" text="Tìm">
-                           <font>
-                              <Font name="Courier New" size="15.0" />
-                           </font>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ComboBox fx:id="cbFillterRoute" prefHeight="26.0" prefWidth="226.0" />
+                              <Button mnemonicParsing="false" onAction="#txtSearch_Click" text="Tìm">
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="Courier New" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
                            <VBox.margin>
-                              <Insets top="5.0" />
+                              <Insets top="10.0" />
                            </VBox.margin>
-                        </Button>
+                        </HBox>
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -69,32 +125,26 @@
                         <Insets right="15.0" />
                      </padding>
                   </VBox>
-                  <VBox prefHeight="21.0" prefWidth="304.0">
+                  <HBox prefHeight="30.0" prefWidth="303.0">
                      <children>
-                        <Label text="Mã chuyến đi:" textFill="RED">
+                        <Label fx:id="lbIDText" text="Mã chuyến đi:" textFill="RED">
                            <font>
                               <Font name="Courier New" size="21.0" />
                            </font>
-                           <VBox.margin>
-                              <Insets top="15.0" />
-                           </VBox.margin>
                         </Label>
-                        <TextField fx:id="txtID" disable="true" prefHeight="26.0" prefWidth="296.0">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </TextField>
+                        <Label fx:id="lbID" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" textAlignment="CENTER">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
                      </children>
                      <opaqueInsets>
-                        <Insets right="15.0" />
+                        <Insets />
                      </opaqueInsets>
                      <VBox.margin>
-                        <Insets right="15.0" />
+                        <Insets right="15.0" top="80.0" />
                      </VBox.margin>
-                     <padding>
-                        <Insets top="15.0" />
-                     </padding>
-                  </VBox>
+                  </HBox>
                   <VBox layoutX="10.0" layoutY="10.0" prefHeight="21.0" prefWidth="304.0">
                      <children>
                         <Label text="Thời gian khởi hành:" textFill="RED">
@@ -177,59 +227,6 @@
                      <VBox.margin>
                         <Insets right="15.0" top="15.0" />
                      </VBox.margin>
-                  </VBox>
-                  <VBox prefHeight="160.0" prefWidth="304.0">
-                     <children>
-                        <HBox prefHeight="37.0" prefWidth="289.0">
-                           <children>
-                              <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#btnEdit_Click" prefHeight="34.0" prefWidth="74.0" text="Sửa">
-                                 <font>
-                                    <Font name="Courier 10 Pitch BT" size="15.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="40.0" right="20.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#btnDelete_Click" prefHeight="34.0" prefWidth="74.0" text="Xóa">
-                                 <font>
-                                    <Font name="Courier 10 Pitch BT" size="15.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="30.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="10.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox layoutX="10.0" layoutY="25.0" prefHeight="34.0" prefWidth="289.0">
-                           <children>
-                              <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#btnAdd_Click" prefHeight="33.0" prefWidth="74.0" text="Thêm">
-                                 <font>
-                                    <Font name="Courier 10 Pitch BT" size="15.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="40.0" right="20.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button fx:id="btnExit" mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="33.0" prefWidth="74.0" text="Thoát">
-                                 <font>
-                                    <Font name="Courier 10 Pitch BT" size="15.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="30.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="10.0" />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                     <padding>
-                        <Insets right="15.0" top="15.0" />
-                     </padding>
                   </VBox>
                </children>
                <opaqueInsets>
