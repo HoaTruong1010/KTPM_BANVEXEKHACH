@@ -11,14 +11,24 @@ import java.time.LocalDateTime;
  * @author HOA TRƯƠNG
  */
 public class Ticket {
+
     private int id;
     private String chair;
     private String status;
-    private LocalDateTime start;
+    private LocalDateTime print_date;
     private int trip_id;
     private int customer_id;
+    private int user_id;
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
     private static int count = 0;
-    
+
     {
         this.id = count++;
     }
@@ -26,24 +36,33 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(String chair, String status, String start, int trip_id, int customer_id) {
+    public Ticket(String chair, String status, String start, int trip_id, int customer_id, int user_id) {
         this.chair = chair;
         this.status = status;
-        this.start = LocalDateTime.parse(start, Trip.formatDate);
+        if (print_date != null) {
+            this.print_date = LocalDateTime.parse(start, Trip.formatDate);
+        } else {
+            this.print_date = null;
+        }
         this.trip_id = trip_id;
         this.customer_id = customer_id;
+        this.user_id = user_id;
     }
 
-    public Ticket(int id, String chair, String status, String start, int trip_id, int customer_id) {
+    public Ticket(int id, String chair, String status, String start, int trip_id, int customer_id, int user_id) {
         this.id = id;
         this.chair = chair;
         this.status = status;
-        this.start = LocalDateTime.parse(start, Trip.formatDate);
+        if (print_date != null) {
+            this.print_date = LocalDateTime.parse(start, Trip.formatDate);
+        } else {
+            this.print_date = null;
+        }
         this.trip_id = trip_id;
         this.customer_id = customer_id;
+        this.user_id = user_id;
     }
-    
-    
+
     /**
      * @return the id
      */
@@ -90,14 +109,14 @@ public class Ticket {
      * @return the start
      */
     public LocalDateTime getStart() {
-        return start;
+        return print_date;
     }
 
     /**
      * @param start the start to set
      */
     public void setStart(LocalDateTime start) {
-        this.start = start;
+        this.print_date = start;
     }
 
     /**
@@ -127,5 +146,5 @@ public class Ticket {
     public void setCustomer_id(int customer_id) {
         this.customer_id = customer_id;
     }
-    
+
 }
