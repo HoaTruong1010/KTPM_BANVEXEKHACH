@@ -68,7 +68,7 @@ public class CheckData {
     
     public static int isValidTrip(Trip trip) throws SQLException {
         TripServices ts = new TripServices();
-        List<Trip> listTrip = ts.loadTrips(null);
+        List<Trip> listTrip = ts.loadTrips(null, 0);
         
         for (Trip t : listTrip) {
             if(!isValidSumChair(trip, t))

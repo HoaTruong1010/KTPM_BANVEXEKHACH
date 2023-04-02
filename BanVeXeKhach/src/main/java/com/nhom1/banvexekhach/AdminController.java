@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -41,7 +42,9 @@ public class AdminController implements Initializable {
     @FXML
     private TableView<Trip> tableTrip;
     @FXML
-    private TextField txtID;
+    private Label lbIDText;
+    @FXML
+    private Label lbID;
     @FXML
     private TextField txtDeparting;
     @FXML
@@ -60,6 +63,8 @@ public class AdminController implements Initializable {
     private Button btnDelete;
     @FXML
     private TextField txtKeyword;
+    @FXML
+    private ComboBox<Route> cbFillterRoute;
 
     /**
      * Initializes the controller class.
@@ -70,7 +75,8 @@ public class AdminController implements Initializable {
         try {
             // TODO
 
-            this.loadTableData(null);
+            this.loadTableData(null, 0);
+            this.loadCbFillterRouteData();
             this.loadCbCarData();
             this.loadCbRouteData();
         } catch (SQLException ex) {
@@ -84,7 +90,8 @@ public class AdminController implements Initializable {
 
             row.setOnMouseClicked(r -> {
                 Trip trip = this.tableTrip.getSelectionModel().getSelectedItem();
-                this.txtID.setText(String.format("%d", trip.getId()));
+                this.lbIDText.setVisible(true);
+                this.lbID.setText(String.format("%d", trip.getId()));
                 this.txtDeparting.setText(trip.getDeparting_at());
                 this.txtArriving.setText(trip.getArriving_at());
                 this.txtPrice.setText(String.format("%.1f", trip.getPrice()));
@@ -101,11 +108,13 @@ public class AdminController implements Initializable {
     }
 
     public void reset() {
-        this.txtID.setText("");
+        this.lbIDText.setVisible(false);
+        this.lbID.setText("");
         this.txtDeparting.setText("");
         this.txtArriving.setText("");
         this.txtPrice.setText("");
         this.txtKeyword.setText("");
+        this.cbFillterRoute.getSelectionModel().select(0);
         this.cbCar.getSelectionModel().select(0);
         this.cbRoute.getSelectionModel().select(0);
 
@@ -140,10 +149,23 @@ public class AdminController implements Initializable {
         this.tableTrip.getColumns().addAll(colID, colDeparting, colArriving, colPrice, colCarID, colRouteID);
     }
 
-    private void loadTableData(String kw) throws SQLException {
+    private void loadTableData(String kw, int routeID) throws SQLException {
         TripServices t = new TripServices();
 
-        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(kw)));
+        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(kw, routeID)));
+    }
+
+    public void btnReload_Click() throws SQLException {
+        TripServices t = new TripServices();
+        this.reset();
+
+        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(null, 0)));
+    }
+
+    private void loadCbFillterRouteData() throws SQLException {
+        RouteServices r = new RouteServices();
+
+        this.cbFillterRoute.setItems(FXCollections.observableList(r.loadRoutes()));
     }
 
     private void loadCbCarData() throws SQLException {
@@ -174,7 +196,7 @@ public class AdminController implements Initializable {
                     switch (addTripResult) {
                         case 1:
                             MessageBox.getBox("Information", "Thêm thành công!", Alert.AlertType.INFORMATION).show();
-                            this.loadTableData(null);
+                            this.loadTableData(null, 0);
                             this.reset();
                             break;
                         case -1:
@@ -203,7 +225,7 @@ public class AdminController implements Initializable {
 
         if (CheckData.isDateTimeFormat(departing) && CheckData.isDateTimeFormat(arriving)) {
             if (CheckData.isDouble(this.txtPrice.getText())) {
-                Trip trip = new Trip(Integer.parseInt(txtID.getText()), departing, arriving, Double.parseDouble(this.txtPrice.getText()),
+                Trip trip = new Trip(Integer.parseInt(lbID.getText()), departing, arriving, Double.parseDouble(this.txtPrice.getText()),
                         this.cbCar.getSelectionModel().getSelectedItem().getId(),
                         this.cbRoute.getSelectionModel().getSelectedItem().getId());
 
@@ -212,7 +234,7 @@ public class AdminController implements Initializable {
                     switch (editTripResult) {
                         case 1:
                             MessageBox.getBox("Information", "Sửa thành công!", Alert.AlertType.INFORMATION).show();
-                            this.loadTableData(null);
+                            this.loadTableData(null, 0);
                             this.reset();
                             break;
                         case -1:
@@ -244,7 +266,7 @@ public class AdminController implements Initializable {
                     Trip trip = this.tableTrip.getSelectionModel().getSelectedItem();
                     if (ts.deleteTrip(trip)) {
                         MessageBox.getBox("Information", "Xóa thành công!", Alert.AlertType.INFORMATION).show();
-                        this.loadTableData(null);
+                        this.loadTableData(null, 0);
                         this.reset();
                     } else {
                         MessageBox.getBox("Error", "Xóa thất bại!", Alert.AlertType.ERROR).show();
@@ -259,14 +281,17 @@ public class AdminController implements Initializable {
 
     public void txtSearch_Click(ActionEvent e) throws SQLException {
         String kw = this.txtKeyword.getText();
+        int selectRoute = this.cbFillterRoute.getSelectionModel().getSelectedItem().getId();
+        this.reset();
+        this.txtKeyword.setText(kw);
+        this.cbFillterRoute.getSelectionModel().select(selectRoute - 1);
 
-        if (!CheckData.isDateTimeFormat(kw)) {
+        if (!kw.isEmpty() && !CheckData.isDateTimeFormat(kw)) {
             MessageBox.getBox("Error", "Từ khóa không đúng định dạng:\n năm-tháng-ngày giờ:phút:giây", Alert.AlertType.ERROR).show();
             kw = null;
         }
 
-        this.loadTableData(kw);
-        this.reset();
+        this.loadTableData(kw, selectRoute);
     }
 
     public void btnExit_Click(ActionEvent e) {
