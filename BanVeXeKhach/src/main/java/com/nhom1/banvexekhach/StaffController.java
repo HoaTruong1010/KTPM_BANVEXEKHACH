@@ -9,6 +9,7 @@ import com.nhom1.services.TicketServices;
 import com.nhom1.utils.MessageBox;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -19,9 +20,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -30,15 +33,73 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class StaffController implements Initializable{
     @FXML private TableView<Ticket> tbTicket;
+    @FXML private TextField txtID;
+    @FXML private TextField start;
+    @FXML private TextField end;
+    @FXML private DatePicker startDate;
+    @FXML private TextField startTime;
+    @FXML private TextField chair;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {           
             this.loadTableTicket();
-            this.loadTableData();
+            this.loadTableDataByID(null);
         } catch (SQLException ex) {
             Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.txtID.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByID(this.txtID.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.start.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.end.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.chair.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.startDate.valueProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.startTime.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
     private void loadTableTicket() throws SQLException {
@@ -92,9 +153,19 @@ public class StaffController implements Initializable{
                 colStartTime, colStart, colChangeTicket, colCancelTicket);
     }
     
-    private void loadTableData() throws SQLException {
-        TicketServices s = new TicketServices();
-        List<Ticket> tk = s.loadTicket();
+    private void loadTableDataByID(String id) throws SQLException {
+        TicketServices s = new TicketServices();     
+        List<Ticket> tk = null;        
+        tk = s.loadTicketByID(id);
         this.tbTicket.setItems(FXCollections.observableList(tk));
+        System.out.println(this.txtID.getText());       
+    }
+    private void loadTableDataByInfo(String start, String end, String chair, LocalDate startDate, String startTime) throws SQLException
+    {
+        TicketServices s = new TicketServices();     
+        List<Ticket> tk = null; 
+        tk = s.loadTicketByInfo(start, end, chair, startDate, startTime);
+        this.tbTicket.setItems(FXCollections.observableList(tk));
+        System.out.println(this.txtID.getText());
     }
 }
