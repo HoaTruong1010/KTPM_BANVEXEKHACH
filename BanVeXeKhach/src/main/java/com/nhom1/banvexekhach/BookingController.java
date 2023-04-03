@@ -21,20 +21,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -160,11 +159,11 @@ public class BookingController implements Initializable {
         this.loadTableData(kw, selectRoute);
     }
     
-    public void btnBook_Click() throws IOException, SQLException {
+    public void btnBook_Click(ActionEvent e) throws IOException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking_detail.fxml"));
         Parent bookingDetail = fxmlLoader.load();
         
-        Stage stage = (Stage) btBook.getScene().getWindow();
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
         Booking_detailController bdc = fxmlLoader.getController();
         bdc.setTripDetail(selectedTrip);

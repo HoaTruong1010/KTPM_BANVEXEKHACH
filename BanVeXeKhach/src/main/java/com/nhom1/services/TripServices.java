@@ -102,16 +102,18 @@ public class TripServices {
                 stm1.setInt(6, trip.getRoute_id());
 
                 stm1.executeUpdate();
+                int ticketID = TicketServices.getLastTicketId();
                 for (int i = 1; i <= numChair; i++) {
-                    sql = "INSERT INTO ticket(chair, status, print_date, trip_id, customer_id, user_id) "
-                            + "VALUES(?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?);";
+                    sql = "INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                            + "VALUES(?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?);";
                     PreparedStatement stm2 = conn.prepareStatement(sql);
-                    stm2.setString(1, String.format("%d", i));
-                    stm2.setString(2, "Empty");
-                    stm2.setString(3, null);
-                    stm2.setInt(4, trip.getId());
-                    stm2.setString(5, null);
+                    stm2.setInt(1, ticketID + i);
+                    stm2.setString(2, String.format("%d", i));
+                    stm2.setString(3, "Empty");
+                    stm2.setString(4, null);
+                    stm2.setInt(5, trip.getId());
                     stm2.setString(6, null);
+                    stm2.setString(7, null);
 
                     stm2.executeUpdate();
                 }

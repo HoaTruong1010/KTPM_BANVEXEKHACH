@@ -67,31 +67,31 @@ public class TripServicesTest {
         assertNotNull(trip);
     }
     
-//    public static Stream<Arguments> addTripData() {
-//        return Stream.of (
-//                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
-//                        "2023-03-30 05:45:00", 250, 3, 5), 1),
-//                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
-//                        "2023-03-30 02:45:00", 150, 4, 4), -1),
-//                Arguments.arguments(new Trip("2023-04-12 13:00:00", 
-//                        "2023-04-12 18:30:00", 450, 1, 2), -1),
-//                Arguments.arguments(new Trip("2023-04-12 14:30:00", 
-//                        "2023-04-13 02:30:00", 450, 1, 2), -1),
-//                Arguments.arguments(new Trip("2023-04-12 14:00:00", 
-//                        "2023-04-12 18:30:00", 150, 1, 2), -1),
-//                Arguments.arguments(new Trip("2023-04-13 13:00:00", 
-//                        "2023-04-13 18:15:00", 200, 1, 1), 1)
-//        );
-//    }
-//    
-//    @ParameterizedTest
-//    @MethodSource("addTripData")
-//    public void testAddTrip(Trip trip, int expResult) throws SQLException {
-//        int numChair = CarServices.getCarById(trip.getCar_id()).getSumChair();
-//        int result = tripServies.addTrip(trip, numChair);
-//        
-//        assertEquals(expResult, result);
-//    }
+    public static Stream<Arguments> addTripData() {
+        return Stream.of (
+                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
+                        "2023-03-30 05:45:00", 250, 5, 5), 1),
+                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
+                        "2023-03-30 02:45:00", 150, 4, 4), -1),
+                Arguments.arguments(new Trip("2023-04-12 13:00:00", 
+                        "2023-04-12 18:30:00", 450, 1, 2), -1),
+                Arguments.arguments(new Trip("2023-04-12 14:30:00", 
+                        "2023-04-13 02:30:00", 450, 1, 2), -1),
+                Arguments.arguments(new Trip("2023-04-12 14:00:00", 
+                        "2023-04-12 18:30:00", 150, 1, 2), -1),
+                Arguments.arguments(new Trip("2023-04-13 13:00:00", 
+                        "2023-04-13 18:15:00", 200, 1, 1), 1)
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("addTripData")
+    public void testAddTrip(Trip trip, int expResult) throws SQLException {
+        int numChair = CarServices.getCarById(trip.getCar_id()).getSumChair();
+        int result = tripServies.addTrip(trip, numChair);
+        
+        assertEquals(expResult, result);
+    }
         
 //    public static Stream<Arguments> editTripData() {
 //        return Stream.of (
