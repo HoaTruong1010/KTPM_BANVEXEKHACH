@@ -13,11 +13,8 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,7 +49,6 @@ import javafx.stage.Stage;
  */
 public class BookingController implements Initializable {
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @FXML
     private TableView<Trip> tableTrip;
     @FXML
@@ -212,7 +208,11 @@ public class BookingController implements Initializable {
         this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(null, 0)));
     }
 
-    public void btnExit_Click(ActionEvent e) {
-        System.exit(0);
+    public void btnExit_Click(ActionEvent e) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+        Parent main = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(main));
     }
 }
