@@ -12,6 +12,7 @@ import com.nhom1.services.RouteServices;
 import com.nhom1.services.TripServices;
 import com.nhom1.utils.MessageBox;
 import com.nhom1.utils.CheckData;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -20,7 +21,11 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -31,6 +36,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -98,9 +104,9 @@ public class AdminController implements Initializable {
                 this.cbCar.getSelectionModel().select(trip.getCar_id() - 1);
                 this.cbRoute.getSelectionModel().select(trip.getRoute_id() - 1);
 
-                btnAdd.setVisible(false);
-                btnEdit.setVisible(true);
-                btnDelete.setVisible(true);
+                btnAdd.setDisable(true);
+                btnEdit.setDisable(false);
+                btnDelete.setDisable(false);
             });
 
             return row;
@@ -118,9 +124,9 @@ public class AdminController implements Initializable {
         this.cbCar.getSelectionModel().select(0);
         this.cbRoute.getSelectionModel().select(0);
 
-        this.btnAdd.setVisible(true);
-        this.btnEdit.setVisible(false);
-        this.btnDelete.setVisible(false);
+        this.btnAdd.setDisable(false);
+        this.btnEdit.setDisable(true);
+        this.btnDelete.setDisable(true);
     }
 
     private void loadTable() {
@@ -294,7 +300,11 @@ public class AdminController implements Initializable {
         this.loadTableData(kw, selectRoute);
     }
 
-    public void btnExit_Click(ActionEvent e) {
-        System.exit(0);
+    public void btnExit_Click(ActionEvent e) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+        Parent main = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(main));
     }
 }
