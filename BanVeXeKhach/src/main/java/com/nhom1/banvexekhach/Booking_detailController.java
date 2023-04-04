@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
@@ -63,7 +65,7 @@ public class Booking_detailController implements Initializable {
     private TextField txtName;
     @FXML
     private TextField txtPhone;
-    List<CheckBox> listCheckBoxes = new ArrayList<>();
+    List<Ticket> listSelectedTicket = new ArrayList<>();
 
     @FXML
     /**
@@ -81,7 +83,8 @@ public class Booking_detailController implements Initializable {
         lbPrice.setText(String.valueOf(trip.getPrice()));
         Route r = RouteServices.getRouteById(trip.getRoute_id());
         lbRoute.setText(String.format("%s - %s", r.getStart(), r.getEnd()));
-        this.createTicket();
+        this.createSeat();
+        this.reload();
     }
 
     private CheckBox createCheckBox(int id, String text) {
@@ -94,7 +97,7 @@ public class Booking_detailController implements Initializable {
         return cb;
     }
 
-    private void createTicket() throws SQLException {
+    private void createSeat() throws SQLException {
         int tripId = Integer.parseInt(lbID.getText());
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();
@@ -107,7 +110,6 @@ public class Booking_detailController implements Initializable {
                 if (index < listTicket.size()) {
                     Ticket ticket = listTicket.get(index);
                     CheckBox chb = this.createCheckBox(ticket.getId(), ticket.getChair());
-                    listCheckBoxes.add(chb);
                     if (ticket.getStatus().equalsIgnoreCase("Empty")) {
                         chb.setDisable(false);
                     } else {
@@ -116,10 +118,15 @@ public class Booking_detailController implements Initializable {
 
                     chb.selectedProperty()
                             .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                    listCheckBoxes.get(Integer.parseInt(chb.getText()) - 1).setSelected(true);
-                                } else {
-                                    listCheckBoxes.get(Integer.parseInt(chb.getText()) - 1).setSelected(false);
+                                try {
+                                    Ticket selectedTicket = TicketServices.getTicketById(Integer.parseInt(chb.getId()));
+                                    if (newValue) {
+                                        listSelectedTicket.add(selectedTicket);
+                                    } else {
+                                        listSelectedTicket.remove(selectedTicket);
+                                    }
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                             });
 
@@ -138,25 +145,29 @@ public class Booking_detailController implements Initializable {
             MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
         } else {
             if (CheckData.isInteger(phone) && phone.length() == 9 || phone.length() == 10) {
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-                confirm.setContentText("Bạn có chắc chắn đặt?");
-                confirm.showAndWait().ifPresent((var res) -> {
-                    if (res == ButtonType.OK) {
-                        try {
-                            Customer cus = new Customer(CustomerServices.getLastCustomerID() + 1, name, phone);
-                            for (CheckBox c : listCheckBoxes) {
-                                if (c.isSelected()) {
-                                    TicketServices.updateTicket(Integer.parseInt(c.getId()), cus);
+                if (!listSelectedTicket.isEmpty()) {
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setContentText("Bạn có chắc chắn đặt?");
+                    confirm.showAndWait().ifPresent((var res) -> {
+                        if (res == ButtonType.OK) {
+                            try {
+                                Customer cus = new Customer(CustomerServices.getLastCustomerID() + 1, name, phone);
+                                if (TicketServices.updateTicket(listSelectedTicket, cus)) {
+                                    MessageBox.getBox("Information", "Đặt thành công!", Alert.AlertType.INFORMATION).show();
+                                    btnCancle_Click(e);
+                                } else {
+                                    MessageBox.getBox("Error", 
+                                            "Có thể ghế đã được thu hồi hoặc được đặt bởi người khác!", 
+                                            Alert.AlertType.ERROR).show();
                                 }
+                            } catch (SQLException | IOException ex) {
+                                Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            MessageBox.getBox("Information", "Đặt thành công!", Alert.AlertType.INFORMATION).show();
-                            btnCancle_Click(e);
-                        } catch (SQLException | IOException ex) {
-                            Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    }
-                });
-
+                    });
+                } else {
+                    MessageBox.getBox("Error", "Vui lòng chọn ít nhất 1 ghế!", Alert.AlertType.ERROR).show();
+                }
             } else {
                 MessageBox.getBox("Error", "Số điện thoại không hợp lệ!", Alert.AlertType.ERROR).show();
             }
@@ -164,10 +175,26 @@ public class Booking_detailController implements Initializable {
     }
 
     public void btnCancle_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class
+                .getResource("booking.fxml"));
         Parent booking = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.setScene(new Scene(booking));
+    }
+    
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    createSeat();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        timer.schedule(task, 60*5000L);
     }
 }

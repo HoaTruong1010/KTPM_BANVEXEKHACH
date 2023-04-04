@@ -36,11 +36,11 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(String chair, String status, String start, int trip_id, int customer_id, int user_id) {
+    public Ticket(String chair, String status, String print_date, int trip_id, int customer_id, int user_id) {
         this.chair = chair;
         this.status = status;
         if (print_date != null) {
-            this.print_date = LocalDateTime.parse(start, Trip.formatDate);
+            this.print_date = LocalDateTime.parse(print_date, Trip.formatDate);
         } else {
             this.print_date = null;
         }
@@ -49,12 +49,12 @@ public class Ticket {
         this.user_id = user_id;
     }
 
-    public Ticket(int id, String chair, String status, String start, int trip_id, int customer_id, int user_id) {
+    public Ticket(int id, String chair, String status, String print_date, int trip_id, int customer_id, int user_id) {
         this.id = id;
         this.chair = chair;
         this.status = status;
         if (print_date != null) {
-            this.print_date = LocalDateTime.parse(start, Trip.formatDate);
+            this.print_date = LocalDateTime.parse(print_date, Trip.formatDate);
         } else {
             this.print_date = null;
         }
@@ -106,17 +106,17 @@ public class Ticket {
     }
 
     /**
-     * @return the start
+     * @return the print_date
      */
-    public LocalDateTime getStart() {
+    public LocalDateTime getPrint_date() {
         return print_date;
     }
 
     /**
-     * @param start the start to set
+     * @param print_date the start to set
      */
-    public void setStart(LocalDateTime start) {
-        this.print_date = start;
+    public void setPrint_date(LocalDateTime print_date) {
+        this.print_date = print_date;
     }
 
     /**

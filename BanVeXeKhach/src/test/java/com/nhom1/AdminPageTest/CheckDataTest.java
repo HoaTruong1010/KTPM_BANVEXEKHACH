@@ -4,9 +4,12 @@
  */
 package com.nhom1.AdminPageTest;
 
+import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.utils.CheckData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -16,7 +19,7 @@ import org.junit.jupiter.params.provider.Arguments;
 //import org.junit.jupiter.api.AfterAll;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -84,5 +87,32 @@ public class CheckDataTest {
     public void testIsValidTrip(Trip trip, int expResult) throws SQLException {
         int result = CheckData.isValidTrip(trip);
         assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testEmptyTicket() throws SQLException {
+        List<Ticket> list = new ArrayList<>();
+        Ticket t1 = new Ticket(36, "10", "Empty",
+                        null, 1, 1, 1);
+        list.add(t1);
+        assertTrue(CheckData.isEmptyTicket(list)); 
+    }
+
+    @Test
+    public void testNotEmptyTicket() throws SQLException {
+        List<Ticket> list = new ArrayList<>();
+        Ticket t1 = new Ticket(36, "10", "Empty",
+                        null, 1, 1, 1);
+        Ticket t2 = new Ticket(36, "10", "Sold",
+                        null, 1, 1, 1);
+        Ticket t3 = new Ticket(36, "10", "Reserved",
+                        null, 1, 1, 1);
+        Ticket t4 = new Ticket(36, "10", "Regain",
+                        null, 1, 1, 1);
+        list.add(t1);
+        list.add(t2);
+        list.add(t3);
+        list.add(t4);
+        assertFalse(CheckData.isEmptyTicket(list)); 
     }
 }

@@ -28,7 +28,7 @@ public class CustomerServices {
         }
     }
     
-    public static boolean isFindCustomer(Customer customer) throws SQLException {
+    public static boolean isExistCustomer(Customer customer) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             PreparedStatement stm = conn.prepareStatement("SELECT id FROM customer WHERE name = ? && phone = ?;");
             stm.setString(1, customer.getName());
