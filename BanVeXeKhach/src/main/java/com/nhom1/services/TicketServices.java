@@ -6,6 +6,7 @@ package com.nhom1.services;
 
 import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Ticket;
+import com.nhom1.utils.CheckData;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,6 +35,22 @@ public class TicketServices {
             }
         }
         return list;
+    }
+
+    public static Ticket getTicketById(int id) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket WHERE id = ?;");
+            stm.setInt(1, id);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                return new Ticket(rs.getInt("id"), rs.getString("chair"),
+                        rs.getString("status"), rs.getString("print_date"),
+                        rs.getInt("trip_id"), rs.getInt("customer_id"),
+                        rs.getInt("user_id"));
+            }
+            return null;
+        }
     }
 
     public static int getLastTicketId() throws SQLException {
@@ -66,13 +83,13 @@ public class TicketServices {
         }
     }
 
-    public static boolean updateTicket(int ticketId, Customer customer) throws SQLException {
+    public static boolean updateTicket(List<Ticket> listTicket, Customer customer) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             conn.setAutoCommit(false);
             String sql;
             PreparedStatement stm;
             int result = 1;
-            if (!CustomerServices.isFindCustomer(customer)) {
+            if (!CustomerServices.isExistCustomer(customer)) {
                 sql = "INSERT INTO customer(id, name, phone) "
                         + "VALUES(?, ?, ?);";
                 stm = conn.prepareStatement(sql);
@@ -82,13 +99,15 @@ public class TicketServices {
                 result = stm.executeUpdate();
             }
 
-            if (result > 0) {
-                sql = "UPDATE ticket SET status = ?, customer_id = ? WHERE id = ?;";
-                stm = conn.prepareStatement(sql);
-                stm.setString(1, "Reserved");
-                stm.setInt(2, customer.getId());
-                stm.setInt(3, ticketId);
-                stm.executeUpdate();
+            if (result > 0 && CheckData.isEmptyTicket(listTicket)) {
+                for (Ticket ticket : listTicket) {
+                    sql = "UPDATE ticket SET status = ?, customer_id = ? WHERE id = ?;";
+                    stm = conn.prepareStatement(sql);
+                    stm.setString(1, "Reserved");
+                    stm.setInt(2, customer.getId());
+                    stm.setInt(3, ticket.getId());
+                    stm.executeUpdate();
+                }
                 conn.commit();
                 return true;
             }

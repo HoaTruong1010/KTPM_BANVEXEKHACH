@@ -4,13 +4,16 @@
  */
 package com.nhom1.utils;
 
+import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.services.CarServices;
+import com.nhom1.services.TicketServices;
 import com.nhom1.services.TripServices;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javafx.scene.control.CheckBox;
 
 /**
  *
@@ -77,5 +80,14 @@ public class CheckData {
                 return -1;
         }
         return 1;
+    }
+    
+    public static boolean isEmptyTicket(List<Ticket> list) throws SQLException {        
+        for(Ticket ticket : list) {
+            if(!ticket.getStatus().equalsIgnoreCase("Empty"))
+                return false;
+        }
+        
+        return true;
     }
 }

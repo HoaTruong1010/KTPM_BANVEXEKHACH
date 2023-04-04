@@ -13,9 +13,19 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,6 +52,7 @@ import javafx.stage.Stage;
  */
 public class BookingController implements Initializable {
 
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @FXML
     private TableView<Trip> tableTrip;
     @FXML
@@ -58,7 +69,6 @@ public class BookingController implements Initializable {
     private Label lbEnd;
     @FXML
     private Button btBook;
-    
 
     /**
      * Initializes the controller class.
@@ -68,10 +78,10 @@ public class BookingController implements Initializable {
         this.loadTable();
         try {
             // TODO
-
-            this.loadTableData(null, 0);
+            loadTableData(null, 0);
             this.loadCbFillterRouteData();
             reset();
+            reload();
         } catch (SQLException ex) {
             Logger.getLogger(BookingController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,7 +105,22 @@ public class BookingController implements Initializable {
 
             return row;
         });
-    }            
+    }
+
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    loadTableData(null, 0);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        timer.schedule(task, 60 * 5000L);
+    }
 
     public void reset() {
         this.lbStart.setVisible(false);
@@ -110,8 +135,18 @@ public class BookingController implements Initializable {
 
     private void loadTableData(String kw, int routeID) throws SQLException {
         TripServices t = new TripServices();
+        List<Trip> list = t.loadTrips(kw, routeID);
 
-        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(kw, routeID)));
+        list = list.stream().filter((Trip x) -> {
+            LocalDateTime departing = LocalDateTime.parse(x.getDeparting_at(), Trip.formatDate);
+            Date now = new Date();
+            long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long getDiff = getTime - now.getTime();
+            return getDiff > 3600000;
+
+        }).collect(Collectors.toList());
+
+        this.tableTrip.setItems(FXCollections.observableList(list));
     }
 
     private void loadTable() {
@@ -135,9 +170,9 @@ public class BookingController implements Initializable {
         colRouteID.setCellValueFactory(new PropertyValueFactory("route_id"));
         colRouteID.setPrefWidth(70);
 
-        this.tableTrip.getColumns().addAll(colID, colDeparting, colArriving, 
-                colPrice, colRouteID );
-    }  
+        this.tableTrip.getColumns().addAll(colID, colDeparting, colArriving,
+                colPrice, colRouteID);
+    }
 
     private void loadCbFillterRouteData() throws SQLException {
         RouteServices r = new RouteServices();
@@ -158,11 +193,11 @@ public class BookingController implements Initializable {
 
         this.loadTableData(kw, selectRoute);
     }
-    
+
     public void btnBook_Click(ActionEvent e) throws IOException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking_detail.fxml"));
         Parent bookingDetail = fxmlLoader.load();
-        
+
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
         Booking_detailController bdc = fxmlLoader.getController();
