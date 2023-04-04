@@ -37,11 +37,6 @@
                   <Font name="Courier New Bold" size="41.0" />
                </font>
             </Label>
-            <TableView fx:id="tableTrip" prefHeight="608.0" prefWidth="625.0" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets bottom="15.0" left="15.0" right="15.0" />
-               </GridPane.margin>
-            </TableView>
             <VBox prefHeight="623.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <HBox prefHeight="38.0" prefWidth="270.0">
@@ -153,6 +148,31 @@
                      </VBox.margin>
                   </HBox>
                </children>
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+               <children>
+                  <HBox prefHeight="55.0" prefWidth="643.0">
+                     <children>
+                        <Label text="Chào mừng, ">
+                           <font>
+                              <Font name="Courier New Bold" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbCurrentUsername" layoutX="10.0" layoutY="10.0" textFill="#0001ff">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tableTrip" prefHeight="608.0" prefWidth="625.0" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>

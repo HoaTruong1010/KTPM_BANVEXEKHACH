@@ -7,6 +7,7 @@ package com.nhom1.banvexekhach;
 import com.nhom1.pojo.Car;
 import com.nhom1.pojo.Route;
 import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.services.CarServices;
 import com.nhom1.services.RouteServices;
 import com.nhom1.services.TripServices;
@@ -71,6 +72,25 @@ public class AdminController implements Initializable {
     private TextField txtKeyword;
     @FXML
     private ComboBox<Route> cbFillterRoute;
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
 
     /**
      * Initializes the controller class.
@@ -301,10 +321,12 @@ public class AdminController implements Initializable {
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
         Parent main = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        MainController mc = fxmlLoader.getController();
+        mc.setCurrentUser(currentUser);
         stage.setScene(new Scene(main));
     }
 }
