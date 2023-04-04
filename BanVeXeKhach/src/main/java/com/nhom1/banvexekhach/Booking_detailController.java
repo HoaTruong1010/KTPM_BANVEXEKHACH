@@ -8,6 +8,7 @@ import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Route;
 import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.services.CustomerServices;
 import com.nhom1.services.RouteServices;
 import com.nhom1.services.TicketServices;
@@ -23,7 +24,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,6 +49,7 @@ import javafx.stage.Stage;
  */
 public class Booking_detailController implements Initializable {
 
+    List<Ticket> listSelectedTicket = new ArrayList<>();
     @FXML
     private GridPane root;
     @FXML
@@ -65,7 +66,25 @@ public class Booking_detailController implements Initializable {
     private TextField txtName;
     @FXML
     private TextField txtPhone;
-    List<Ticket> listSelectedTicket = new ArrayList<>();
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
 
     @FXML
     /**
@@ -180,6 +199,8 @@ public class Booking_detailController implements Initializable {
         Parent booking = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        BookingController bc = fxmlLoader.getController();
+        bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
     }
     

@@ -6,6 +6,7 @@ package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Route;
 import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.services.RouteServices;
 import com.nhom1.services.TripServices;
 import com.nhom1.utils.CheckData;
@@ -65,6 +66,25 @@ public class BookingController implements Initializable {
     private Label lbEnd;
     @FXML
     private Button btBook;
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
 
     /**
      * Initializes the controller class.
@@ -198,6 +218,7 @@ public class BookingController implements Initializable {
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
         Booking_detailController bdc = fxmlLoader.getController();
         bdc.setTripDetail(selectedTrip);
+        bdc.setCurrentUser(currentUser);
         stage.setScene(new Scene(bookingDetail));
     }
 
@@ -209,10 +230,12 @@ public class BookingController implements Initializable {
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("secondary.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
         Parent main = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        MainController mc = fxmlLoader.getController();
+        mc.setCurrentUser(currentUser);
         stage.setScene(new Scene(main));
     }
 }
