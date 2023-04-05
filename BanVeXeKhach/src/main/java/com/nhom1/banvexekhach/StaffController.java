@@ -52,7 +52,7 @@ public class StaffController implements Initializable{
             try {
                 this.loadTableDataByID(this.txtID.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.start.textProperty().addListener(o -> {
@@ -61,7 +61,7 @@ public class StaffController implements Initializable{
                         this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
                         this.startTime.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.end.textProperty().addListener(o -> {
@@ -70,7 +70,7 @@ public class StaffController implements Initializable{
                         this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
                         this.startTime.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.chair.textProperty().addListener(o -> {
@@ -79,7 +79,7 @@ public class StaffController implements Initializable{
                         this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
                         this.startTime.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.startDate.valueProperty().addListener(o -> {
@@ -88,7 +88,7 @@ public class StaffController implements Initializable{
                         this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
                         this.startTime.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.startTime.textProperty().addListener(o -> {
@@ -97,7 +97,7 @@ public class StaffController implements Initializable{
                         this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
                         this.startTime.getText());
             } catch (SQLException ex) {
-                Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

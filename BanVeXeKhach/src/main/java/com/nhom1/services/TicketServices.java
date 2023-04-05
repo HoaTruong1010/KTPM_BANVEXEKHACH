@@ -21,12 +21,7 @@ import java.util.List;
  * @author fptshop.com.vn
  */
 public class TicketServices {
-<<<<<<< HEAD
     public List<Ticket> loadTicketByID(String ticket_id) throws SQLException {
-=======
-
-    public List<Ticket> loadTicket() throws SQLException {
->>>>>>> a485cacf6bb0126de70f803b27680d612fe97cc5
         List<Ticket> list = new ArrayList<>();
         try (Connection conn = JDBCUtils.createConn()) {
             String sql = "SELECT * FROM ticket";
