@@ -6,8 +6,10 @@ package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Ticket;
 import com.nhom1.services.TicketServices;
+import com.nhom1.utils.MessageBox;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -15,10 +17,14 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -27,53 +33,109 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class StaffController implements Initializable{
     @FXML private TableView<Ticket> tbTicket;
+    @FXML private TextField txtID;
+    @FXML private TextField start;
+    @FXML private TextField end;
+    @FXML private DatePicker startDate;
+    @FXML private TextField startTime;
+    @FXML private TextField chair;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {           
             this.loadTableTicket();
-            this.loadTableData();
+            this.loadTableDataByID(null);
         } catch (SQLException ex) {
             Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.txtID.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByID(this.txtID.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.start.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.end.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.chair.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.startDate.valueProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.startTime.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataByInfo(this.start.getText(), 
+                        this.end.getText(), this.chair.getText(), this.startDate.getValue(), 
+                        this.startTime.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
-    private void loadTableTicket() {
+    private void loadTableTicket() throws SQLException {
         TableColumn colIDTicket = new TableColumn("Mã vé");
         colIDTicket.setCellValueFactory(new PropertyValueFactory("id"));
-        colIDTicket.setPrefWidth(50);
+        colIDTicket.setPrefWidth(100);
         
         TableColumn colChair = new TableColumn("Ghế");
         colChair.setCellValueFactory(new PropertyValueFactory("chair"));
-        colChair.setPrefWidth(50);
+        colChair.setPrefWidth(100);
         
         TableColumn colStatus = new TableColumn("Trạng thái");
         colStatus.setCellValueFactory(new PropertyValueFactory("status"));
-        colStatus.setPrefWidth(80);
+        colStatus.setPrefWidth(150);
         
-        TableColumn colStartTime = new TableColumn("Thời gian đi");
-        colStartTime.setCellValueFactory(new PropertyValueFactory("departing_at"));
+        TableColumn colStartTime = new TableColumn("Mã chuyến đi");
+        colStartTime.setCellValueFactory(new PropertyValueFactory("trip_id"));
         colStartTime.setPrefWidth(120);
         
-        TableColumn colStart = new TableColumn("Nơi đi");
+        TableColumn colStart = new TableColumn("Khách hàng");
         colStart.setCellValueFactory(new PropertyValueFactory("customer_id"));
         colStart.setPrefWidth(120);
         
-        TableColumn colEnd = new TableColumn("Nơi đến");
-        colEnd.setCellValueFactory(new PropertyValueFactory("user_id"));
-        colEnd.setPrefWidth(120);
-        
-        TableColumn colCusName = new TableColumn("Tên khách hàng");
-        colCusName.setCellValueFactory(new PropertyValueFactory("departing_at"));
-        colCusName.setPrefWidth(120);
-        
-        TableColumn colPrice = new TableColumn("Giá vé");
-        colPrice.setCellValueFactory(new PropertyValueFactory("departing_at"));
-        colPrice.setPrefWidth(120);
-        
         TableColumn colChangeTicket = new TableColumn();
-        colChangeTicket.setCellFactory(evt -> {
+        colChangeTicket.setCellFactory(p -> {
                 Button btnChange = new Button("Đổi vé");
+            
+                btnChange.setOnAction(evt -> {
+                    Alert confirm = MessageBox.getBox("Question", 
+                            "Are you sure to delete this question", 
+                            Alert.AlertType.CONFIRMATION);
+                    confirm.showAndWait().ifPresent(res -> {
+                        if (res == ButtonType.OK) {
+                        }
+                    });
+                });
                 TableCell cellChange = new TableCell();
                 cellChange.setGraphic(btnChange);
                 return cellChange;
@@ -88,13 +150,22 @@ public class StaffController implements Initializable{
         });
         
         this.tbTicket.getColumns().addAll(colIDTicket, colChair, colStatus, 
-                colStartTime, colStart, colEnd, colCusName, colPrice, colChangeTicket, colCancelTicket);
+                colStartTime, colStart, colChangeTicket, colCancelTicket);
     }
     
-    private void loadTableData() throws SQLException {
-        TicketServices s = new TicketServices();
-        List<Ticket> tk = s.loadTicket();
+    private void loadTableDataByID(String id) throws SQLException {
+        TicketServices s = new TicketServices();     
+        List<Ticket> tk = null;        
+        tk = s.loadTicketByID(id);
         this.tbTicket.setItems(FXCollections.observableList(tk));
-        
+        System.out.println(this.txtID.getText());       
+    }
+    private void loadTableDataByInfo(String start, String end, String chair, LocalDate startDate, String startTime) throws SQLException
+    {
+        TicketServices s = new TicketServices();     
+        List<Ticket> tk = null; 
+        tk = s.loadTicketByInfo(start, end, chair, startDate, startTime);
+        this.tbTicket.setItems(FXCollections.observableList(tk));
+        System.out.println(this.txtID.getText());
     }
 }

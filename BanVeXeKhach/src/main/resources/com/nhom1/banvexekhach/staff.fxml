@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -12,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="616.0" prefWidth="937.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="759.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
    <children>
       <Label alignment="CENTER" prefHeight="75.0" prefWidth="982.0" text="Quản lý vé xe" textFill="#199e0a">
          <font>
@@ -36,7 +35,7 @@
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="3">
                <children>
                   <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đi (*):" />
-                  <TextField prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch" />
+                  <TextField fx:id="start" prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch" />
                </children>
             </HBox>
             <Label text="Tìm theo mã vé">
@@ -47,36 +46,32 @@
             <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="5">
                <children>
                   <Label prefHeight="19.0" prefWidth="120.0" text="Ghế (*):" />
-                  <TextField prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch" />
+                  <TextField fx:id="chair" prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch" />
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="4">
                <children>
                   <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đến (*):" />
-                  <TextField prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch" />
+                  <TextField fx:id="end" prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch" />
                </children>
             </HBox>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <Label prefHeight="19.0" prefWidth="128.0" text="Ngày khởi hành(*):" />
-                  <DatePicker prefHeight="29.0" prefWidth="210.0" promptText="01/01/2023" />
+                  <DatePicker fx:id="startDate" prefHeight="29.0" prefWidth="210.0" promptText="01/01/2023" />
                </children>
             </HBox>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <Label prefHeight="19.0" prefWidth="128.0" text="Giờ khởi hành (*):" />
-                  <TextField prefHeight="23.0" prefWidth="210.0" promptText="00:00" styleClass="txtSearch" />
+                  <TextField fx:id="startTime" prefHeight="23.0" prefWidth="210.0" promptText="00:00" styleClass="txtSearch" />
                </children>
             </HBox>
-            <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <children>
-                  <Button mnemonicParsing="false" styleClass="btnSearch" text="Tìm" />
-               </children>
-            </VBox>
+            <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="1">
                <children>
                   <Label prefHeight="19.0" prefWidth="120.0" text="Mã vé (*):" />
-                  <TextField prefHeight="23.0" prefWidth="210.0" promptText="123456789" styleClass="txtSearch" />
+                  <TextField fx:id="txtID" prefHeight="23.0" prefWidth="210.0" promptText="123456789" styleClass="txtSearch" />
                </children>
             </HBox>
             <Label text="Tìm theo thông tin vé" GridPane.rowIndex="2">
@@ -84,11 +79,7 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <Button mnemonicParsing="false" styleClass="btnSearch" text="Tìm" />
-               </children>
-            </VBox>
+            <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <TableView fx:id="tbTicket" prefHeight="276.0" prefWidth="778.0" />
