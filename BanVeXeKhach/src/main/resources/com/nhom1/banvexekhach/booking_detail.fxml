@@ -18,10 +18,10 @@
         <URL value="@/com/nhom1/style/booking_detail.css" />
     </stylesheets>
    <children>
-      <GridPane layoutY="7.0" prefHeight="702.0" prefWidth="958.0">
+      <GridPane fx:id="root" layoutY="7.0" prefHeight="702.0" prefWidth="1050.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="627.3999633789062" minWidth="10.0" prefWidth="590.5999755859375" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="448.20001220703125" minWidth="10.0" prefWidth="315.4000244140625" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="627.3999633789062" minWidth="10.0" prefWidth="591.2000366210938" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="448.20001220703125" minWidth="10.0" prefWidth="411.9999633789063" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="228.79999389648438" minHeight="0.0" prefHeight="79.00000610351563" vgrow="SOMETIMES" />
@@ -29,14 +29,28 @@
           <RowConstraints maxHeight="578.9999908447265" minHeight="10.0" prefHeight="515.9999938964845" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <VBox maxWidth="450.0" prefHeight="516.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
+                  <HBox prefHeight="55.0" prefWidth="643.0">
+                     <children>
+                        <Label text="Chào mừng, ">
+                           <font>
+                              <Font name="Courier New Bold" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbCurrentUsername" layoutX="10.0" layoutY="10.0" textFill="#0001ff">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                   <Label text="THÔNG TIN KHÁCH HÀNG" textAlignment="CENTER" textFill="#007eff" wrapText="true">
                      <font>
                         <Font name="Courier New Bold" size="25.0" />
                      </font>
                   </Label>
-                  <VBox prefHeight="74.0" prefWidth="315.0">
+                  <VBox prefHeight="74.0" prefWidth="373.0">
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin>
@@ -46,7 +60,7 @@
                               <Font name="Courier New Bold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField />
+                        <TextField fx:id="txtName" maxWidth="350.0" prefHeight="26.0" prefWidth="328.0" />
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="56.0" prefHeight="181.0" prefWidth="312.0">
@@ -56,27 +70,34 @@
                               <Font name="Courier New Bold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField />
+                        <TextField fx:id="txtPhone" maxWidth="350.0" />
                      </children>
                   </VBox>
                   <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="131.0" prefHeight="80.0" prefWidth="312.0">
                      <children>
-                        <Button mnemonicParsing="false" text="OK">
-                           <font>
-                              <Font name="Courier New Bold" size="19.0" />
-                           </font>
-                        </Button>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#btnOK_Click" prefHeight="37.0" prefWidth="66.0" text="OK">
+                                 <font>
+                                    <Font name="Courier New Bold" size="19.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="50.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnCancle_Click" prefHeight="37.0" prefWidth="66.0" text="Hủy">
+                                 <font>
+                                    <Font name="Courier New Bold" size="19.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="30.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" layoutX="10.0" layoutY="331.0" prefHeight="37.0" prefWidth="312.0">
-                     <children>
-                        <Button mnemonicParsing="false" text="Hủy">
-                           <font>
-                              <Font name="Courier New Bold" size="19.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </VBox>
+                  <VBox alignment="CENTER" layoutX="10.0" layoutY="331.0" prefHeight="37.0" prefWidth="312.0" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -212,6 +233,17 @@
                   <Insets left="50.0" />
                </padding>
             </VBox>
+            <GridPane maxHeight="600.0" prefHeight="516.0" prefWidth="611.0" GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
          </children>
       </GridPane>
    </children>

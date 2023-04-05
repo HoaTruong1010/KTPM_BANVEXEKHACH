@@ -20,7 +20,7 @@ public class App extends Application {
 //        scene = new Scene(loadFXML("admin"));
 //        scene = new Scene(loadFXML("primary"));
 //        scene = new Scene(loadFXML("staff"));
-        scene = new Scene(loadFXML("booking"));
+        scene = new Scene(loadFXML("signin"));
         stage.setScene(scene);
         stage.show();
     }

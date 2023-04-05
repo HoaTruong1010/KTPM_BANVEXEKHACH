@@ -6,6 +6,7 @@ package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Route;
 import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.services.RouteServices;
 import com.nhom1.services.TripServices;
 import com.nhom1.utils.CheckData;
@@ -13,28 +14,34 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -59,7 +66,25 @@ public class BookingController implements Initializable {
     private Label lbEnd;
     @FXML
     private Button btBook;
-    
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
 
     /**
      * Initializes the controller class.
@@ -69,10 +94,10 @@ public class BookingController implements Initializable {
         this.loadTable();
         try {
             // TODO
-
-            this.loadTableData(null, 0);
+            loadTableData(null, 0);
             this.loadCbFillterRouteData();
             reset();
+            reload();
         } catch (SQLException ex) {
             Logger.getLogger(BookingController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,7 +121,22 @@ public class BookingController implements Initializable {
 
             return row;
         });
-    }            
+    }
+
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    loadTableData(null, 0);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        timer.schedule(task, 60 * 5000L);
+    }
 
     public void reset() {
         this.lbStart.setVisible(false);
@@ -111,8 +151,18 @@ public class BookingController implements Initializable {
 
     private void loadTableData(String kw, int routeID) throws SQLException {
         TripServices t = new TripServices();
+        List<Trip> list = t.loadTrips(kw, routeID);
 
-        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(kw, routeID)));
+        list = list.stream().filter((Trip x) -> {
+            LocalDateTime departing = LocalDateTime.parse(x.getDeparting_at(), Trip.formatDate);
+            Date now = new Date();
+            long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long getDiff = getTime - now.getTime();
+            return getDiff > 3600000;
+
+        }).collect(Collectors.toList());
+
+        this.tableTrip.setItems(FXCollections.observableList(list));
     }
 
     private void loadTable() {
@@ -136,9 +186,9 @@ public class BookingController implements Initializable {
         colRouteID.setCellValueFactory(new PropertyValueFactory("route_id"));
         colRouteID.setPrefWidth(70);
 
-        this.tableTrip.getColumns().addAll(colID, colDeparting, colArriving, 
-                colPrice, colRouteID );
-    }  
+        this.tableTrip.getColumns().addAll(colID, colDeparting, colArriving,
+                colPrice, colRouteID);
+    }
 
     private void loadCbFillterRouteData() throws SQLException {
         RouteServices r = new RouteServices();
@@ -159,15 +209,16 @@ public class BookingController implements Initializable {
 
         this.loadTableData(kw, selectRoute);
     }
-    
-    public void btnBook_Click() throws IOException, SQLException {
+
+    public void btnBook_Click(ActionEvent e) throws IOException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking_detail.fxml"));
         Parent bookingDetail = fxmlLoader.load();
-        
-        Stage stage = (Stage) btBook.getScene().getWindow();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
         Booking_detailController bdc = fxmlLoader.getController();
         bdc.setTripDetail(selectedTrip);
+        bdc.setCurrentUser(currentUser);
         stage.setScene(new Scene(bookingDetail));
     }
 
@@ -178,7 +229,13 @@ public class BookingController implements Initializable {
         this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(null, 0)));
     }
 
-    public void btnExit_Click(ActionEvent e) {
-        System.exit(0);
+    public void btnExit_Click(ActionEvent e) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
+        Parent main = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        MainController mc = fxmlLoader.getController();
+        mc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(main));
     }
 }

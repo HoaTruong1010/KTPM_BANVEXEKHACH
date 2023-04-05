@@ -70,7 +70,7 @@ public class TripServicesTest {
 //    public static Stream<Arguments> addTripData() {
 //        return Stream.of (
 //                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
-//                        "2023-03-30 05:45:00", 250, 3, 5), 1),
+//                        "2023-03-30 05:45:00", 250, 5, 5), 1),
 //                Arguments.arguments(new Trip("2023-03-30 03:45:00", 
 //                        "2023-03-30 02:45:00", 150, 4, 4), -1),
 //                Arguments.arguments(new Trip("2023-04-12 13:00:00", 
