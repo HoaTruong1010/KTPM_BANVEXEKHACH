@@ -147,4 +147,11 @@ public class Ticket {
         this.customer_id = customer_id;
     }
 
+    @Override
+    public String toString() {
+        return Integer.toString(this.id); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
+
 }

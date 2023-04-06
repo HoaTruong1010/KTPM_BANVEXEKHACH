@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -40,15 +42,35 @@ public class TicketServicesTest {
     }
     
     @ParameterizedTest
-    public void testSearchByID() {
+    @CsvFileSource(resources = "/SearchTicketByIDData.csv", numLinesToSkip = 1)
+    public void testSearchByID(String id, int quantity, boolean eptOutput) {
         try {
-            List<Ticket> tickets = ticketServices.loadTicketByID("11");
-            Assertions.assertEquals(1, tickets.size());
+            List<Ticket> tickets = ticketServices.loadTicketByID(id);
+            Assertions.assertEquals(eptOutput, quantity == tickets.size());
             for (Ticket t: tickets) {
-                Assertions.assertTrue(Integer.toString(t.getId()).contains("11"));
+                Assertions.assertTrue(Integer.toString(t.getId()).contains(id));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @ParameterizedTest
+    @CsvFileSource(resources = "/SearchTicketByInfoData.csv", numLinesToSkip = 1)
+    public void testSearchByInfo(String chair, String start, String end, String startDate, String startTime, int quantity, boolean eptOutput) {
+        try {
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            List<Ticket> tickets = ticketServices.loadTicketByInfo(start, end, chair, LocalDate.parse(startDate, format), startTime);
+            Assertions.assertEquals(eptOutput, quantity == tickets.size());
+            for (Ticket t: tickets) {
+                Assertions.assertTrue(t.getChair().contains(chair));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void testChangeTicket() {
+        
     }
 }

@@ -21,20 +21,22 @@ import java.util.List;
  * @author fptshop.com.vn
  */
 public class TicketServices {
+
     public List<Ticket> loadTicketByID(String ticket_id) throws SQLException {
         List<Ticket> list = new ArrayList<>();
         try (Connection conn = JDBCUtils.createConn()) {
             String sql = "SELECT * FROM ticket";
             if (ticket_id != null && !ticket_id.isEmpty()) {
                 sql += " WHERE id like concat('%', ?, '%')";
-            }            
+            }
             PreparedStatement stm = conn.prepareCall(sql);
-            if (ticket_id != null && !ticket_id.isEmpty())
+            if (ticket_id != null && !ticket_id.isEmpty()) {
                 stm.setString(1, ticket_id);
+            }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Ticket t = new Ticket(rs.getInt("id"), rs.getString("chair"), 
-                        rs.getString("status"), rs.getString("print_date"), 
+                Ticket t = new Ticket(rs.getInt("id"), rs.getString("chair"),
+                        rs.getString("status"), rs.getString("print_date"),
                         rs.getInt("trip_id"), rs.getInt("customer_id"),
                         rs.getInt("user_id"));
                 list.add(t);
@@ -42,13 +44,14 @@ public class TicketServices {
         }
         return list;
     }
+
     public List<Ticket> loadTicketByInfo(String start, String end, String chair, LocalDate startDate, String startTime) throws SQLException {
         List<Ticket> list = new ArrayList<>();
-        try(Connection conn = JDBCUtils.createConn()) {
-            String sql = "SELECT ticket.* " +
-                    "FROM ticket, trip, "
-                    + "route, customer" +
-                    " WHERE ticket.customer_id = customer.id and ticket.trip_id = trip.id "
+        try (Connection conn = JDBCUtils.createConn()) {
+            String sql = "SELECT ticket.* "
+                    + "FROM ticket, trip, "
+                    + "route"
+                    + " WHERE ticket.trip_id = trip.id "
                     + "and trip.route_id = route.id"
                     + " and route.start like concat('%', ?, '%') "
                     + "and route.end like concat('%', ?, '%')"
@@ -56,34 +59,37 @@ public class TicketServices {
                     + " and DATE(trip.departing_at) like concat('%', ?, '%')"
                     + "and DATE_FORMAT(trip.departing_at, '%H:%i') like concat('%', ?, '%')";
             PreparedStatement stm = conn.prepareCall(sql);
-            if (start != null && !start.isEmpty())
+            if (start != null && !start.isEmpty()) {
                 stm.setString(1, start);
-            else
+            } else {
                 stm.setString(1, "");
-            
-            if (end != null && !end.isEmpty())
+            }
+
+            if (end != null && !end.isEmpty()) {
                 stm.setString(2, end);
-            else
+            } else {
                 stm.setString(2, "");
-            
-            if (chair != null && !chair.isEmpty())
+            }
+
+            if (chair != null && !chair.isEmpty()) {
                 stm.setString(3, chair);
-            else
+            } else {
                 stm.setString(3, "");
-            
-            if (startDate != null)
-            {
+            }
+
+            if (startDate != null) {
                 Date stDate = Date.valueOf(startDate);
                 stm.setDate(4, stDate);
-            }
-            else
+            } else {
                 stm.setString(4, "");
-            
-            if (startTime != null && !startTime.isEmpty())
+            }
+
+            if (startTime != null && !startTime.isEmpty()) {
                 stm.setString(5, startTime);
-            else
+            } else {
                 stm.setString(5, "");
-            
+            }
+
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Ticket t = new Ticket(rs.getInt("id"), rs.getString("chair"),
@@ -172,6 +178,60 @@ public class TicketServices {
             }
 
             return false;
+        }
+    }
+
+    public static boolean changeTicket(String idtk1, Ticket tk2) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            boolean flag1 = false;
+            boolean flag2 = false;
+            boolean flag3 = false;
+            Ticket tk1 = null;
+            if (idtk1 != null && !idtk1.isEmpty()) {
+                PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket WHERE id = ?;");
+                stm.setString(1, idtk1);
+                ResultSet rs = stm.executeQuery();
+                while (rs.next()) {
+                    tk1 = new Ticket(rs.getInt("id"), rs.getString("chair"),
+                            rs.getString("status"), rs.getString("print_date"),
+                            rs.getInt("trip_id"), rs.getInt("customer_id"),
+                            rs.getInt("user_id"));
+                }
+                flag1 = true;
+            }
+            if (!"empty".equals(tk2.getStatus())) {
+                String sql = "UPDATE ticket SET status = ?, customer_id = ? WHERE id = ?";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setString(1, tk1.getStatus());
+                stm.setInt(2, tk1.getCustomer_id());
+                stm.setInt(3, tk2.getId());
+                stm.executeUpdate();
+                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
+                flag2 = true;
+            }
+            if (!"Reserved".equals(tk2.getStatus())) {
+                String sql = "UPDATE ticket SET status = ?, customer_id = NULL WHERE id = ?";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setString(1, tk2.getStatus());
+                stm.setInt(2, tk1.getId());
+                stm.executeUpdate();
+                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
+                if(flag1 && flag2)
+                    flag3 = true;
+            }
+            return flag3;
+        }
+    }
+
+    public static void cancelTicket(int id) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            if (Integer.toString(id) != null && !Integer.toString(id).isEmpty()) {
+                String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ?";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setInt(1, id);
+                stm.executeUpdate();
+                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
+            }            
         }
     }
 }
