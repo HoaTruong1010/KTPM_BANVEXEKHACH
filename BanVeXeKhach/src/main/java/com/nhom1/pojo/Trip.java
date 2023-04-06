@@ -129,5 +129,11 @@ public class Trip {
     public void setRoute_id(int route_id) {
         this.route_id = route_id;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s", this.departing_at); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
     
 }

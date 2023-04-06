@@ -149,7 +149,7 @@ public class BookingController implements Initializable {
         btBook.setDisable(true);
     }
 
-    private void loadTableData(String kw, int routeID) throws SQLException {
+    public void loadTableData(String kw, int routeID) throws SQLException {
         TripServices t = new TripServices();
         List<Trip> list = t.loadTrips(kw, routeID);
 
@@ -165,7 +165,7 @@ public class BookingController implements Initializable {
         this.tableTrip.setItems(FXCollections.observableList(list));
     }
 
-    private void loadTable() {
+    public void loadTable() {
         TableColumn colID = new TableColumn("Mã chuyến đi");
         colID.setCellValueFactory(new PropertyValueFactory("id"));
         colID.setPrefWidth(110);
@@ -190,7 +190,7 @@ public class BookingController implements Initializable {
                 colPrice, colRouteID);
     }
 
-    private void loadCbFillterRouteData() throws SQLException {
+    public void loadCbFillterRouteData() throws SQLException {
         RouteServices r = new RouteServices();
 
         this.cbFillterRoute.setItems(FXCollections.observableList(r.loadRoutes()));

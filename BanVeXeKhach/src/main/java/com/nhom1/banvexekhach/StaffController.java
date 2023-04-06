@@ -6,14 +6,19 @@ package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.services.TicketServices;
+import com.nhom1.services.TripServices;
 import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -59,12 +64,33 @@ public class StaffController implements Initializable {
     private TextField startTime;
     @FXML
     private TextField chair;
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            
             this.loadTableTicket();
             this.loadTableDataByID(null);
+            this.reload();
         } catch (SQLException ex) {
             Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,6 +146,21 @@ public class StaffController implements Initializable {
                 Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+    }
+    
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    loadTableDataByID(null);
+                } catch (SQLException ex) {
+                    Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        timer.schedule(task, 60 * 5000L);
     }
 
     private void loadTableTicket() throws SQLException {
@@ -210,8 +251,9 @@ public class StaffController implements Initializable {
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         ChangeTicketController ctc = fxmlLoader.getController();
-        System.out.println(selectedTicket.getId());
         ctc.getTicketChange(selectedTicket);
+        ctc.getTripTicketChange(selectedTicket.getTrip_id());
+        ctc.setCurrentUser(currentUser);
         stage.setScene(new Scene(popup));
         stage.show();
     }
@@ -219,7 +261,7 @@ public class StaffController implements Initializable {
     private void loadTableDataByID(String id) throws SQLException {
         TicketServices s = new TicketServices();
         List<Ticket> tk = s.loadTicketByID(id);
-        this.tbTicket.setItems(FXCollections.observableList(tk));
+        this.tbTicket.setItems(FXCollections.observableList(tk));    
     }
 
     private void loadTableDataByInfo(String start, String end, String chair, LocalDate startDate, String startTime) throws SQLException {
@@ -227,5 +269,14 @@ public class StaffController implements Initializable {
         List<Ticket> tk = s.loadTicketByInfo(start, end, chair, startDate, startTime);
         this.tbTicket.setItems(FXCollections.observableList(tk));
     }
+  
+    public void btnExit_Click(ActionEvent e) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
+        Parent main = fxmlLoader.load();
 
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        MainController mc = fxmlLoader.getController();
+        mc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(main));
+    }
 }

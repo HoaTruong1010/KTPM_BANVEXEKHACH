@@ -12,14 +12,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="448.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.ChangeTicketController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="448.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.ChangeTicketController">
    <children>
-      <Label alignment="CENTER" prefHeight="75.0" prefWidth="982.0" text="Thay đổi vé" textFill="#199e0a">
+      <Label alignment="CENTER" prefHeight="52.0" prefWidth="448.0" text="Thay đổi vé" textFill="#199e0a">
          <font>
-            <Font name="Arial Bold" size="33.0" />
+            <Font name="Courier New Bold" size="33.0" />
          </font>
       </Label>
-      <GridPane alignment="CENTER" prefHeight="298.0" prefWidth="448.0" styleClass="gbBox" stylesheets="@../style/staff.css">
+      <HBox alignment="CENTER" prefHeight="32.0" prefWidth="759.0">
+         <children>
+            <Label fx:id="lbCurrentUsername" layoutX="10.0" layoutY="10.0" textFill="#0001ff">
+               <font>
+                  <Font name="Courier New Bold Italic" size="21.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <GridPane alignment="CENTER" prefHeight="329.0" prefWidth="448.0" styleClass="gbBox" stylesheets="@../style/staff.css">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
@@ -31,47 +40,85 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="2">
+            <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="3">
                <children>
-                  <Label prefHeight="21.0" prefWidth="129.0" text="Nơi đi (*):" />
-                  <TextField fx:id="tfStart" prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch" />
+                  <Label prefHeight="21.0" prefWidth="180.0" text="Nơi đi:">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="tfStart" prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="5">
+               <children>
+                  <Label prefHeight="21.0" prefWidth="177.0" text="Ghế:">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="tfChair" prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="4">
                <children>
-                  <Label prefHeight="21.0" prefWidth="128.0" text="Ghế (*):" />
-                  <TextField fx:id="tfChair" prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch" />
-               </children>
-            </HBox>
-            <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="3">
-               <children>
-                  <Label prefHeight="21.0" prefWidth="128.0" text="Nơi đến (*):" />
-                  <TextField fx:id="tfEnd" prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch" />
-               </children>
-            </HBox>
-            <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="5">
-               <children>
-                  <Label prefHeight="19.0" prefWidth="128.0" text="Ngày khởi hành(*):" />
-                  <DatePicker fx:id="dpDate" prefHeight="29.0" prefWidth="210.0" promptText="01/01/2023" />
+                  <Label prefHeight="21.0" prefWidth="177.0" text="Nơi đến:">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="tfEnd" prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="6">
                <children>
-                  <Label prefHeight="19.0" prefWidth="128.0" text="Giờ khởi hành (*):" />
+                  <Label prefHeight="19.0" prefWidth="178.0" text="Ngày khởi hành:">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <DatePicker fx:id="dpDate" prefHeight="29.0" prefWidth="210.0" promptText="01/01/2023" />
+               </children>
+            </HBox>
+            <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="7">
+               <children>
+                  <Label prefHeight="19.0" prefWidth="178.0" text="Giờ khởi hành:">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
                   <TextField fx:id="tfTime" prefHeight="23.0" prefWidth="210.0" promptText="00:00" styleClass="txtSearch" />
                </children>
             </HBox>
-            <Label text="Tìm theo thông tin vé" GridPane.rowIndex="1">
+            <Label text="Tìm theo thông tin vé" GridPane.rowIndex="2">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="Courier New Bold" size="20.0" />
                </font>
             </Label>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch">
                <children>
-                  <Label prefHeight="21.0" prefWidth="128.0" text="Vé được đổi:" />
+                  <Label prefHeight="21.0" prefWidth="179.0" text="Mã vé được đổi:">
+                     <font>
+                        <Font name="Courier New Bold" size="16.0" />
+                     </font></Label>
                   <TextField fx:id="tfTicketChange" prefHeight="23.0" prefWidth="210.0" styleClass="txtSearch" />
+               </children>
+            </HBox>
+            <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="1">
+               <children>
+                  <Label prefHeight="21.0" prefWidth="179.0" text="Mã chuyến đi:">
+                     <font>
+                        <Font name="Courier New Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="tfTripTicketChange" prefHeight="23.0" prefWidth="210.0" styleClass="txtSearch" />
                </children>
             </HBox>
          </children>

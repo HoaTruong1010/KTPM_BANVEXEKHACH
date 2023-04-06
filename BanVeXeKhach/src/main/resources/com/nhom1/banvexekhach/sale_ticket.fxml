@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="701.0" prefWidth="1002.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.SaleTicketController">
+    <stylesheets>
+        <URL value="@/com/nhom1/style/booking.css" />
+    </stylesheets>
+   <children>
+      <GridPane layoutX="-1.0" layoutY="-1.0" prefHeight="702.0" prefWidth="1002.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="732.4000244140625" minWidth="10.0" prefWidth="673.1999755859375" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="456.4000244140625" minWidth="10.0" prefWidth="328.4000244140625" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="229.59998168945313" minHeight="10.0" prefHeight="78.00001068115233" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="623.1999893188477" minHeight="10.0" prefHeight="623.1999893188477" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="BÁN VÉ" textFill="#199e0a" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="Courier New Bold" size="41.0" />
+               </font>
+            </Label>
+            <VBox prefHeight="623.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <HBox prefHeight="38.0" prefWidth="270.0">
+                     <children>
+                        <Label text="*" textFill="RED">
+                           <font>
+                              <Font name="Courier New" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="10.0" text="Định dạng ngày tháng: năm-tháng-ngày giờ:phút:giây" wrapText="true">
+                           <font>
+                              <Font name="Courier New" size="14.0" />
+                           </font>
+                           <padding>
+                              <Insets left="12.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <TextField fx:id="txtKeyword" prefHeight="26.0" prefWidth="250.0" promptText="Nhập ngày đi...">
+                     <VBox.margin>
+                        <Insets right="15.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <HBox layoutX="10.0" layoutY="131.0" prefHeight="38.0" prefWidth="270.0">
+                     <children>
+                        <ComboBox fx:id="cbFillterRoute" prefHeight="26.0" prefWidth="194.0" />
+                        <Button mnemonicParsing="false" onAction="#txtSearch_Click" text="Tìm">
+                           <font>
+                              <Font name="Courier New Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="28.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="89.0" prefHeight="38.0" prefWidth="270.0">
+                     <children>
+                        <Label fx:id="lbStart" text="Nơi đi: " textFill="RED">
+                           <font>
+                              <Font name="Courier New" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbStartText" layoutX="10.0" layoutY="10.0">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="50.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="152.0" prefHeight="38.0" prefWidth="270.0">
+                     <children>
+                        <Label fx:id="lbEnd" text="Nơi đến: " textFill="RED">
+                           <font>
+                              <Font name="Courier New" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbEndText" layoutX="10.0" layoutY="10.0">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <ImageView fitHeight="168.0" fitWidth="259.0" pickOnBounds="true" preserveRatio="true">
+                     <VBox.margin>
+                        <Insets left="25.0" top="50.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@../../../images/xe.jpg" />
+                     </image>
+                  </ImageView>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="270.0">
+                     <children>
+                        <Button fx:id="btBook" disable="true" mnemonicParsing="false" onAction="#btnBook_Click" prefHeight="41.0" prefWidth="60.0" text="Chọn">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Courier New Bold" size="15.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="65.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnReload_Click" prefHeight="41.0" prefWidth="75.0" text="Reload">
+                           <font>
+                              <Font name="Courier New Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="40.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button layoutX="88.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="40.0" prefWidth="66.0" text="Thoát">
+                           <font>
+                              <Font name="Courier New Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="30.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="50.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+               <children>
+                  <HBox prefHeight="55.0" prefWidth="643.0">
+                     <children>
+                        <Label text="Chào mừng, ">
+                           <font>
+                              <Font name="Courier New Bold" size="21.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbCurrentUsername" layoutX="10.0" layoutY="10.0" textFill="#0001ff">
+                           <font>
+                              <Font name="Courier New Bold Italic" size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tableTrip" prefHeight="608.0" prefWidth="625.0" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </VBox>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

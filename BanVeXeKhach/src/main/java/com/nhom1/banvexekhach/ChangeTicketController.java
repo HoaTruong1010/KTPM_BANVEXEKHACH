@@ -5,6 +5,7 @@
 package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Ticket;
+import com.nhom1.pojo.User;
 import com.nhom1.services.TicketServices;
 import com.nhom1.utils.MessageBox;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -27,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -43,6 +47,8 @@ public class ChangeTicketController implements Initializable {
     @FXML
     private TextField tfTicketChange;
     @FXML
+    private TextField tfTripTicketChange;
+    @FXML
     private TableView<Ticket> tbChangeTicket;
     @FXML
     private TextField tfStart;
@@ -56,12 +62,50 @@ public class ChangeTicketController implements Initializable {
     private TextField tfChair;
     @FXML
     private Button btnClose;
+    @FXML
+    private Label lbCurrentUsername;
+    private User currentUser;
+
+    /**
+     * @return the currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param currentUser the currentUser to set
+     */
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.lbCurrentUsername.setText(String.format("%s",
+                currentUser.getName()));
+    }
+
+    public void getTicketChange(Ticket t) {
+        this.tfTicketChange.setText(t.toString());
+        this.tfTicketChange.setEditable(false);
+    }
+
+    public void getTripTicketChange(int t) {
+        this.tfTripTicketChange.setText(Integer.toString(t));
+        this.tfTripTicketChange.setEditable(false);
+        System.out.println(this.tfTripTicketChange.getText());
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         this.loadTableTicketChange();
-        this.loadTableDataChange();
+        System.out.println(this.tfTripTicketChange.getText());
+        this.tfTripTicketChange.textProperty().addListener(o -> {
+            try {
+                this.loadTableDataChange(this.tfTripTicketChange.getText());
+            } catch (SQLException ex) {
+                Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.reload();
 
         this.tfStart.textProperty().addListener(o -> {
             this.searchTableDataChange(this.tfStart.getText(),
@@ -95,6 +139,17 @@ public class ChangeTicketController implements Initializable {
                 Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+    }
+
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                searchTableDataChange(null, null, null, null, null);
+            }
+        };
+        timer.schedule(task, 60 * 5000L);
     }
 
     public void loadTableTicketChange() {
@@ -133,7 +188,7 @@ public class ChangeTicketController implements Initializable {
                             });
                         } else {
                             Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
-                        };
+                        }
                     } catch (SQLException ex) {
                         Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -152,16 +207,13 @@ public class ChangeTicketController implements Initializable {
         this.tbChangeTicket.getColumns().addAll(colIDTicket, colChair, colStatus, colChangeTicket);
     }
 
-    private TableView<Ticket> loadTableDataChange() {
+    public void loadTableDataChange(String str) throws SQLException {
         TicketServices s1 = new TicketServices();
         List<Ticket> tkChange = null;
-        try {
-            tkChange = s1.loadTicketByID(null);
-        } catch (SQLException ex) {
-            Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        System.out.println(this.tfTripTicketChange.getText());
+//        tkChange = s1.getTicketsByStringTripID(this.tfTripTicketChange.getText());
+        tkChange = s1.getTicketsByStringTripID(str);
         this.tbChangeTicket.setItems(FXCollections.observableList(tkChange));
-        return this.tbChangeTicket;
     }
 
     private TableView<Ticket> searchTableDataChange(String start, String end, String chair, LocalDate startDate, String startTime) {
@@ -182,12 +234,8 @@ public class ChangeTicketController implements Initializable {
 
         Stage stage = (Stage) ((Node) evt.getSource()).getScene().getWindow();
         StaffController ctc = fxmlLoader.getController();
+        ctc.setCurrentUser(currentUser);
         stage.setScene(new Scene(popup));
         stage.show();
-    }
-
-    public void getTicketChange(Ticket t) {
-        this.tfTicketChange.setText(t.toString());
-        this.tfTicketChange.setEditable(false);
     }
 }

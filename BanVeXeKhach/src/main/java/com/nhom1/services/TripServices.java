@@ -43,8 +43,8 @@ public class TripServices {
                         rs.getInt("car_id"), rs.getInt("route_id"));
                 list.add(t);
             }
-            
-            if(isSearch && !list.isEmpty()) {
+
+            if (isSearch && !list.isEmpty()) {
                 list = list.stream().filter(x -> x.getRoute_id() == routeID).collect(Collectors.toList());
             }
         }
@@ -128,7 +128,7 @@ public class TripServices {
         try (Connection conn = JDBCUtils.createConn()) {
             conn.setAutoCommit(false);
             int resultCheck = CheckData.isValidTrip(trip);
-            
+
             if (resultCheck == 1) {
                 String sql = "UPDATE trip SET departing_at = ?, arriving_at = ?, price = ?, car_id = ?, route_id = ? WHERE id = ?;";
 
@@ -179,4 +179,20 @@ public class TripServices {
             return false;
         }
     }
+
+//    public List<Trip> getTripTimeOut() throws SQLException {
+//        List<Trip> lt = new ArrayList<>();
+//        try (Connection conn = JDBCUtils.createConn()) {
+//            String sql = "SELECT * FROM `sale-ticket`.trip WHERE departing_at < now() + INTERVAL 30 MINUTE";
+//            PreparedStatement stm = conn.prepareStatement(sql);
+//            ResultSet rs = stm.executeQuery();
+//            while (rs.next()) {
+//                Trip t = new Trip(rs.getInt("id"), rs.getString("departing_at"),
+//                        rs.getString("arriving_at"), rs.getDouble("price"),
+//                        rs.getInt("car_id"), rs.getInt("route_id"));
+//                lt.add(t);
+//            }
+//            return lt;
+//        }
+//    }
 }
