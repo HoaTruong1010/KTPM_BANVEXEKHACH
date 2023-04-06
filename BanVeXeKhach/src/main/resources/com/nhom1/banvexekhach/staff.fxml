@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -13,11 +15,31 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="759.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
    <children>
-      <Label alignment="CENTER" prefHeight="75.0" prefWidth="982.0" text="Quản lý vé xe" textFill="#199e0a">
+      <Label alignment="CENTER" prefHeight="62.0" prefWidth="759.0" text="Quản lý vé xe" textFill="#199e0a">
          <font>
-            <Font name="Arial Bold" size="42.0" />
+            <Font name="Courier New Bold" size="42.0" />
          </font>
       </Label>
+      <HBox prefHeight="32.0" prefWidth="759.0">
+         <children>
+            <Label text="Chào mừng, ">
+               <font>
+                  <Font name="Courier New Bold" size="21.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="lbCurrentUsername" layoutX="10.0" layoutY="10.0" textFill="#0001ff">
+               <font>
+                  <Font name="Courier New Bold Italic" size="21.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets bottom="15.0" />
+         </VBox.margin>
+      </HBox>
       <GridPane alignment="CENTER" prefHeight="284.0" prefWidth="778.0" styleClass="gbBox">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -34,54 +56,95 @@
          <children>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="3">
                <children>
-                  <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đi (*):" />
-                  <TextField fx:id="start" prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch" />
+                  <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đi (*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="start" prefHeight="23.0" prefWidth="210.0" promptText="Vi Thanh" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <Label text="Tìm theo mã vé">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="Courier New Bold" size="20.0" />
                </font>
             </Label>
             <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="5">
                <children>
-                  <Label prefHeight="19.0" prefWidth="120.0" text="Ghế (*):" />
-                  <TextField fx:id="chair" prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch" />
+                  <Label prefHeight="19.0" prefWidth="120.0" text="Ghế (*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="chair" prefHeight="23.0" prefWidth="210.0" promptText="A01" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <HBox layoutX="10.0" layoutY="34.0" prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="4">
                <children>
-                  <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đến (*):" />
-                  <TextField fx:id="end" prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch" />
+                  <Label prefHeight="19.0" prefWidth="120.0" text="Nơi đến(*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="end" prefHeight="23.0" prefWidth="210.0" promptText="Ho Chi Minh" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
-                  <Label prefHeight="19.0" prefWidth="128.0" text="Ngày khởi hành(*):" />
+                  <Label prefHeight="19.0" prefWidth="254.0" text="Ngày khởi hành(*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
                   <DatePicker fx:id="startDate" prefHeight="29.0" prefWidth="210.0" promptText="01/01/2023" />
                </children>
             </HBox>
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Label prefHeight="19.0" prefWidth="128.0" text="Giờ khởi hành (*):" />
-                  <TextField fx:id="startTime" prefHeight="23.0" prefWidth="210.0" promptText="00:00" styleClass="txtSearch" />
+                  <Label prefHeight="19.0" prefWidth="248.0" text="Giờ khởi hành (*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="startTime" prefHeight="23.0" prefWidth="210.0" promptText="00:00" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <HBox prefHeight="44.0" prefWidth="756.0" styleClass="hbSearch" GridPane.rowIndex="1">
                <children>
-                  <Label prefHeight="19.0" prefWidth="120.0" text="Mã vé (*):" />
-                  <TextField fx:id="txtID" prefHeight="23.0" prefWidth="210.0" promptText="123456789" styleClass="txtSearch" />
+                  <Label prefHeight="19.0" prefWidth="120.0" text="Mã vé (*):">
+                     <font>
+                        <Font name="Courier New" size="16.0" />
+                     </font></Label>
+                  <TextField fx:id="txtID" prefHeight="23.0" prefWidth="210.0" promptText="123456789" styleClass="txtSearch">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <Label text="Tìm theo thông tin vé" GridPane.rowIndex="2">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="Courier New Bold" size="20.0" />
                </font>
             </Label>
             <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <TableView fx:id="tbTicket" prefHeight="276.0" prefWidth="778.0" />
+      <TableView fx:id="tbTicket" prefHeight="185.0" prefWidth="759.0" />
+      <Button alignment="TOP_LEFT" blendMode="MULTIPLY" cache="true" mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="36.0" prefWidth="54.0" text="Thoát" textOverrun="CLIP">
+         <font>
+            <Font name="Courier New" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+         </VBox.margin>
+      </Button>
    </children>
 </VBox>
