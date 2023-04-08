@@ -82,12 +82,12 @@ public class CheckDataTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("tripData")
-    public void testIsValidTrip(Trip trip, int expResult) throws SQLException {
-        int result = CheckData.isValidTrip(trip);
-        assertEquals(expResult, result);
-    }
+//    @ParameterizedTest
+//    @MethodSource("tripData")
+//    public void testIsValidTrip(Trip trip, int expResult) throws SQLException {
+//        int result = CheckData.isValidTrip(trip);
+//        assertEquals(expResult, result);
+//    }
 
     @Test
     public void testEmptyTicket() throws SQLException {

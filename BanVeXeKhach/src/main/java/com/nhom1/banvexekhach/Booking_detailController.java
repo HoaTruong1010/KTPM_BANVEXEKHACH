@@ -138,7 +138,7 @@ public class Booking_detailController implements Initializable {
         this.createSeat();
     }
 
-    private CheckBox createCheckBox(int id, String text) {
+    public CheckBox createCheckBox(int id, String text) {
         CheckBox cb = new CheckBox(text);
         cb.setId(String.valueOf(id));
         Font f = new Font("Courier New", 18);

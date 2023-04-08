@@ -58,22 +58,6 @@
                   <Insets right="15.0" />
                </HBox.margin>
             </Button>
-            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#btnSaleTicket_Click" prefHeight="29.0" prefWidth="76.0" text="Bán vé">
-               <font>
-                  <Font name="Courier New" size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="15.0" />
-               </HBox.margin>
-            </Button>
-            <Button alignment="CENTER_RIGHT" layoutX="484.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnBooking_Click" text="Đặt vé">
-               <font>
-                  <Font name="Courier New" size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="15.0" />
-               </HBox.margin>
-            </Button>
             <Button alignment="CENTER_RIGHT" layoutX="616.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnSignout_Click" text="Đăng xuất">
                <font>
                   <Font name="Courier New" size="15.0" />

@@ -165,6 +165,10 @@ public class ChangeTicketController implements Initializable {
         TableColumn colStatus = new TableColumn("Trạng thái");
         colStatus.setCellValueFactory(new PropertyValueFactory("status"));
         colStatus.setPrefWidth(150);
+//      Tạo cột Mã chuyến đi
+        TableColumn colTripID = new TableColumn("Mã chuyến đi");
+        colTripID.setCellValueFactory(new PropertyValueFactory("trip_id"));
+        colTripID.setPrefWidth(150);
 //      Tạo nút xác nhận đổi
         TableColumn colChangeTicket = new TableColumn();
         colChangeTicket.setCellFactory(evt -> {
@@ -177,18 +181,21 @@ public class ChangeTicketController implements Initializable {
                 if (selectedTicket.getStatus().contains("Empty")) {
                     TicketServices s = new TicketServices();
                     try {
-                        if (s.changeTicket(tfTicketChange.getText(), selectedTicket)) {
-                            Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé thành công", Alert.AlertType.INFORMATION);
-                            confirm.showAndWait().ifPresent(a -> {
-                                try {
-                                    btnCloseHandler(e);
-                                } catch (IOException ex) {
-                                    Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            });
-                        } else {
-                            Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
+                        if (!s.isTimeOutToReservedTicket(tfTicketChange.getText())) {
+                            if (s.changeTicket(tfTicketChange.getText(), selectedTicket)) {
+                                Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé thành công", Alert.AlertType.INFORMATION);
+                                confirm.showAndWait().ifPresent(a -> {
+                                    try {
+                                        btnCloseHandler(e);
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                });
+                            } else {
+                                Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
+                            }
                         }
+
                     } catch (SQLException ex) {
                         Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -204,14 +211,12 @@ public class ChangeTicketController implements Initializable {
             cellChange.setGraphic(btnChange);
             return cellChange;
         });
-        this.tbChangeTicket.getColumns().addAll(colIDTicket, colChair, colStatus, colChangeTicket);
+        this.tbChangeTicket.getColumns().addAll(colIDTicket, colChair, colStatus, colTripID, colChangeTicket);
     }
 
     public void loadTableDataChange(String str) throws SQLException {
         TicketServices s1 = new TicketServices();
         List<Ticket> tkChange = null;
-//        System.out.println(this.tfTripTicketChange.getText());
-//        tkChange = s1.getTicketsByStringTripID(this.tfTripTicketChange.getText());
         tkChange = s1.getTicketsByStringTripID(str);
         this.tbChangeTicket.setItems(FXCollections.observableList(tkChange));
     }

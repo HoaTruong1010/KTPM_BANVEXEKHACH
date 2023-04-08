@@ -6,7 +6,7 @@ package com.nhom1.services;
 
 import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Ticket;
-import com.nhom1.pojo.Trip;
+import com.nhom1.pojo.User;
 import com.nhom1.utils.CheckData;
 import java.sql.Connection;
 import java.sql.Date;
@@ -200,6 +200,44 @@ public class TicketServices {
             return false;
         }
     }
+    
+    public static boolean saleTicket(List<Ticket> listTicket, Customer customer, User user) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            conn.setAutoCommit(false);
+            String sql;
+            PreparedStatement stm;
+            int result = 1;
+            if (!CheckData.isReservedTicket(listTicket))
+                if (!CustomerServices.isExistCustomer(customer)) {
+                    sql = "INSERT INTO customer(id, name, phone) "
+                            + "VALUES(?, ?, ?);";
+                    stm = conn.prepareStatement(sql);
+                    stm.setInt(1, customer.getId());
+                    stm.setString(2, customer.getName());
+                    stm.setString(3, customer.getPhone());
+                    result = stm.executeUpdate();
+                    System.out.println(stm);
+                }
+            else
+                return false;
+
+            if (result > 0 && !CheckData.isSoldTicket(listTicket)) {
+                for (Ticket ticket : listTicket) {
+                    sql = "UPDATE ticket SET status = ?, customer_id = ?, print_date = NOW(), user_id = ? WHERE id = ?;";
+                    stm = conn.prepareStatement(sql);
+                    stm.setString(1, "Sold");
+                    stm.setInt(2, customer.getId());                  
+                    stm.setInt(3, user.getId());
+                    stm.setInt(4, ticket.getId());
+                    stm.executeUpdate();
+                }
+                conn.commit();
+                return true;
+            }
+
+            return false;
+        }
+    }
 
     public static boolean changeTicket(String idtk1, Ticket tk2) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
@@ -256,26 +294,18 @@ public class TicketServices {
         }
     }
 
-//    public Ticket cancelTicketBooking() throws SQLException {
-//        Ticket tk  = new Ticket();
-//        try (Connection conn = JDBCUtils.createConn()) {
-//            PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket "
-//                    + "WHERE status = 'Reserved' AND trip_id "
-//                    + "IN (SELECT id FROM `sale-ticket`.trip WHERE departing_at < now() + INTERVAL 30 MINUTE)");
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                tk = new Ticket(rs.getInt("id"), rs.getString("chair"),
-//                        rs.getString("status"), rs.getString("print_date"),
-//                        rs.getInt("trip_id"), rs.getInt("customer_id"),
-//                        rs.getInt("user_id"));
-//                break;
-//                
-//            }
-//            return tk;
-//        }
-//    }
-    
-    public boolean saleTicket(Ticket t){
-        return true;
+    public boolean isTimeOutToReservedTicket(String id) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket "
+                    + "WHERE id = ? AND trip_id IN (SELECT id FROM trip WHERE departing_at < now() + INTERVAL 60 MINUTE)");
+            stm.setString(1, id);
+            ResultSet rs = stm.executeQuery();
+            System.out.println(stm);
+            if (!rs.next()) {
+                return false;           
+            }
+            return true;
+        }
     }
+   
 }
