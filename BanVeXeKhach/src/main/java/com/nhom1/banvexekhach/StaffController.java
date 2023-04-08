@@ -285,6 +285,11 @@ public class StaffController implements Initializable {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         MainController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
+        if (currentUser.getUserRole().equalsIgnoreCase("admin")) {
+            mc.setVisibleBtAdmin(true);
+        } else {
+            mc.setVisibleBtAdmin(false);
+        }
         stage.setScene(new Scene(main));
     }
     

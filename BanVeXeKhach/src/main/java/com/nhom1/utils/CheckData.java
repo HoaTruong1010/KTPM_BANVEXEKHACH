@@ -7,13 +7,11 @@ package com.nhom1.utils;
 import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.services.CarServices;
-import com.nhom1.services.TicketServices;
 import com.nhom1.services.TripServices;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javafx.scene.control.CheckBox;
 
 /**
  *
