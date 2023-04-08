@@ -230,11 +230,11 @@ public class BookingController implements Initializable {
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("staff.fxml"));
         Parent main = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        MainController mc = fxmlLoader.getController();
+        StaffController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
         stage.setScene(new Scene(main));
     }

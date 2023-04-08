@@ -106,7 +106,7 @@ public class Booking_detailController implements Initializable {
         this.reload();
     }
 
-    private CheckBox createCheckBox(int id, String text) {
+    public CheckBox createCheckBox(int id, String text) {
         CheckBox cb = new CheckBox(text);
         cb.setId(String.valueOf(id));
         Font f = new Font("Courier New", 18);
@@ -116,7 +116,7 @@ public class Booking_detailController implements Initializable {
         return cb;
     }
 
-    private void createSeat() throws SQLException {
+    public void createSeat() throws SQLException {
         int tripId = Integer.parseInt(lbID.getText());
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();

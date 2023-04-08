@@ -41,4 +41,33 @@ public class CustomerServices {
             return false;
         }
     }
+    
+    public static boolean isExistCustomer(String name, String phone) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            PreparedStatement stm = conn.prepareStatement("SELECT id FROM customer WHERE name = ? && phone = ?;");
+            stm.setString(1, name);
+            stm.setString(2, phone);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                return true;
+            }
+            return false;
+        }
+    }
+    
+    public static Customer getCustomer(String name, String phone) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            Customer cus;
+            PreparedStatement stm = conn.prepareStatement("SELECT * FROM customer WHERE name = ? && phone = ?;");
+            stm.setString(1, name);
+            stm.setString(2, phone);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                return cus = new Customer(rs.getInt("id"), rs.getString("name"), rs.getString("phone"));
+            }
+            return null;
+        }
+    }
 }

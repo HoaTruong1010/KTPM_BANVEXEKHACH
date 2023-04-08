@@ -52,16 +52,6 @@ public class MainController {
         ac.setCurrentUser(currentUser);
         stage.setScene(new Scene(tripManagement));
     }
-
-    public void btnBooking_Click(ActionEvent e) throws IOException, SQLException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking.fxml"));
-        Parent booking = fxmlLoader.load();
-
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        BookingController bc = fxmlLoader.getController();
-        bc.setCurrentUser(currentUser);
-        stage.setScene(new Scene(booking));
-    }
     
     public void btnStaff_Click(ActionEvent e) throws IOException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("staff.fxml"));
@@ -69,16 +59,6 @@ public class MainController {
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         StaffController bc = fxmlLoader.getController();
-        bc.setCurrentUser(currentUser);
-        stage.setScene(new Scene(booking));
-    }
-    
-    public void btnSaleTicket_Click(ActionEvent e) throws IOException, SQLException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("sale_ticket.fxml"));
-        Parent booking = fxmlLoader.load();
-
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        SaleTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
     }
