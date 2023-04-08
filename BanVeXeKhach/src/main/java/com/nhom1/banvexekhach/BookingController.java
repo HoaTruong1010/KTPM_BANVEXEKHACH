@@ -135,7 +135,7 @@ public class BookingController implements Initializable {
                 }
             }
         };
-        timer.schedule(task, 60 * 5000L);
+        timer.schedule(task,0, 60 * 1000L);
     }
 
     public void reset() {
@@ -223,10 +223,7 @@ public class BookingController implements Initializable {
     }
 
     public void btnReload_Click() throws SQLException {
-        TripServices t = new TripServices();
-        reset();
-
-        this.tableTrip.setItems(FXCollections.observableList(t.loadTrips(null, 0)));
+       this.loadTableData(null, 0);
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
@@ -236,6 +233,11 @@ public class BookingController implements Initializable {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         MainController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
+        if (currentUser.getUserRole().equalsIgnoreCase("admin")) {
+            mc.setVisibleBtAdmin(true);
+        } else {
+            mc.setVisibleBtAdmin(false);
+        }
         stage.setScene(new Scene(main));
     }
 }
