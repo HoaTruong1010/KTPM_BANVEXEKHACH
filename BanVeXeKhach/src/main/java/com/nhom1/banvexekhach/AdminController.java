@@ -116,17 +116,19 @@ public class AdminController implements Initializable {
 
             row.setOnMouseClicked(r -> {
                 Trip trip = this.tableTrip.getSelectionModel().getSelectedItem();
-                this.lbIDText.setVisible(true);
-                this.lbID.setText(String.format("%d", trip.getId()));
-                this.txtDeparting.setText(trip.getDeparting_at());
-                this.txtArriving.setText(trip.getArriving_at());
-                this.txtPrice.setText(String.format("%.1f", trip.getPrice()));
-                this.cbCar.getSelectionModel().select(trip.getCar_id() - 1);
-                this.cbRoute.getSelectionModel().select(trip.getRoute_id() - 1);
+                if (trip != null) {
+                    this.lbIDText.setVisible(true);
+                    this.lbID.setText(String.format("%d", trip.getId()));
+                    this.txtDeparting.setText(trip.getDeparting_at());
+                    this.txtArriving.setText(trip.getArriving_at());
+                    this.txtPrice.setText(String.format("%.1f", trip.getPrice()));
+                    this.cbCar.getSelectionModel().select(trip.getCar_id() - 1);
+                    this.cbRoute.getSelectionModel().select(trip.getRoute_id() - 1);
 
-                btnAdd.setDisable(true);
-                btnEdit.setDisable(false);
-                btnDelete.setDisable(false);
+                    btnAdd.setDisable(true);
+                    btnEdit.setDisable(false);
+                    btnDelete.setDisable(false);
+                }
             });
 
             return row;

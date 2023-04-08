@@ -115,7 +115,7 @@ public class BookingController implements Initializable {
                     this.lbEndText.setText(route.getEnd());
                     btBook.setDisable(false);
                 } catch (SQLException ex) {
-                    Logger.getLogger(BookingController.class.getName()).log(Level.SEVERE, null, ex);
+                    
                 }
             });
 

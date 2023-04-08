@@ -69,7 +69,7 @@ public class Booking_detailController implements Initializable {
     private TextField txtPhone;
     @FXML
     private Label lbCurrentUsername;
-    
+
     private User currentUser;
     Thread bookingDetailThread;
     boolean isRunning = true;
@@ -89,7 +89,7 @@ public class Booking_detailController implements Initializable {
         this.lbCurrentUsername.setText(String.format("%s",
                 currentUser.getName()));
     }
-    
+
     /**
      * @return the lbID
      */
@@ -226,7 +226,6 @@ public class Booking_detailController implements Initializable {
     }
 
     public void btnCancle_Click() throws IOException {
-        isRunning = false;
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("booking.fxml"));
         Parent booking = fxmlLoader.load();
@@ -235,6 +234,7 @@ public class Booking_detailController implements Initializable {
         BookingController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
+
     }
 
     public void reload() {
@@ -252,15 +252,12 @@ public class Booking_detailController implements Initializable {
                             isRunning = false;
                             Alert confirm = new Alert(Alert.AlertType.ERROR);
                             confirm.setContentText("Chuyến đi đã không còn cho phép đặt vé!");
-                            confirm.showAndWait().ifPresent((var res) -> {
-                                if (res == ButtonType.OK) {
-                                    try {
-                                        this.btnCancle_Click();
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                            });
+                            confirm.showAndWait();
+                            try {
+                                this.btnCancle_Click();
+                            } catch (IOException ex) {
+                                Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 } catch (SQLException ex) {
@@ -269,7 +266,11 @@ public class Booking_detailController implements Initializable {
             });
 
             try {
-                Thread.sleep(5000);
+                if (isRunning) {
+                    Thread.sleep(5000);
+                } else {
+                    Thread.sleep(60000);
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
             }
