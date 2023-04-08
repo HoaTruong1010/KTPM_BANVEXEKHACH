@@ -17,20 +17,21 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -68,7 +69,10 @@ public class Booking_detailController implements Initializable {
     private TextField txtPhone;
     @FXML
     private Label lbCurrentUsername;
+    
     private User currentUser;
+    Thread bookingDetailThread;
+    boolean isRunning = true;
 
     /**
      * @return the currentUser
@@ -85,6 +89,34 @@ public class Booking_detailController implements Initializable {
         this.lbCurrentUsername.setText(String.format("%s",
                 currentUser.getName()));
     }
+    
+    /**
+     * @return the lbID
+     */
+    public Label getLbID() {
+        return lbID;
+    }
+
+    /**
+     * @param lbID the lbID to set
+     */
+    public void setLbID(Label lbID) {
+        this.lbID = lbID;
+    }
+
+    /**
+     * @return the lbDeparting
+     */
+    public Label getLbDeparting() {
+        return lbDeparting;
+    }
+
+    /**
+     * @param lbDeparting the lbDeparting to set
+     */
+    public void setLbDeparting(Label lbDeparting) {
+        this.lbDeparting = lbDeparting;
+    }
 
     @FXML
     /**
@@ -92,18 +124,18 @@ public class Booking_detailController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        bookingDetailThread = new Thread(this::reload);
+        bookingDetailThread.start();
     }
 
     public void setTripDetail(Trip trip) throws SQLException {
-        lbID.setText(String.valueOf(trip.getId()));
-        lbDeparting.setText(trip.getDeparting_at());
+        getLbID().setText(String.valueOf(trip.getId()));
+        getLbDeparting().setText(trip.getDeparting_at());
         lbArriving.setText(trip.getArriving_at());
         lbPrice.setText(String.valueOf(trip.getPrice()));
         Route r = RouteServices.getRouteById(trip.getRoute_id());
         lbRoute.setText(String.format("%s - %s", r.getStart(), r.getEnd()));
         this.createSeat();
-        this.reload();
     }
 
     private CheckBox createCheckBox(int id, String text) {
@@ -116,8 +148,8 @@ public class Booking_detailController implements Initializable {
         return cb;
     }
 
-    private void createSeat() throws SQLException {
-        int tripId = Integer.parseInt(lbID.getText());
+    public void createSeat() throws SQLException {
+        int tripId = Integer.parseInt(getLbID().getText());
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();
         gridPane.setMaxHeight(600);
@@ -173,10 +205,10 @@ public class Booking_detailController implements Initializable {
                                 Customer cus = new Customer(CustomerServices.getLastCustomerID() + 1, name, phone);
                                 if (TicketServices.updateTicket(listSelectedTicket, cus)) {
                                     MessageBox.getBox("Information", "Đặt thành công!", Alert.AlertType.INFORMATION).show();
-                                    btnCancle_Click(e);
+                                    btnCancle_Click();
                                 } else {
-                                    MessageBox.getBox("Error", 
-                                            "Có thể ghế đã được thu hồi hoặc được đặt bởi người khác!", 
+                                    MessageBox.getBox("Error",
+                                            "Có thể ghế đã được thu hồi hoặc được đặt bởi người khác!",
                                             Alert.AlertType.ERROR).show();
                                 }
                             } catch (SQLException | IOException ex) {
@@ -193,29 +225,54 @@ public class Booking_detailController implements Initializable {
         }
     }
 
-    public void btnCancle_Click(ActionEvent e) throws IOException {
+    public void btnCancle_Click() throws IOException {
+        isRunning = false;
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("booking.fxml"));
         Parent booking = fxmlLoader.load();
 
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Stage stage = (Stage) getLbID().getScene().getWindow();
         BookingController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
     }
-    
+
     public void reload() {
-        Timer timer = new Timer("Reload");
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
+        while (isRunning) {
+            Platform.runLater(() -> {
                 try {
-                    createSeat();
+                    if (getLbID() != null) {
+                        LocalDateTime departing = LocalDateTime.parse(getLbDeparting().getText(), Trip.formatDate);
+                        Date now = new Date();
+                        long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                        long getDiff = getTime - now.getTime();
+                        if (getDiff > 3600000) {
+                            createSeat();
+                        } else {
+                            isRunning = false;
+                            Alert confirm = new Alert(Alert.AlertType.ERROR);
+                            confirm.setContentText("Chuyến đi đã không còn cho phép đặt vé!");
+                            confirm.showAndWait().ifPresent((var res) -> {
+                                if (res == ButtonType.OK) {
+                                    try {
+                                        this.btnCancle_Click();
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            });
+                        }
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            });
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        };
-        timer.schedule(task, 60*5000L);
+        }
     }
 }
