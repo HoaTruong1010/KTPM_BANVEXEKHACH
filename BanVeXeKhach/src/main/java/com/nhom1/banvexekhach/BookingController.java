@@ -227,11 +227,11 @@ public class BookingController implements Initializable {
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("staff.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
         Parent main = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        StaffController mc = fxmlLoader.getController();
+        MainController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
         if (currentUser.getUserRole().equalsIgnoreCase("admin")) {
             mc.setVisibleBtAdmin(true);

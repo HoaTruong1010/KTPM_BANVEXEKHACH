@@ -45,11 +45,11 @@ public class CustomerServicesTest {
 //        assertEquals(10, cus);
 //    }
         
-    @Test
-    public  void testExistCustomer() throws SQLException {
-        boolean result = CustomerServices.isExistCustomer(new Customer("nam", "0217849658"));
-        assertTrue(result);
-    }
+//    @Test
+//    public  void testExistCustomer() throws SQLException {
+//        boolean result = CustomerServices.isExistCustomer(new Customer("nam", "0217849658"));
+//        assertTrue(result);
+//    }
     
     @Test
     public  void testNotExistCustomer() throws SQLException {

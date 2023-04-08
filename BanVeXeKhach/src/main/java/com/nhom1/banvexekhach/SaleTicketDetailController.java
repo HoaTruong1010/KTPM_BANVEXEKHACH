@@ -21,6 +21,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,6 +31,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -104,7 +106,8 @@ public class SaleTicketDetailController extends Booking_detailController {
                                 }
                                 if (TicketServices.saleTicket(listSelectedTicket, cus, this.getCurrentUser())) {
                                     MessageBox.getBox("Information", "Xuất thành công!", Alert.AlertType.INFORMATION).show();
-                                    btnCancle_Click(e);
+                                    moveToExport(e, listSelectedTicket);
+//                                    btnCancle_Click(e);
                                 } else {
                                     MessageBox.getBox("Error",
                                             "Có thể ghế đã được thu hồi hoặc được xuất bởi người khác!",
@@ -124,7 +127,6 @@ public class SaleTicketDetailController extends Booking_detailController {
         }
     }
 
-    @Override
     public void btnCancle_Click(ActionEvent e) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("sale_ticket.fxml"));
@@ -134,6 +136,27 @@ public class SaleTicketDetailController extends Booking_detailController {
         SaleTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
+    }
+    
+    public void moveToExport(ActionEvent e, List<Ticket> t) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class
+                .getResource("ticket_export.fxml"));
+        Parent booking = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        ExportTicketController bc = fxmlLoader.getController();
+        bc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(booking));
+    }
+    
+    public CheckBox createCheckBox(int id, String text, String status) {
+        CheckBox cb = new CheckBox(text + ", " + status);
+        cb.setId(String.valueOf(id));
+        Font f = new Font("Courier New", 15);
+        cb.setFont(f);
+        Insets i = new Insets(10, 0, 10, 110);
+        cb.setPadding(i);
+        return cb;
     }
 
     @Override
@@ -149,7 +172,7 @@ public class SaleTicketDetailController extends Booking_detailController {
                 int index = row * i + j;
                 if (index < listTicket.size()) {
                     Ticket ticket = listTicket.get(index);
-                    CheckBox chb = super.createCheckBox(ticket.getId(), ticket.getChair());
+                    CheckBox chb = createCheckBox(ticket.getId(), ticket.getChair(), ticket.getStatus());
                     if (!ticket.getStatus().equalsIgnoreCase("Sold")) {
                         chb.setDisable(false);
                     } else {

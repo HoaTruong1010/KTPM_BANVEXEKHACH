@@ -149,11 +149,7 @@ public class Booking_detailController implements Initializable {
     }
 
     public void createSeat() throws SQLException {
-<<<<<<< HEAD
-        int tripId = Integer.parseInt(lbID.getText());
-=======
         int tripId = Integer.parseInt(getLbID().getText());
->>>>>>> 46387201674559fd85331e11110dec76f83d466b
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();
         gridPane.setMaxHeight(600);
