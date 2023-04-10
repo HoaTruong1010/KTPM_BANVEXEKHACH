@@ -179,21 +179,4 @@ public class TripServices {
             return false;
         }
     }
-
-    public Trip getTripByID(int id) throws SQLException {
-        List<Trip> lt = new ArrayList<>();
-        try (Connection conn = JDBCUtils.createConn()) {
-            String sql = "SELECT * FROM `sale-ticket`.trip WHERE id = ?";
-            PreparedStatement stm = conn.prepareStatement(sql);
-            stm.setInt(1, id);
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                Trip t = new Trip(rs.getInt("id"), rs.getString("departing_at"),
-                        rs.getString("arriving_at"), rs.getDouble("price"),
-                        rs.getInt("car_id"), rs.getInt("route_id"));
-                return t;
-            }
-            return null;
-        }
-    }
 }

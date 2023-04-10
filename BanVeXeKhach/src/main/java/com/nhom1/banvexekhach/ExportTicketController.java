@@ -29,10 +29,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
  *
@@ -126,5 +132,15 @@ public class ExportTicketController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(ExportTicketController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void btnCancle_Click(ActionEvent e) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class
+                .getResource("sale_ticket.fxml"));
+        Parent booking = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        SaleTicketController bc = fxmlLoader.getController();
+        bc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(booking));
     }
 }

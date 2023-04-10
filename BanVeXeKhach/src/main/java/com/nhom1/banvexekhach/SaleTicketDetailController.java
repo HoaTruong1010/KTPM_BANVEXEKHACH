@@ -87,7 +87,7 @@ public class SaleTicketDetailController extends Booking_detailController {
     public void btnOK_Click(ActionEvent e) {
         String name = this.txtName.getText();
         String phone = this.txtPhone.getText();
-
+        TicketServices tks = new TicketServices();
         if (name.isEmpty()) {
             MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
         } else {
@@ -108,7 +108,7 @@ public class SaleTicketDetailController extends Booking_detailController {
                                 } else {
                                     cus = CustomerServices.getCustomer(name, phone);
                                 }
-                                if (TicketServices.saleTicket(listSelectedTicket, cus, this.getCurrentUser())) {
+                                if (tks.saleTicket(listSelectedTicket, cus, this.getCurrentUser())) {
                                     MessageBox.getBox("Information", "Xuất thành công!", Alert.AlertType.INFORMATION).show();
                                     try {
                                         moveToExport(e, listSelectedTicket);

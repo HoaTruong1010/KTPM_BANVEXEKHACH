@@ -149,7 +149,7 @@ public class TicketServices {
             return listTicket;
         }
     }
-    
+
     public static List<Ticket> getTicketsByStringTripID(String tripID) throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         try (Connection conn = JDBCUtils.createConn()) {
@@ -200,35 +200,36 @@ public class TicketServices {
             return false;
         }
     }
-    
-    public static boolean saleTicket(List<Ticket> listTicket, Customer customer, User user) throws SQLException {
+
+    public boolean saleTicket(List<Ticket> listTicket, Customer customer, User user) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             conn.setAutoCommit(false);
             String sql;
             PreparedStatement stm;
             int result = 1;
-            if (CheckData.isReservedTicket(listTicket)) {               
-                if (CustomerServices.isExistCustomer(customer)) {
-                    return false;
-                }                  
-            }
+
             if (!CustomerServices.isExistCustomer(customer)) {
-                    sql = "INSERT INTO customer(id, name, phone) "
-                            + "VALUES(?, ?, ?);";
-                    stm = conn.prepareStatement(sql);
-                    stm.setInt(1, customer.getId());
-                    stm.setString(2, customer.getName());
-                    stm.setString(3, customer.getPhone());
-                    result = stm.executeUpdate();
-                    System.out.println(stm);
-                }
+                sql = "INSERT INTO customer(id, name, phone) "
+                        + "VALUES(?, ?, ?);";
+                stm = conn.prepareStatement(sql);
+                stm.setInt(1, customer.getId());
+                stm.setString(2, customer.getName());
+                stm.setString(3, customer.getPhone());
+                result = stm.executeUpdate();
+                System.out.println(stm);
+            }
 
             if (result > 0 && !CheckData.isSoldTicket(listTicket)) {
                 for (Ticket ticket : listTicket) {
+                    if ("Reserved".equals(ticket.getStatus())) {
+                        if (customer.getId() != ticket.getCustomer_id()) {
+                            return false;
+                        }
+                    }
                     sql = "UPDATE ticket SET status = ?, customer_id = ?, print_date = NOW(), user_id = ? WHERE id = ?;";
                     stm = conn.prepareStatement(sql);
                     stm.setString(1, "Sold");
-                    stm.setInt(2, customer.getId());                  
+                    stm.setInt(2, customer.getId());
                     stm.setInt(3, user.getId());
                     stm.setInt(4, ticket.getId());
                     stm.executeUpdate();
@@ -241,7 +242,7 @@ public class TicketServices {
         }
     }
 
-    public static boolean changeTicket(String idtk1, Ticket tk2) throws SQLException {
+    public boolean changeTicket(String idtk1, Ticket tk2) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             boolean flag1 = false;
             boolean flag2 = false;
@@ -284,7 +285,7 @@ public class TicketServices {
         }
     }
 
-    public static void cancelTicket(int id) throws SQLException {
+    public void cancelTicket(int id) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             if (Integer.toString(id) != null && !Integer.toString(id).isEmpty()) {
                 String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ?";
@@ -304,10 +305,10 @@ public class TicketServices {
             ResultSet rs = stm.executeQuery();
             System.out.println(stm);
             if (!rs.next()) {
-                return false;           
+                return false;
             }
             return true;
         }
     }
-   
+
 }
