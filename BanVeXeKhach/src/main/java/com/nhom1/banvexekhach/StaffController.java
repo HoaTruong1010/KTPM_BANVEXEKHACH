@@ -176,14 +176,22 @@ public class StaffController implements Initializable {
         TableColumn colStatus = new TableColumn("Trạng thái");
         colStatus.setCellValueFactory(new PropertyValueFactory("status"));
         colStatus.setPrefWidth(150);
+//      Tạo cột trạng thái của vé
+        TableColumn colPrintDate = new TableColumn("Ngày xuất vé");
+        colPrintDate.setCellValueFactory(new PropertyValueFactory("print_date"));
+        colPrintDate.setPrefWidth(150);
 //      Tạo cột mã chuyến đi
         TableColumn colStartTime = new TableColumn("Mã chuyến đi");
         colStartTime.setCellValueFactory(new PropertyValueFactory("trip_id"));
-        colStartTime.setPrefWidth(120);
+        colStartTime.setPrefWidth(100);
 //      Tạo cột mã khách hàng
         TableColumn colStart = new TableColumn("Khách hàng");
         colStart.setCellValueFactory(new PropertyValueFactory("customer_id"));
-        colStart.setPrefWidth(120);
+        colStart.setPrefWidth(100);
+//      Tạo cột mã khách hàng
+        TableColumn colUser = new TableColumn("Nhân viên");
+        colUser.setCellValueFactory(new PropertyValueFactory("user_id"));
+        colUser.setPrefWidth(100);
 //      Tạo cột với button đổi vé
         TableColumn colChangeTicket = new TableColumn();
         colChangeTicket.setCellFactory(p -> {
@@ -241,8 +249,8 @@ public class StaffController implements Initializable {
             return cellCancel;
         });
 
-        this.tbTicket.getColumns().addAll(colIDTicket, colChair, colStatus,
-                colStartTime, colStart, colChangeTicket, colCancelTicket);
+        this.tbTicket.getColumns().addAll(colIDTicket, colChair, colStatus, colPrintDate,
+                colStartTime, colStart, colUser, colChangeTicket, colCancelTicket);
     }
 
     private void moveToChange(ActionEvent event, Ticket selectedTicket) throws IOException {
@@ -283,5 +291,26 @@ public class StaffController implements Initializable {
             mc.setVisibleBtAdmin(false);
         }
         stage.setScene(new Scene(main));
+    }
+    
+        
+    public void btnSaleTicket_Click(ActionEvent e) throws IOException, SQLException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("sale_ticket.fxml"));
+        Parent booking = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        SaleTicketController bc = fxmlLoader.getController();
+        bc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(booking));
+    }
+
+    public void btnBooking_Click(ActionEvent e) throws IOException, SQLException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking.fxml"));
+        Parent booking = fxmlLoader.load();
+
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        BookingController bc = fxmlLoader.getController();
+        bc.setCurrentUser(currentUser);
+        stage.setScene(new Scene(booking));
     }
 }

@@ -88,4 +88,22 @@ public class CheckData {
         
         return true;
     }
+    
+    public static boolean isSoldTicket(List<Ticket> list) throws SQLException {        
+        for(Ticket ticket : list) {
+            if(!ticket.getStatus().equalsIgnoreCase("Sold"))
+                return false;
+        }
+        
+        return true;
+    }
+    
+    public static boolean isReservedTicket(List<Ticket> list) throws SQLException {        
+        for(Ticket ticket : list) {
+            if(!ticket.getStatus().equalsIgnoreCase("Reserved"))
+                return false;
+        }
+        
+        return true;
+    }
 }

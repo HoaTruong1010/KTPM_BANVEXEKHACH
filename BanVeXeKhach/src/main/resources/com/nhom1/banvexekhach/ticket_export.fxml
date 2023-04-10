@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="507.0" prefWidth="582.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.ExportTicketController">
+   <children>
+      <Label alignment="CENTER" prefHeight="49.0" prefWidth="579.0" text="THẺ LÊN XE/BOARDING PASS" textFill="#9c0b3c">
+         <font>
+            <Font name="Arial Bold" size="20.0" />
+         </font>
+      </Label>
+      <GridPane>
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" prefWidth="267.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" prefWidth="49.0" />
+          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="309.0" minWidth="10.0" prefWidth="266.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER" text="=&gt;" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Label>
+            <Label fx:id="lbStart" text="Label">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Label>
+            <Label fx:id="lbEnd" text="Label" GridPane.columnIndex="2">
+               <font>
+                  <Font name="Arial Bold" size="17.0" />
+               </font></Label>
+         </children>
+      </GridPane>
+      <GridPane prefHeight="383.0" prefWidth="582.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="287.0" minWidth="10.0" prefWidth="210.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="216.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0" minWidth="10.0" prefWidth="156.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="104.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="109.0" minHeight="4.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="118.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+               <children>
+                  <Label prefHeight="19.0" prefWidth="111.0" text="NƠI ĐI/FROM:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbFrom" prefHeight="26.0" prefWidth="330.0">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+               <children>
+                  <Label prefHeight="19.0" prefWidth="112.0" text="NƠI ĐẾN/TO:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbTo" prefHeight="26.0" prefWidth="338.0">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="35.0" prefWidth="582.0" GridPane.columnIndex="1">
+               <children>
+                  <Label text="XE/BUS:">
+                     <HBox.margin>
+                        <Insets right="3.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbBusNumber">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Ã" GridPane.columnIndex="2" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowSpan="3">
+               <children>
+                  <Label fx:id="lbQR" alignment="TOP_LEFT" text="MÃ QR">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label prefHeight="19.0" prefWidth="162.0" text="MÃ VÉ/CODE" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbTicketID" text="1128139619612369">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="3">
+               <children>
+                  <Label prefHeight="19.0" prefWidth="198.0" text="KHỞI HÀNH/DEPARTURE TIME" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lbStartDate" alignment="CENTER" prefHeight="53.0" prefWidth="212.0" text="NÀY" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="4">
+               <children>
+                  <Label text="GHẾ/SEAT:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbSeat" text="A10">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="200.0" text="GIÁ/PRICE:" textFill="#36bc5c" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <Label text="150000" GridPane.columnIndex="2" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="5">
+               <children>
+                  <Label text="HỌ TÊN/NAME:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lbCusName" text="đUUONGGƯ HỮU THÀNH" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <HBox prefHeight="53.0" prefWidth="582.0" GridPane.columnSpan="3" GridPane.rowIndex="7">
+               <children>
+                  <VBox prefHeight="30.0" prefWidth="285.0">
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="285.0" text="Hành khách có mặt tại văn phòng" textFill="#eb1c15">
+                           <font>
+                              <Font name="Arial Italic" size="11.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                        <Label prefHeight="27.0" prefWidth="285.0" text="To be present at this office" textFill="#eb1c15">
+                           <font>
+                              <Font name="Arial Italic" size="11.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="30.0" prefWidth="285.0">
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="285.0" text="Trước giờ khởi hành" textFill="#eb1c15">
+                           <font>
+                              <Font name="Arial Italic" size="11.0" />
+                           </font>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                        </Label>
+                        <Label prefHeight="27.0" prefWidth="285.0" text="Before depature time" textFill="#eb1c15">
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                           <font>
+                              <Font name="Arial Italic" size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="6">
+               <children>
+                  <Label prefHeight="19.0" prefWidth="102.0" text="ĐIỆN THOẠI:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbCusPhone" prefHeight="26.0" prefWidth="132.0">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <children>
+                  <Label text="Lên xe:">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="lbEnter" text="VỊ THANH">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="8">
+               <children>
+                  <Label text="NHÂN VIÊN/EMPLOYEE:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lbUserName" alignment="CENTER" contentDisplay="TOP" prefHeight="26.0" prefWidth="239.0" text="ÁD" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <HBox prefHeight="28.0" prefWidth="582.0" GridPane.rowIndex="9">
+               <children>
+                  <Label text="NGÀY IN/ PRINT DATE:" textFill="#36bc5c">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lbPrintDate" alignment="CENTER" contentDisplay="TOP" prefHeight="26.0" prefWidth="239.0" text="ÁD" GridPane.columnIndex="1" GridPane.rowIndex="9">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+      <HBox alignment="CENTER" prefHeight="46.0" prefWidth="582.0">
+         <children>
+            <Button fx:id="btnClose" minWidth="53.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="53.0" style="-fx-font-size: 13;" text="Hủy" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>

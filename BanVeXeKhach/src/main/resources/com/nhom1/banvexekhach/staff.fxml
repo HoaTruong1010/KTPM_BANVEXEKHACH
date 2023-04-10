@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="605.0" prefWidth="759.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="974.0" stylesheets="@../style/staff.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nhom1.banvexekhach.StaffController">
    <children>
       <Label alignment="CENTER" prefHeight="62.0" prefWidth="759.0" text="Quản lý vé xe" textFill="#199e0a">
          <font>
@@ -40,7 +40,7 @@
             <Insets bottom="15.0" />
          </VBox.margin>
       </HBox>
-      <GridPane alignment="CENTER" prefHeight="284.0" prefWidth="778.0" styleClass="gbBox">
+      <GridPane alignment="CENTER" prefHeight="319.0" prefWidth="974.0" styleClass="gbBox">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -135,16 +135,36 @@
                </font>
             </Label>
             <VBox alignment="CENTER" prefHeight="44.0" prefWidth="756.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="414.0" GridPane.columnIndex="1">
+               <children>
+                  <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#btnSaleTicket_Click" prefHeight="33.0" prefWidth="77.0" style="-fx-font-size: 15;" text="BÁN VÉ">
+                     <font>
+                        <Font name="Arial" size="10.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#btnBooking_Click" style="-fx-font-size: 15;" text="ĐẶT VÉ">
+                     <font>
+                        <Font name="Courier New" size="1.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button alignment="TOP_LEFT" blendMode="MULTIPLY" cache="true" mnemonicParsing="false" onAction="#btnExit_Click" style="-fx-font-size: 15;" text="Thoát" textOverrun="CLIP">
+                     <font>
+                        <Font name="Courier New" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+               </GridPane.margin>
+            </HBox>
          </children>
       </GridPane>
-      <TableView fx:id="tbTicket" prefHeight="185.0" prefWidth="759.0" />
-      <Button alignment="TOP_LEFT" blendMode="MULTIPLY" cache="true" mnemonicParsing="false" onAction="#btnExit_Click" prefHeight="36.0" prefWidth="54.0" text="Thoát" textOverrun="CLIP">
-         <font>
-            <Font name="Courier New" size="12.0" />
-         </font>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" top="10.0" />
-         </VBox.margin>
-      </Button>
+      <TableView fx:id="tbTicket" prefHeight="316.0" prefWidth="974.0" />
    </children>
 </VBox>
