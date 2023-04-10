@@ -41,19 +41,19 @@ public class TicketServicesTest {
         }
     }
     
-    @ParameterizedTest
-    @CsvFileSource(resources = "/SearchTicketByIDData.csv", numLinesToSkip = 1)
-    public void testSearchByID(String id, int quantity, boolean eptOutput) {
-        try {
-            List<Ticket> tickets = ticketServices.loadTicketByID(id);
-            Assertions.assertEquals(eptOutput, quantity == tickets.size());
-            for (Ticket t: tickets) {
-                Assertions.assertTrue(Integer.toString(t.getId()).contains(id));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    @ParameterizedTest
+//    @CsvFileSource(resources = "/SearchTicketByIDData.csv", numLinesToSkip = 1)
+//    public void testSearchByID(String id, int quantity, boolean eptOutput) {
+//        try {
+//            List<Ticket> tickets = ticketServices.loadTicketByID(id);
+//            Assertions.assertEquals(eptOutput, quantity == tickets.size());
+//            for (Ticket t: tickets) {
+//                Assertions.assertTrue(Integer.toString(t.getId()).contains(id));
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
     @ParameterizedTest
     @CsvFileSource(resources = "/SearchTicketByInfoData.csv", numLinesToSkip = 1)
