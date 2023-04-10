@@ -4,14 +4,18 @@
  */
 package com.nhom1.banvexekhach;
 
+//import com.itextpdf.text.DocumentException;
+import com.google.zxing.WriterException;
 import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.User;
 import com.nhom1.services.CustomerServices;
 import com.nhom1.services.TicketServices;
 import com.nhom1.utils.CheckData;
+import com.nhom1.utils.ExportPDF;
 import com.nhom1.utils.MessageBox;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +87,7 @@ public class SaleTicketDetailController extends Booking_detailController {
     public void btnOK_Click(ActionEvent e) {
         String name = this.txtName.getText();
         String phone = this.txtPhone.getText();
-
+        TicketServices tks = new TicketServices();
         if (name.isEmpty()) {
             MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
         } else {
@@ -104,10 +108,13 @@ public class SaleTicketDetailController extends Booking_detailController {
                                 } else {
                                     cus = CustomerServices.getCustomer(name, phone);
                                 }
-                                if (TicketServices.saleTicket(listSelectedTicket, cus, this.getCurrentUser())) {
+                                if (tks.saleTicket(listSelectedTicket, cus, this.getCurrentUser())) {
                                     MessageBox.getBox("Information", "Xuất thành công!", Alert.AlertType.INFORMATION).show();
-                                    moveToExport(e, listSelectedTicket);
-//                                    btnCancle_Click(e);
+                                    try {
+                                        moveToExport(e, listSelectedTicket);
+                                    } catch (WriterException ex) {
+                                        Logger.getLogger(SaleTicketDetailController.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 } else {
                                     MessageBox.getBox("Error",
                                             "Có thể ghế đã được thu hồi hoặc được xuất bởi người khác!",
@@ -131,14 +138,13 @@ public class SaleTicketDetailController extends Booking_detailController {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("sale_ticket.fxml"));
         Parent booking = fxmlLoader.load();
-
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         SaleTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
     }
-    
-    public void moveToExport(ActionEvent e, List<Ticket> t) throws IOException {
+
+    public void moveToExport(ActionEvent e, List<Ticket> t) throws IOException, SQLException, WriterException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("ticket_export.fxml"));
         Parent booking = fxmlLoader.load();
@@ -146,9 +152,12 @@ public class SaleTicketDetailController extends Booking_detailController {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         ExportTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
+        for (Ticket i : t) {
+            bc.setInfoInTicket(i, this.txtName.getText(), this.txtPhone.getText());
+        }
         stage.setScene(new Scene(booking));
     }
-    
+
     public CheckBox createCheckBox(int id, String text, String status) {
         CheckBox cb = new CheckBox(text + ", " + status);
         cb.setId(String.valueOf(id));
