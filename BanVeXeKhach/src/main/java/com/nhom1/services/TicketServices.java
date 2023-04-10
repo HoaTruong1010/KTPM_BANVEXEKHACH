@@ -207,8 +207,12 @@ public class TicketServices {
             String sql;
             PreparedStatement stm;
             int result = 1;
-            if (!CheckData.isReservedTicket(listTicket))
-                if (!CustomerServices.isExistCustomer(customer)) {
+            if (CheckData.isReservedTicket(listTicket)) {               
+                if (CustomerServices.isExistCustomer(customer)) {
+                    return false;
+                }                  
+            }
+            if (!CustomerServices.isExistCustomer(customer)) {
                     sql = "INSERT INTO customer(id, name, phone) "
                             + "VALUES(?, ?, ?);";
                     stm = conn.prepareStatement(sql);
@@ -218,8 +222,6 @@ public class TicketServices {
                     result = stm.executeUpdate();
                     System.out.println(stm);
                 }
-            else
-                return false;
 
             if (result > 0 && !CheckData.isSoldTicket(listTicket)) {
                 for (Ticket ticket : listTicket) {
