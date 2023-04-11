@@ -71,6 +71,7 @@ public class SaleTicketDetailController extends Booking_detailController {
     private User currentUser;
     boolean isContinued = true;
     boolean isResetTicket = true;
+    int selectedCusID = 0;
 
     /**
      * @return the lbID
@@ -217,8 +218,24 @@ public class SaleTicketDetailController extends Booking_detailController {
                             .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 try {
                                     Ticket selectedTicket = TicketServices.getTicketById(Integer.parseInt(chb.getId()));
+                                    CustomerServices cs = new CustomerServices();
+                                    Customer cus = cs.getCustomerByID(selectedTicket.getCustomer_id());
                                     if (newValue) {
                                         listSelectedTicket.add(selectedTicket);
+                                        if (this.txtName.getText() != "" && this.txtPhone.getText() != "")
+                                            if (cus != null)
+                                                if (!cus.getName().equals(this.txtName.getText()) && !cus.getPhone().equals(this.txtPhone.getText())) {
+                                                    MessageBox.getBox("Warning", "Khách đặt không trùng khớp!", Alert.AlertType.WARNING).show();
+                                                    listSelectedTicket.remove(selectedTicket);
+                                                    chb.setSelected(false);
+                                                    cus.setName(this.txtName.getText());
+                                                    cus.setPhone(this.txtPhone.getText());
+                                                }
+                                                
+                                        if (cus != null) {                          
+                                            this.txtName.setText(cus.getName());
+                                            this.txtPhone.setText(cus.getPhone());
+                                        }
                                     } else {
                                         listSelectedTicket.remove(selectedTicket);
                                     }
