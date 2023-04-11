@@ -84,7 +84,7 @@ public class SaleTicketController extends BookingController implements Initializ
             Date now = new Date();
             long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long getDiff = getTime - now.getTime();
-            return getDiff > 5000;
+            return getDiff > 60000;
 
         }).collect(Collectors.toList());
 
@@ -100,7 +100,7 @@ public class SaleTicketController extends BookingController implements Initializ
             Date now = new Date();
             long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long getDiff = getTime - now.getTime();
-            return getDiff > 5000;
+            return getDiff > 60000;
 
         }).collect(Collectors.toList());
         
