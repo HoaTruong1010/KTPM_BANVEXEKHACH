@@ -69,4 +69,16 @@ public class CustomerServices {
             return null;
         }
     }
+    public Customer getCustomerByID(int id) throws SQLException {
+        try (Connection conn = JDBCUtils.createConn()) {
+            PreparedStatement stm = conn.prepareStatement("SELECT * FROM customer WHERE id = ?;");
+            stm.setInt(1, id);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                return new Customer(rs.getInt("id"), rs.getString("name"), rs.getString("phone"));
+            }
+            return null;
+        }
+    }
 }

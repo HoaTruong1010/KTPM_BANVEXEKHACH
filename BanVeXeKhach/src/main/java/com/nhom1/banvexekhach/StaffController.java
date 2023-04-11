@@ -9,6 +9,7 @@ import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
 import com.nhom1.services.TicketServices;
 import com.nhom1.services.TripServices;
+import com.nhom1.utils.CheckData;
 import com.nhom1.utils.ExportPDF;
 import com.nhom1.utils.MessageBox;
 import java.io.IOException;
@@ -88,7 +89,7 @@ public class StaffController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            
+
             this.loadTableTicket();
             this.loadTableDataByID(null);
             this.reload();
@@ -148,7 +149,7 @@ public class StaffController implements Initializable {
             }
         });
     }
-    
+
     public void reload() {
         Timer timer = new Timer("Reload");
         TimerTask task = new TimerTask() {
@@ -202,18 +203,29 @@ public class StaffController implements Initializable {
                 Button b = (Button) e.getSource();
                 TableCell cell = (TableCell) b.getParent();
                 Ticket t = (Ticket) cell.getTableRow().getItem();
-                if (!t.getStatus().contains("Reserved")) {
-                    Alert confirm = MessageBox.getBox("Đổi vé", "Vé chưa đặt không thể đổi vé.\nVui lòng đặt!!!", Alert.AlertType.WARNING);
-                    confirm.showAndWait();
-                } else {
-                    try {
-                        // Load FXML popup
-                        this.moveToChange(e, t);
-                    } catch (IOException ex) {
-                        Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
 
+                try {
+                    Trip trip = TripServices.getTripById(t.getTrip_id());
+
+                    if (CheckData.isChoosing(trip.getDeparting_at(), (1000 * 60 * 60))) {
+                        if (!t.getStatus().contains("Reserved")) {
+                            Alert confirm = MessageBox.getBox("Đổi vé", "Vé chưa đặt không thể đổi vé.\nVui lòng đặt!!!", Alert.AlertType.WARNING);
+                            confirm.showAndWait();
+                        } else {
+                            try {
+                                // Load FXML popup
+                                this.moveToChange(e, t);
+                            } catch (IOException ex) {
+                                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    } else {
+                        MessageBox.getBox("Error", "Vé đã quá thời gian cho phép đổi!", Alert.AlertType.ERROR).show();
+                        loadTableDataByID(null);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
             TableCell cellChange = new TableCell();
             cellChange.setGraphic(btnChange);
@@ -270,7 +282,7 @@ public class StaffController implements Initializable {
     private void loadTableDataByID(String id) throws SQLException {
         TicketServices s = new TicketServices();
         List<Ticket> tk = s.loadTicketByID(id);
-        this.tbTicket.setItems(FXCollections.observableList(tk));    
+        this.tbTicket.setItems(FXCollections.observableList(tk));
     }
 
     private void loadTableDataByInfo(String start, String end, String chair, LocalDate startDate, String startTime) throws SQLException {
@@ -278,7 +290,7 @@ public class StaffController implements Initializable {
         List<Ticket> tk = s.loadTicketByInfo(start, end, chair, startDate, startTime);
         this.tbTicket.setItems(FXCollections.observableList(tk));
     }
-  
+
     public void btnExit_Click(ActionEvent e) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
         Parent main = fxmlLoader.load();
@@ -293,8 +305,7 @@ public class StaffController implements Initializable {
         }
         stage.setScene(new Scene(main));
     }
-    
-        
+
     public void btnSaleTicket_Click(ActionEvent e) throws IOException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("sale_ticket.fxml"));
         Parent booking = fxmlLoader.load();
