@@ -8,6 +8,7 @@ package com.nhom1.banvexekhach;
 import com.google.zxing.WriterException;
 import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Ticket;
+import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
 import com.nhom1.services.CustomerServices;
 import com.nhom1.services.TicketServices;
@@ -17,10 +18,14 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +69,16 @@ public class SaleTicketDetailController extends Booking_detailController {
     @FXML
     private Label lbCurrentUsername;
     private User currentUser;
+    boolean isContinued = true;
+    boolean isResetTicket = true;
+
+    /**
+     * @return the lbID
+     */
+    @Override
+    public Label getLbID() {
+        return lbID;
+    }
 
     /**
      * @return the currentUser
@@ -119,6 +134,7 @@ public class SaleTicketDetailController extends Booking_detailController {
                                     MessageBox.getBox("Error",
                                             "Có thể ghế đã được thu hồi hoặc được xuất bởi người khác!",
                                             Alert.AlertType.ERROR).show();
+                                    createSeat();
                                 }
                             } catch (SQLException | IOException ex) {
                                 Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,11 +150,14 @@ public class SaleTicketDetailController extends Booking_detailController {
         }
     }
 
-    public void btnCancle_Click(ActionEvent e) throws IOException {
+    @Override
+    public void btnCancle_Click() throws IOException {
+        isContinued = false;
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("sale_ticket.fxml"));
         Parent booking = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+        Stage stage = (Stage) getLbID().getScene().getWindow();
         SaleTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
         stage.setScene(new Scene(booking));
@@ -163,19 +182,23 @@ public class SaleTicketDetailController extends Booking_detailController {
         cb.setId(String.valueOf(id));
         Font f = new Font("Courier New", 15);
         cb.setFont(f);
-        Insets i = new Insets(10, 0, 10, 110);
+        Insets i = new Insets(10, 0, 10, 90);
         cb.setPadding(i);
         return cb;
     }
 
     @Override
     public void createSeat() throws SQLException {
-        int tripId = Integer.parseInt(lbID.getText());
+        listSelectedTicket.clear();
+        int tripId = Integer.parseInt(getLbID().getText());
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();
         gridPane.setMaxHeight(600);
         int col = 3;
-        int row = listTicket.size() / col + 1;
+        int row = listTicket.size() / col;
+        if (listTicket.size() % col != 0) {
+            row += 1;
+        }
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {
                 int index = row * i + j;
@@ -184,8 +207,10 @@ public class SaleTicketDetailController extends Booking_detailController {
                     CheckBox chb = createCheckBox(ticket.getId(), ticket.getChair(), ticket.getStatus());
                     if (!ticket.getStatus().equalsIgnoreCase("Sold")) {
                         chb.setDisable(false);
+                        chb.setSelected(false);
                     } else {
                         chb.setDisable(true);
+                        chb.setSelected(true);
                     }
 
                     chb.selectedProperty()
@@ -207,5 +232,36 @@ public class SaleTicketDetailController extends Booking_detailController {
             }
         }
         root.add(gridPane, 0, 2);
+    }
+
+    @Override
+    public void reload() {
+        while (isContinued) {
+            Platform.runLater(() -> {
+                if (getLbID() != null) {
+                    if (!CheckData.isChoosing(getLbDeparting().getText(), 300000)) {
+                        isContinued = false;
+                        Alert confirm = new Alert(Alert.AlertType.ERROR);
+                        confirm.setContentText("Chuyến đi đã không còn cho phép bán vé!");
+                        confirm.showAndWait();
+                        try {
+                            this.btnCancle_Click();
+                        } catch (IOException ex) {
+                            Logger.getLogger(SaleTicketDetailController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            });
+
+            try {
+                if (isContinued) {
+                    Thread.sleep(5000);
+                } else {
+                    Thread.sleep(60 * 60000);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

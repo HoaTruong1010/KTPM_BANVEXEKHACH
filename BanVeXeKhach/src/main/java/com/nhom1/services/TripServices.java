@@ -4,13 +4,17 @@
  */
 package com.nhom1.services;
 
+import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.utils.CheckData;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +86,21 @@ public class TripServices {
         }
     }
 
+    public static List<Trip> getTripsByDeparting(int second) throws SQLException {
+        TripServices t = new TripServices();
+        List<Trip> list = t.loadTrips(null, 0);
+
+        list = list.stream().filter((Trip x) -> {
+            LocalDateTime departing = LocalDateTime.parse(x.getDeparting_at(), Trip.formatDate);
+            Date now = new Date();
+            long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long getDiff = getTime - now.getTime();
+            return getDiff <= second;
+        }).collect(Collectors.toList());
+
+        return list;
+    }
+
     public int addTrip(Trip trip, int numChair) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             conn.setAutoCommit(false);
@@ -141,6 +160,17 @@ public class TripServices {
                 stm.setInt(6, trip.getId());
 
                 stm.executeUpdate();
+                
+                List<Ticket> listTicket = TicketServices.getTicketsByTripID(trip.getId());
+                for (Ticket ticket: listTicket) {
+                    sql = "UPDATE ticket SET status = ? WHERE id = ? and status = ?;";
+                    PreparedStatement stm2 = conn.prepareStatement(sql);
+                    stm2.setString(1, "Empty");
+                    stm2.setInt(2, ticket.getId());
+                    stm2.setString(3, "Recall");
+
+                    stm2.executeUpdate();
+                }
 
                 conn.commit();
             }

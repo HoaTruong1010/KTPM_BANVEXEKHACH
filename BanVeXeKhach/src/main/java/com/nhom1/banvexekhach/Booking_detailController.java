@@ -32,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -149,12 +150,16 @@ public class Booking_detailController implements Initializable {
     }
 
     public void createSeat() throws SQLException {
+        listSelectedTicket.clear();
         int tripId = Integer.parseInt(getLbID().getText());
         List<Ticket> listTicket = TicketServices.getTicketsByTripID(tripId);
         GridPane gridPane = new GridPane();
         gridPane.setMaxHeight(600);
         int col = 3;
-        int row = listTicket.size() / col + 1;
+        int row = listTicket.size() / col;
+        if (listTicket.size() % col != 0) {
+            row += 1;
+        }
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {
                 int index = row * i + j;
@@ -163,8 +168,10 @@ public class Booking_detailController implements Initializable {
                     CheckBox chb = this.createCheckBox(ticket.getId(), ticket.getChair());
                     if (ticket.getStatus().equalsIgnoreCase("Empty")) {
                         chb.setDisable(false);
+                        chb.setSelected(false);
                     } else {
                         chb.setDisable(true);
+                        chb.setSelected(true);
                     }
 
                     chb.selectedProperty()
@@ -210,6 +217,7 @@ public class Booking_detailController implements Initializable {
                                     MessageBox.getBox("Error",
                                             "Có thể ghế đã được thu hồi hoặc được đặt bởi người khác!",
                                             Alert.AlertType.ERROR).show();
+                                    createSeat();
                                 }
                             } catch (SQLException | IOException ex) {
                                 Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
@@ -226,6 +234,7 @@ public class Booking_detailController implements Initializable {
     }
 
     public void btnCancle_Click() throws IOException {
+        isRunning = false;
         FXMLLoader fxmlLoader = new FXMLLoader(App.class
                 .getResource("booking.fxml"));
         Parent booking = fxmlLoader.load();
@@ -240,36 +249,26 @@ public class Booking_detailController implements Initializable {
     public void reload() {
         while (isRunning) {
             Platform.runLater(() -> {
-                try {
-                    if (getLbID() != null) {
-                        LocalDateTime departing = LocalDateTime.parse(getLbDeparting().getText(), Trip.formatDate);
-                        Date now = new Date();
-                        long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                        long getDiff = getTime - now.getTime();
-                        if (getDiff > 3600000) {
-                            createSeat();
-                        } else {
-                            isRunning = false;
-                            Alert confirm = new Alert(Alert.AlertType.ERROR);
-                            confirm.setContentText("Chuyến đi đã không còn cho phép đặt vé!");
-                            confirm.showAndWait();
-                            try {
-                                this.btnCancle_Click();
-                            } catch (IOException ex) {
-                                Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                if (getLbID() != null) {
+                    if (!CheckData.isChoosing(getLbDeparting().getText(), 3600000)) {
+                        isRunning = false;
+                        Alert confirm = new Alert(Alert.AlertType.ERROR);
+                        confirm.setContentText("Chuyến đi đã không còn cho phép đặt vé!");
+                        confirm.showAndWait();
+                        try {
+                            this.btnCancle_Click();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
 
             try {
                 if (isRunning) {
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 } else {
-                    Thread.sleep(60000);
+                    Thread.sleep(60 * 60000);
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
