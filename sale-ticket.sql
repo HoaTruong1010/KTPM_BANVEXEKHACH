@@ -38,7 +38,7 @@ CREATE TABLE `car` (
 
 LOCK TABLES `car` WRITE;
 /*!40000 ALTER TABLE `car` DISABLE KEYS */;
-INSERT INTO `car` VALUES (1,'93A-11232','XeB',20),(2,'93A-11236','XeC',30),(3,'93A-11234','XeA',20),(4,'93B-19102','XeD',20),(5,'93H-19668','xeF',30);
+INSERT INTO `car` VALUES (1,'93A-11232','XeA',20),(2,'93A-11236','XeB',30),(3,'93A-11234','XeC',20),(4,'93B-19102','XeD',20),(5,'93H-19668','xeF',30);
 /*!40000 ALTER TABLE `car` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,7 +55,7 @@ CREATE TABLE `customer` (
   `phone` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `route` (
   `end` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +90,7 @@ CREATE TABLE `route` (
 
 LOCK TABLES `route` WRITE;
 /*!40000 ALTER TABLE `route` DISABLE KEYS */;
-INSERT INTO `route` VALUES (1,'Vi Thanh','Ho Chi Minh'),(2,'Tay Son','Ho Chi Minh'),(3,'Vi Thanh ','Ca Mau'),(4,'Ho Chi Minh','Dong Nai'),(5,'Da Lat','Ho Chi Minh');
+INSERT INTO `route` VALUES (1,'Vi Thanh','Ho Chi Minh'),(2,'Ho Chi Minh','Vi Thanh'),(3,'Dong Nai','Ho Chi Minh'),(4,'Ho Chi Minh','Dong Nai'),(5,'Da Lat','Ho Chi Minh'),(6,'Ho Chi Minh','Da Lat');
 /*!40000 ALTER TABLE `route` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +117,7 @@ CREATE TABLE `ticket` (
   CONSTRAINT `fk1_trip_ticket` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk2_customer_ticket` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT,
   CONSTRAINT `fk3_user_ticket` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +126,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (1,'A10','Sold','2022-11-11 00:00:00',1,1,1),(2,'A1','Empty',NULL,2,NULL,NULL),(3,'A2','Reserved','2022-11-11 00:00:00',1,2,3),(4,'A3','Sold','2022-11-12 00:00:00',1,3,4),(5,'A4','Empty',NULL,3,NULL,NULL),(7,'1','Empty',NULL,5,NULL,NULL),(8,'2','Empty',NULL,5,NULL,NULL),(9,'3','Empty',NULL,5,NULL,NULL),(10,'4','Empty',NULL,5,NULL,NULL),(11,'5','Empty',NULL,5,NULL,NULL),(12,'6','Empty',NULL,5,NULL,NULL),(13,'7','Empty',NULL,5,NULL,NULL),(14,'8','Empty',NULL,5,NULL,NULL),(15,'9','Empty',NULL,5,NULL,NULL),(16,'10','Empty',NULL,5,NULL,NULL),(17,'11','Empty',NULL,5,NULL,NULL),(18,'12','Empty',NULL,5,NULL,NULL),(19,'13','Empty',NULL,5,NULL,NULL),(20,'14','Empty',NULL,5,NULL,NULL),(21,'15','Empty',NULL,5,NULL,NULL),(22,'16','Empty',NULL,5,NULL,NULL),(23,'17','Empty',NULL,5,NULL,NULL),(24,'18','Empty',NULL,5,NULL,NULL),(25,'19','Empty',NULL,5,NULL,NULL),(26,'20','Empty',NULL,5,NULL,NULL);
+INSERT INTO `ticket` VALUES (1,'1','Empty',NULL,1,NULL,NULL),(2,'2','Empty',NULL,1,NULL,NULL),(3,'3','Empty',NULL,1,NULL,NULL),(4,'4','Empty',NULL,1,NULL,NULL),(5,'5','Empty',NULL,1,NULL,NULL),(6,'6','Empty',NULL,1,NULL,NULL),(7,'7','Empty',NULL,1,NULL,NULL),(8,'8','Empty',NULL,1,NULL,NULL),(9,'9','Empty',NULL,1,NULL,NULL),(10,'10','Empty',NULL,1,NULL,NULL),(11,'11','Empty',NULL,1,NULL,NULL),(12,'12','Empty',NULL,1,NULL,NULL),(13,'13','Empty',NULL,1,NULL,NULL),(14,'14','Empty',NULL,1,NULL,NULL),(15,'15','Empty',NULL,1,NULL,NULL),(16,'16','Empty',NULL,1,NULL,NULL),(17,'17','Empty',NULL,1,NULL,NULL),(18,'18','Empty',NULL,1,NULL,NULL),(19,'19','Empty',NULL,1,NULL,NULL),(20,'20','Empty',NULL,1,NULL,NULL),(21,'1','Empty',NULL,2,NULL,NULL),(22,'2','Empty',NULL,2,NULL,NULL),(23,'3','Empty',NULL,2,NULL,NULL),(24,'4','Empty',NULL,2,NULL,NULL),(25,'5','Empty',NULL,2,NULL,NULL),(26,'6','Empty',NULL,2,NULL,NULL),(27,'7','Empty',NULL,2,NULL,NULL),(28,'8','Empty',NULL,2,NULL,NULL),(29,'9','Empty',NULL,2,NULL,NULL),(30,'10','Empty',NULL,2,NULL,NULL),(31,'11','Empty',NULL,2,NULL,NULL),(32,'12','Empty',NULL,2,NULL,NULL),(33,'13','Empty',NULL,2,NULL,NULL),(34,'14','Empty',NULL,2,NULL,NULL),(35,'15','Empty',NULL,2,NULL,NULL),(36,'16','Empty',NULL,2,NULL,NULL),(37,'17','Empty',NULL,2,NULL,NULL),(38,'18','Empty',NULL,2,NULL,NULL),(39,'19','Empty',NULL,2,NULL,NULL),(40,'20','Empty',NULL,2,NULL,NULL),(41,'1','Empty',NULL,3,NULL,NULL),(42,'2','Empty',NULL,3,NULL,NULL),(43,'3','Empty',NULL,3,NULL,NULL),(44,'4','Empty',NULL,3,NULL,NULL),(45,'5','Empty',NULL,3,NULL,NULL),(46,'6','Empty',NULL,3,NULL,NULL),(47,'7','Empty',NULL,3,NULL,NULL),(48,'8','Empty',NULL,3,NULL,NULL),(49,'9','Empty',NULL,3,NULL,NULL),(50,'10','Empty',NULL,3,NULL,NULL),(51,'11','Empty',NULL,3,NULL,NULL),(52,'12','Empty',NULL,3,NULL,NULL),(53,'13','Empty',NULL,3,NULL,NULL),(54,'14','Empty',NULL,3,NULL,NULL),(55,'15','Empty',NULL,3,NULL,NULL),(56,'16','Empty',NULL,3,NULL,NULL),(57,'17','Empty',NULL,3,NULL,NULL),(58,'18','Empty',NULL,3,NULL,NULL),(59,'19','Empty',NULL,3,NULL,NULL),(60,'20','Empty',NULL,3,NULL,NULL),(61,'21','Empty',NULL,3,NULL,NULL),(62,'22','Empty',NULL,3,NULL,NULL),(63,'23','Empty',NULL,3,NULL,NULL),(64,'24','Empty',NULL,3,NULL,NULL),(65,'25','Empty',NULL,3,NULL,NULL),(66,'26','Empty',NULL,3,NULL,NULL),(67,'27','Empty',NULL,3,NULL,NULL),(68,'28','Empty',NULL,3,NULL,NULL),(69,'29','Empty',NULL,3,NULL,NULL),(70,'30','Empty',NULL,3,NULL,NULL),(71,'1','Empty',NULL,4,NULL,NULL),(72,'2','Empty',NULL,4,NULL,NULL),(73,'3','Empty',NULL,4,NULL,NULL),(74,'4','Empty',NULL,4,NULL,NULL),(75,'5','Empty',NULL,4,NULL,NULL),(76,'6','Empty',NULL,4,NULL,NULL),(77,'7','Empty',NULL,4,NULL,NULL),(78,'8','Empty',NULL,4,NULL,NULL),(79,'9','Empty',NULL,4,NULL,NULL),(80,'10','Empty',NULL,4,NULL,NULL),(81,'11','Empty',NULL,4,NULL,NULL),(82,'12','Empty',NULL,4,NULL,NULL),(83,'13','Empty',NULL,4,NULL,NULL),(84,'14','Empty',NULL,4,NULL,NULL),(85,'15','Empty',NULL,4,NULL,NULL),(86,'16','Empty',NULL,4,NULL,NULL),(87,'17','Empty',NULL,4,NULL,NULL),(88,'18','Empty',NULL,4,NULL,NULL),(89,'19','Empty',NULL,4,NULL,NULL),(90,'20','Empty',NULL,4,NULL,NULL),(91,'21','Empty',NULL,4,NULL,NULL),(92,'22','Empty',NULL,4,NULL,NULL),(93,'23','Empty',NULL,4,NULL,NULL),(94,'24','Empty',NULL,4,NULL,NULL),(95,'25','Empty',NULL,4,NULL,NULL),(96,'26','Empty',NULL,4,NULL,NULL),(97,'27','Empty',NULL,4,NULL,NULL),(98,'28','Empty',NULL,4,NULL,NULL),(99,'29','Empty',NULL,4,NULL,NULL),(100,'30','Empty',NULL,4,NULL,NULL),(101,'1','Empty',NULL,5,NULL,NULL),(102,'2','Empty',NULL,5,NULL,NULL),(103,'3','Empty',NULL,5,NULL,NULL),(104,'4','Empty',NULL,5,NULL,NULL),(105,'5','Empty',NULL,5,NULL,NULL),(106,'6','Empty',NULL,5,NULL,NULL),(107,'7','Empty',NULL,5,NULL,NULL),(108,'8','Empty',NULL,5,NULL,NULL),(109,'9','Empty',NULL,5,NULL,NULL),(110,'10','Empty',NULL,5,NULL,NULL),(111,'11','Empty',NULL,5,NULL,NULL),(112,'12','Empty',NULL,5,NULL,NULL),(113,'13','Empty',NULL,5,NULL,NULL),(114,'14','Empty',NULL,5,NULL,NULL),(115,'15','Empty',NULL,5,NULL,NULL),(116,'16','Empty',NULL,5,NULL,NULL),(117,'17','Empty',NULL,5,NULL,NULL),(118,'18','Empty',NULL,5,NULL,NULL),(119,'19','Empty',NULL,5,NULL,NULL),(120,'20','Empty',NULL,5,NULL,NULL),(121,'1','Empty',NULL,6,NULL,NULL),(122,'2','Empty',NULL,6,NULL,NULL),(123,'3','Empty',NULL,6,NULL,NULL),(124,'4','Empty',NULL,6,NULL,NULL),(125,'5','Empty',NULL,6,NULL,NULL),(126,'6','Empty',NULL,6,NULL,NULL),(127,'7','Empty',NULL,6,NULL,NULL),(128,'8','Empty',NULL,6,NULL,NULL),(129,'9','Empty',NULL,6,NULL,NULL),(130,'10','Empty',NULL,6,NULL,NULL),(131,'11','Empty',NULL,6,NULL,NULL),(132,'12','Empty',NULL,6,NULL,NULL),(133,'13','Empty',NULL,6,NULL,NULL),(134,'14','Empty',NULL,6,NULL,NULL),(135,'15','Empty',NULL,6,NULL,NULL),(136,'16','Empty',NULL,6,NULL,NULL),(137,'17','Empty',NULL,6,NULL,NULL),(138,'18','Empty',NULL,6,NULL,NULL),(139,'19','Empty',NULL,6,NULL,NULL),(140,'20','Empty',NULL,6,NULL,NULL);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +150,7 @@ CREATE TABLE `trip` (
   KEY `fk_route_trip` (`route_id`),
   CONSTRAINT `fk_car_trip` FOREIGN KEY (`car_id`) REFERENCES `car` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_route_trip` FOREIGN KEY (`route_id`) REFERENCES `route` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +159,7 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (1,'2022-11-15 09:45:00','2022-11-15 10:45:00',250,1,4),(2,'2023-04-12 13:12:00','2023-04-12 15:15:00',150,2,2),(3,'2022-11-16 20:00:00','2022-11-16 22:00:00',150,4,3),(4,'2022-11-17 00:00:00','2022-11-17 01:00:00',150,2,4),(5,'2023-04-12 13:15:00','2023-04-13 01:15:00',150,1,2);
+INSERT INTO `trip` VALUES (1,'2023-04-28 01:00:00','2023-04-28 04:45:00',150,1,1),(2,'2023-04-28 05:45:00','2023-04-28 09:15:00',150,1,2),(3,'2023-04-28 01:00:00','2023-04-28 02:00:00',120,2,3),(4,'2023-04-28 03:00:00','2023-04-28 04:00:00',120,2,4),(5,'2023-04-28 01:15:00','2023-04-28 05:45:00',400,3,5),(6,'2023-04-28 06:45:00','2023-04-28 11:00:00',400,3,6);
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,7 +188,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'u1','1','Employee','Truong Thi Kim Hoa'),(2,'u2','1','Employee','Tran Nguyen Hong An'),(3,'u3','1','Employee','Nguyen Van Hau'),(4,'u4','1','Employee','Quach Phu Hao');
+INSERT INTO `user` VALUES (1,'u1','1','Admin','Truong Thi Kim Hoa'),(2,'u2','1','Employee','Tran Nguyen Hong An'),(3,'u3','1','Employee','Nguyen Van Hau'),(4,'u4','1','Employee','Quach Phu Hao');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -201,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-30 21:46:02
+-- Dump completed on 2023-04-11 22:31:03

@@ -128,7 +128,7 @@ public class TicketServices {
             while (rs.next()) {
                 return rs.getInt("id");
             }
-            return -1;
+            return 0;
         }
     }
 
