@@ -74,7 +74,7 @@ public class TripServices {
         return t;
     }
 
-    private int getLastTripId() throws SQLException {
+    public int getLastTripId() throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             PreparedStatement stm = conn.prepareStatement("SELECT id FROM trip ORDER BY id DESC LIMIT 1;");
 

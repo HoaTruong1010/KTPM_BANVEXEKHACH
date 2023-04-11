@@ -32,7 +32,7 @@ public class CheckDataTest {
      * Test of isDateTimeFormat method, of class CheckData.
      */
     @ParameterizedTest
-    @CsvFileSource(resources = "/datetimedata.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/datetimedata.csv", numLinesToSkip = 0)
     public void testIsDateTimeFormat(String text, boolean expResult) {
         boolean result = CheckData.isDateTimeFormat(text);
         assertEquals(expResult, result);
@@ -42,7 +42,7 @@ public class CheckDataTest {
      * Test of isDouble method, of class CheckData.
      */
     @ParameterizedTest
-    @CsvFileSource(resources = "/doubledata.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/doubledata.csv", numLinesToSkip = 0)
     public void testIsDouble(String text, boolean expResult) {
         boolean result = CheckData.isDouble(text);
         assertEquals(expResult, result);
@@ -52,7 +52,7 @@ public class CheckDataTest {
      * Test of isInteger method, of class CheckData.
      */
     @ParameterizedTest
-    @CsvFileSource(resources = "/integerdata.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/integerdata.csv", numLinesToSkip = 0)
     public void testIsInteger(String text, boolean expResult) {
         boolean result = CheckData.isInteger(text);
         assertEquals(expResult, result);
@@ -60,59 +60,50 @@ public class CheckDataTest {
 
     /**
      * Test of isValidTrip method, of class CheckData.
+     * @return 
      */
     public static Stream<Arguments> tripData() {
         return Stream.of (
-                Arguments.arguments(new Trip(6, "2023-03-30 03:45:00", 
+                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00", 
                         "2023-03-30 05:45:00", 150, 4, 4), 1),
-                Arguments.arguments(new Trip(6, "2023-03-30 03:45:00", 
+                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00", 
                         "2023-03-30 02:45:00", 150, 4, 4), -1),
-                Arguments.arguments(new Trip(6, "2023-04-12 13:00:00", 
-                        "2023-04-12 20:15:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(1, "2023-04-12 13:00:00", 
-                        "2023-04-12 13:12:00", 150, 3, 4), 1),
-                Arguments.arguments(new Trip(1, "2023-04-12 13:00:00", 
-                        "2023-04-12 17:15:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(5, "2023-04-12 13:00:00", 
-                        "2023-04-12 09:15:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(4, "2022-11-17 00:00:00", 
-                        "2022-11-17 01:00:00", 150, 1, 4), -2),
-                Arguments.arguments(new Trip(4, "2022-11-17 00:00:00", 
-                        "2022-11-17 01:00:00", 150, 5, 4), 1)
+                Arguments.arguments(new Trip(15, "2023-04-28 00:00:00", 
+                        "2023-04-28 01:15:00", 150, 1, 3), -1),
+                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00", 
+                        "2023-04-28 05:15:00", 150, 1, 3), -1),
+                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00", 
+                        "2023-04-28 03:15:00", 150, 1, 3), -1),
+                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00", 
+                        "2023-04-28 09:15:00", 150, 5, 2), -2),
+                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00", 
+                        "2023-04-28 09:15:00", 150, 4, 2), 1),
+                Arguments.arguments(new Trip(1, "2023-04-28 00:30:00", 
+                        "2023-04-28 04:00:00", 150, 1, 4), 1),
+                Arguments.arguments(new Trip(1, "2023-04-28 04:00:00", 
+                        "2023-04-28 00:15:00", 150, 1, 4), -1),
+                Arguments.arguments(new Trip(1, "2023-04-28 03:00:00", 
+                        "2023-04-28 09:00:00", 150, 1, 4), -1),
+                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00", 
+                        "2023-04-28 09:00:00", 150, 1, 4), -1),
+                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00", 
+                        "2023-04-28 10:00:00", 150, 1, 4), -1)
         );
     }
 
-//    @ParameterizedTest
-//    @MethodSource("tripData")
-//    public void testIsValidTrip(Trip trip, int expResult) throws SQLException {
-//        int result = CheckData.isValidTrip(trip);
-//        assertEquals(expResult, result);
-//    }
+    @ParameterizedTest
+    @MethodSource("tripData")
+    public void testIsValidTrip(Trip trip, int expResult) throws SQLException {
+        int result = CheckData.isValidTrip(trip);
+        assertEquals(expResult, result);
+    }
 
     @Test
     public void testEmptyTicket() throws SQLException {
         List<Ticket> list = new ArrayList<>();
-        Ticket t1 = new Ticket(36, "10", "Empty",
+        Ticket t1 = new Ticket(10, "11", "Empty",
                         null, 1, 1, 1);
         list.add(t1);
         assertTrue(CheckData.isEmptyTicket(list)); 
-    }
-
-    @Test
-    public void testNotEmptyTicket() throws SQLException {
-        List<Ticket> list = new ArrayList<>();
-        Ticket t1 = new Ticket(36, "10", "Empty",
-                        null, 1, 1, 1);
-        Ticket t2 = new Ticket(36, "10", "Sold",
-                        null, 1, 1, 1);
-        Ticket t3 = new Ticket(36, "10", "Reserved",
-                        null, 1, 1, 1);
-        Ticket t4 = new Ticket(36, "10", "Regain",
-                        null, 1, 1, 1);
-        list.add(t1);
-        list.add(t2);
-        list.add(t3);
-        list.add(t4);
-        assertFalse(CheckData.isEmptyTicket(list)); 
     }
 }

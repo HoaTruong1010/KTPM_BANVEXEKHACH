@@ -61,14 +61,17 @@ public class CheckData {
         LocalDateTime fixedTripArriving = LocalDateTime.parse(fixedTrip.getArriving_at(), formatter);
         LocalDateTime dynamicTripDeparting = LocalDateTime.parse(dynamicTrip.getDeparting_at(), formatter);
         LocalDateTime dynamicTripArriving = LocalDateTime.parse(dynamicTrip.getArriving_at(), formatter);
-        if (fixedTrip.getId() != dynamicTrip.getId()
-                && fixedTrip.getCar_id() == dynamicTrip.getCar_id()) {
-            if (fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripArriving.isBefore(dynamicTripDeparting)) {
-                return true;
+        if (fixedTripDeparting.isBefore(fixedTripArriving)) {
+            if (fixedTrip.getId() != dynamicTrip.getId()
+                    && fixedTrip.getCar_id() == dynamicTrip.getCar_id()) {
+                if (fixedTripArriving.isBefore(dynamicTripDeparting)) {
+                    return true;
+                }
+                return  fixedTripDeparting.isAfter(dynamicTripArriving);
             }
-            return fixedTripDeparting.isBefore(fixedTripArriving) && fixedTripDeparting.isAfter(dynamicTripArriving);
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static int isValidTrip(Trip trip) throws SQLException {
@@ -86,14 +89,13 @@ public class CheckData {
         return 1;
     }
 
-    public static boolean isChoosing(String tripDeparting, int second){
+    public static boolean isChoosing(String tripDeparting, int second) {
         LocalDateTime departing = LocalDateTime.parse(tripDeparting, Trip.formatDate);
         Date now = new Date();
         long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long getDiff = getTime - now.getTime();
         return getDiff > second;
     }
-    
 
     public static boolean isEmptyTicket(List<Ticket> list) throws SQLException {
         for (Ticket ticket : list) {
