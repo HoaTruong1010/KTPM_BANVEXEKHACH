@@ -5,15 +5,23 @@
 package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Route;
+import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
+import com.nhom1.services.TicketServices;
 import com.nhom1.services.TripServices;
+import com.nhom1.utils.CheckData;
+import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -23,6 +31,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -84,7 +93,7 @@ public class SaleTicketController extends BookingController implements Initializ
             Date now = new Date();
             long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long getDiff = getTime - now.getTime();
-            return getDiff > 5000;
+            return getDiff > 300000;
 
         }).collect(Collectors.toList());
 
@@ -100,26 +109,32 @@ public class SaleTicketController extends BookingController implements Initializ
             Date now = new Date();
             long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long getDiff = getTime - now.getTime();
-            return getDiff > 5000;
+            return getDiff > 300000;
 
         }).collect(Collectors.toList());
-        
+
         reset();
         this.tableTrip.setItems(FXCollections.observableList(list));
     }
 
     @Override
     public void btnBook_Click(ActionEvent e) throws IOException, SQLException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("sale_ticket_detail.fxml"));
-        Parent bookingDetail = fxmlLoader.load();
-
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
-        SaleTicketDetailController bdc = fxmlLoader.getController();
-        bdc.setTripDetail(selectedTrip);
-        bdc.setCurrentUser(currentUser);
-        stage.setScene(new Scene(bookingDetail));
+        if (CheckData.isChoosing(selectedTrip.getDeparting_at(), (1000 * 60 * 5))) {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("sale_ticket_detail.fxml"));
+            Parent bookingDetail = fxmlLoader.load();
+
+            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            SaleTicketDetailController bdc = fxmlLoader.getController();
+            bdc.setTripDetail(selectedTrip);
+            bdc.setCurrentUser(currentUser);
+            stage.setScene(new Scene(bookingDetail));
+        } else {
+            MessageBox.getBox("Error", "Chuyến đi đã không còn cho phép bán vé!", Alert.AlertType.ERROR).show();
+            this.btnReload_Click();
+        }
     }
+
     @Override
     public void btnExit_Click(ActionEvent e) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("staff.fxml"));
@@ -129,5 +144,38 @@ public class SaleTicketController extends BookingController implements Initializ
         StaffController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
         stage.setScene(new Scene(main));
+    }
+
+    public static void recall() throws SQLException {
+        List<Trip> list = TripServices.getTripsByDeparting(1000 * 60 * 5);
+        for (Trip trip : list) {
+            List<Ticket> listTicket = TicketServices.getTicketsByTripID(trip.getId());
+            TicketServices.recallTicket(listTicket);
+        }
+    }
+
+    public static void resetTicket() throws SQLException {
+        List<Trip> list = TripServices.getTripsByDeparting(1000 * 60 * 30);
+        for (Trip trip : list) {
+            List<Ticket> listTicket = TicketServices.getTicketsByTripID(trip.getId());
+            TicketServices.resetTicket(listTicket);
+        }
+    }
+
+    @Override
+    public void reload() {
+        Timer timer = new Timer("Reload");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    recall();
+                    resetTicket();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        timer.schedule(task, 0, 5000L);
     }
 }

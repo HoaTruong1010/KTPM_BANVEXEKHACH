@@ -14,13 +14,8 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -106,16 +101,18 @@ public class BookingController implements Initializable {
             TableRow row = new TableRow();
 
             row.setOnMouseClicked(r -> {
-                try {
-                    Route route = RouteServices.getRouteById(
-                            this.tableTrip.getSelectionModel().getSelectedItem().getRoute_id());
-                    this.lbStart.setVisible(true);
-                    this.lbStartText.setText(route.getStart());
-                    this.lbEnd.setVisible(true);
-                    this.lbEndText.setText(route.getEnd());
-                    btBook.setDisable(false);
-                } catch (SQLException ex) {
-                    
+                if (!row.isEmpty()) {
+                    try {
+                        Route route = RouteServices.getRouteById(
+                                this.tableTrip.getSelectionModel().getSelectedItem().getRoute_id());
+                        this.lbStart.setVisible(true);
+                        this.lbStartText.setText(route.getStart());
+                        this.lbEnd.setVisible(true);
+                        this.lbEndText.setText(route.getEnd());
+                        btBook.setDisable(false);
+                    } catch (SQLException ex) {
+
+                    }
                 }
             });
 
@@ -123,21 +120,10 @@ public class BookingController implements Initializable {
         });
     }
 
-    public void reload() {
-        Timer timer = new Timer("Reload");
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    loadTableData(null, 0);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Booking_detailController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-        timer.schedule(task,0, 60 * 1000L);
+    public void reload() throws SQLException {
+        
     }
-
+    
     public void reset() {
         this.lbStart.setVisible(false);
         this.lbStartText.setText("");
@@ -154,12 +140,7 @@ public class BookingController implements Initializable {
         List<Trip> list = t.loadTrips(kw, routeID);
 
         list = list.stream().filter((Trip x) -> {
-            LocalDateTime departing = LocalDateTime.parse(x.getDeparting_at(), Trip.formatDate);
-            Date now = new Date();
-            long getTime = departing.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            long getDiff = getTime - now.getTime();
-            return getDiff > 3600000;
-
+            return CheckData.isChoosing(x.getDeparting_at(), (1000 * 60 * 60));
         }).collect(Collectors.toList());
 
         this.tableTrip.setItems(FXCollections.observableList(list));
@@ -211,33 +192,34 @@ public class BookingController implements Initializable {
     }
 
     public void btnBook_Click(ActionEvent e) throws IOException, SQLException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking_detail.fxml"));
-        Parent bookingDetail = fxmlLoader.load();
-
-        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Trip selectedTrip = this.tableTrip.getSelectionModel().getSelectedItem();
-        Booking_detailController bdc = fxmlLoader.getController();
-        bdc.setTripDetail(selectedTrip);
-        bdc.setCurrentUser(currentUser);
-        stage.setScene(new Scene(bookingDetail));
+        if (CheckData.isChoosing(selectedTrip.getDeparting_at(), (1000 * 60 * 60))) {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("booking_detail.fxml"));
+            Parent bookingDetail = fxmlLoader.load();
+
+            Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            Booking_detailController bdc = fxmlLoader.getController();
+            bdc.setTripDetail(selectedTrip);
+            bdc.setCurrentUser(currentUser);
+            stage.setScene(new Scene(bookingDetail));
+        } else {
+            MessageBox.getBox("Error", "Chuyến đi đã không còn cho phép đặt vé!", Alert.AlertType.ERROR).show();
+            this.btnReload_Click();
+        }
     }
 
     public void btnReload_Click() throws SQLException {
-       this.loadTableData(null, 0);
+        this.loadTableData(null, 0);
+        reset();
     }
 
     public void btnExit_Click(ActionEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("main.fxml"));
-        Parent main = fxmlLoader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("staff.fxml"));
+        Parent staff = fxmlLoader.load();
 
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        MainController mc = fxmlLoader.getController();
+        StaffController mc = fxmlLoader.getController();
         mc.setCurrentUser(currentUser);
-        if (currentUser.getUserRole().equalsIgnoreCase("admin")) {
-            mc.setVisibleBtAdmin(true);
-        } else {
-            mc.setVisibleBtAdmin(false);
-        }
-        stage.setScene(new Scene(main));
+        stage.setScene(new Scene(staff));
     }
 }
