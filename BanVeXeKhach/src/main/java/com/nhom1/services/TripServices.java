@@ -82,7 +82,7 @@ public class TripServices {
             while (rs.next()) {
                 return rs.getInt("id");
             }
-            return -1;
+            return 0;
         }
     }
 
@@ -124,7 +124,7 @@ public class TripServices {
                 int ticketID = TicketServices.getLastTicketId();
                 for (int i = 1; i <= numChair; i++) {
                     sql = "INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
-                            + "VALUES(?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?);";
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?);";
                     PreparedStatement stm2 = conn.prepareStatement(sql);
                     stm2.setInt(1, ticketID + i);
                     stm2.setString(2, String.format("%d", i));
