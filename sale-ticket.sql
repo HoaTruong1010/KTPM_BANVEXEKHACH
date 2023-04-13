@@ -64,7 +64,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Jonny','0359874164'),(2,'Adam','0387746946'),(3,'Smith','0955478635'),(4,'Keilly','0966471234'),(5,'Siu','0177658368'),(6,'test','000000000');
+INSERT INTO `customer` VALUES (1,'Jonny','0359874164'),(2,'Adam','0387746946'),(3,'Smith','0955478635'),(4,'Keilly','0966471234'),(5,'Siu','0177658368');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
