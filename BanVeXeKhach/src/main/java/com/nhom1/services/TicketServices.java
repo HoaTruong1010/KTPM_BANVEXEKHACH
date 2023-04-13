@@ -173,7 +173,6 @@ public class TicketServices {
             conn.setAutoCommit(false);
             String sql;
             PreparedStatement stm;
-            int result = 1;
             if (!CustomerServices.isExistCustomer(customer)) {
                 sql = "INSERT INTO customer(id, name, phone) "
                         + "VALUES(?, ?, ?);";
@@ -181,12 +180,12 @@ public class TicketServices {
                 stm.setInt(1, customer.getId());
                 stm.setString(2, customer.getName());
                 stm.setString(3, customer.getPhone());
-                result = stm.executeUpdate();
+                stm.executeUpdate();
             } else {
                 customer = CustomerServices.getCustomer(customer.getName(), customer.getPhone());
             }
 
-            if (result > 0 && CheckData.isEmptyTicket(listTicket)) {
+            if (CheckData.isEmptyTicket(listTicket)) {
                 for (Ticket ticket : listTicket) {
                     sql = "UPDATE ticket SET status = ?, customer_id = ? WHERE id = ?;";
                     stm = conn.prepareStatement(sql);

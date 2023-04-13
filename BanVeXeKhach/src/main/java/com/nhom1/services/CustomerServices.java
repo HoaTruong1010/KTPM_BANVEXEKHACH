@@ -9,12 +9,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author HOA TRƯƠNG
  */
-public class CustomerServices {   
+public class CustomerServices {  
+    public static List<Customer> loadTrips() throws SQLException {
+        List<Customer> list = new ArrayList<>();
+
+        try (Connection conn = JDBCUtils.createConn()) {
+            String sql = "SELECT * FROM customer";            
+
+            PreparedStatement stm = conn.prepareStatement(sql);
+            
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Customer cus = new Customer(rs.getInt("id"), rs.getString("name"),
+                        rs.getString("phone"));
+                list.add(cus);
+            }
+        }
+
+        return list;
+    }
 
     public static int getLastCustomerID() throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {

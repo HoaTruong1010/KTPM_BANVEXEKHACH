@@ -26,22 +26,23 @@ import org.junit.jupiter.params.provider.CsvFileSource;
  * @author HOA TRƯƠNG
  */
 public class TripServicesTest {
+
     private static Connection conn;
     private static TripServices tripServies;
-    
+
     @BeforeAll
     public static void BeforeALL() throws SQLException {
         conn = JDBCUtils.createConn();
         tripServies = new TripServices();
     }
-    
+
     @AfterAll
     public static void AfterAll() throws SQLException {
         if (conn != null) {
             conn.close();
         }
     }
-        
+
     @ParameterizedTest
     @CsvFileSource(resources = "/searchdata.csv", numLinesToSkip = 0)
     public void testSearch(String text, int routeID, boolean expResult) throws SQLException {
@@ -49,88 +50,102 @@ public class TripServicesTest {
         boolean result = !listSearch.isEmpty();
         assertEquals(expResult, result);
     }
-    
+
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, -100})
-    public  void testGetNullTripByID(int id) throws SQLException {
+    public void testGetNullTripByID(int id) throws SQLException {
         Trip trip = TripServices.getTripById(id);
         assertNull(trip);
     }
-    
+
     @ParameterizedTest
     @ValueSource(ints = {1, 2})
-    public  void testGetValidTripByID(int id) throws SQLException {
+    public void testGetValidTripByID(int id) throws SQLException {
         Trip trip = TripServices.getTripById(id);
         assertNotNull(trip);
     }
-    
+
     public static Stream<Arguments> addTripData() {
-        return Stream.of (
-                Arguments.arguments(new Trip("2023-04-28 01:45:00", 
+        return Stream.of(
+                Arguments.arguments(new Trip("2023-04-28 01:45:00",
                         "2023-04-28 05:45:00", 150, 4, 5), 1),
-                Arguments.arguments(new Trip("2023-04-28 01:45:00", 
+                Arguments.arguments(new Trip("2023-04-28 01:45:00",
                         "2023-04-28 00:45:00", 150, 4, 5), -1),
-                Arguments.arguments(new Trip("2023-04-28 01:45:00", 
+                Arguments.arguments(new Trip("2023-04-28 01:45:00",
                         "2023-04-28 05:45:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip("2023-04-28 00:30:00", 
+                Arguments.arguments(new Trip("2023-04-28 00:30:00",
                         "2023-04-28 02:30:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip("2023-04-28 01:30:00", 
+                Arguments.arguments(new Trip("2023-04-28 01:30:00",
                         "2023-04-28 03:30:00", 150, 1, 2), -1)
         );
     }
-    
+
     @ParameterizedTest
     @MethodSource("addTripData")
     public void testAddTrip(Trip trip, int expResult) throws SQLException {
+        int total = 0;
+        if (expResult == 1) {
+            total = tripServies.loadTrips(null, 1).size() + 1;
+        }
         int numChair = CarServices.getCarById(trip.getCar_id()).getSumChair();
         int result = tripServies.addTrip(trip, numChair);
-        
+
         assertEquals(expResult, result);
+        if (expResult == 1) {
+            assertEquals(total, tripServies.loadTrips(null, 1).size());
+        }
     }
-        
+
     public static Stream<Arguments> editTripData() throws SQLException {
         int tripID = tripServies.getLastTripId();
-        return Stream.of (
-                Arguments.arguments(new Trip(tripID, "2023-04-28 00:45:00", 
+        return Stream.of(
+                Arguments.arguments(new Trip(tripID, "2023-04-28 00:45:00",
                         "2023-04-28 04:15:00", 150, 4, 5), 1),
-                Arguments.arguments(new Trip(tripID, "2023-04-29 01:00:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-29 01:00:00",
                         "2023-04-29 04:45:00", 150, 3, 5), 1),
-                Arguments.arguments(new Trip(tripID, "2023-04-29 06:45:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-29 06:45:00",
                         "2023-04-29 10:45:00", 150, 1, 5), 1),
-                Arguments.arguments(new Trip(tripID, "2023-04-28 06:45:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-28 06:45:00",
                         "2023-04-28 01:45:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip(tripID, "2023-04-28 06:45:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-28 06:45:00",
                         "2023-04-28 08:45:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip(tripID, "2023-04-28 04:45:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-28 04:45:00",
                         "2023-04-28 08:45:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip(tripID, "2023-04-28 04:45:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-28 04:45:00",
                         "2023-04-28 10:45:00", 150, 1, 5), -1),
-                Arguments.arguments(new Trip(tripID, "2023-04-29 01:00:00", 
+                Arguments.arguments(new Trip(tripID, "2023-04-29 01:00:00",
                         "2023-04-29 04:45:00", 150, 5, 5), -2)
         );
     }
-    
+
     @ParameterizedTest
     @MethodSource("editTripData")
-    public  void testEditTrip(Trip trip, int expResult) throws SQLException {       
+    public void testEditTrip(Trip trip, int expResult) throws SQLException {
         int result = tripServies.editTrip(trip);
         assertEquals(expResult, result);
     }
-        
+
     public static Stream<Arguments> deleteTripData() throws SQLException {
         int tripID = tripServies.getLastTripId();
-        return Stream.of (
-                Arguments.arguments(new Trip(tripID, "2023-03-30 03:45:00", 
+        return Stream.of(
+                Arguments.arguments(new Trip(tripID, "2023-03-30 03:45:00",
                         "2023-03-30 05:45:00", 250, 3, 5), true),
-                Arguments.arguments(new Trip(100, "2023-03-30 03:45:00", 
+                Arguments.arguments(new Trip(100, "2023-03-30 03:45:00",
                         "2023-03-30 05:45:00", 250, 3, 5), false)
         );
     }
-    
+
     @ParameterizedTest
     @MethodSource("deleteTripData")
-    public  void testDeleteTrip(Trip trip, boolean expResult) throws SQLException {
+    public void testDeleteTrip(Trip trip, boolean expResult) throws SQLException {
+        int total = 0;
+        if (expResult) {
+            total = tripServies.loadTrips(null, 1).size() - 1;
+        }
         boolean result = tripServies.deleteTrip(trip);
         assertEquals(expResult, result);
+        if (expResult) {
+            assertEquals(total, tripServies.loadTrips(null, 1).size());
+        }
     }
 }
