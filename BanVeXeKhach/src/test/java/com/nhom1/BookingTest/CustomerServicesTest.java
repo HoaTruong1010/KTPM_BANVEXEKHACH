@@ -42,14 +42,14 @@ public class CustomerServicesTest {
 //    @Test
 //    public  void testGetLastCustomerID() throws SQLException {
 //        int cus = CustomerServices.getLastCustomerID();
-//        assertEquals(10, cus);
+//        assertEquals(5, cus);
 //    }
         
-//    @Test
-//    public  void testExistCustomer() throws SQLException {
-//        boolean result = CustomerServices.isExistCustomer(new Customer("nam", "0217849658"));
-//        assertTrue(result);
-//    }
+    @Test
+    public  void testExistCustomer() throws SQLException {
+        boolean result = CustomerServices.isExistCustomer(new Customer("Jonny", "0359874164"));
+        assertTrue(result);
+    }
     
     @Test
     public  void testNotExistCustomer() throws SQLException {

@@ -73,7 +73,7 @@
             <Insets left="30.0" />
          </GridPane.margin>
       </Button>
-      <Button alignment="CENTER" layoutX="192.0" layoutY="345.0" mnemonicParsing="false" prefWidth="120.0" text="Đăng ký" textFill="RED" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+      <Button alignment="CENTER" layoutX="192.0" layoutY="345.0" mnemonicParsing="false" onAction="#btnExit_Click" prefWidth="120.0" text="Thoát" textFill="RED" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font>

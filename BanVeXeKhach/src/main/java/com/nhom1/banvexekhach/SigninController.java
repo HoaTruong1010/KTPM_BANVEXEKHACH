@@ -22,6 +22,10 @@ public class SigninController {
     @FXML
     private TextField txtPassword;
     
+    public void btnExit_Click() {
+        System.exit(0);
+    }
+    
     public void btnSignin_Click(ActionEvent e) throws IOException, SQLException {
         User u = UserServices.getUserByUsername(txtUsername.getText(), txtPassword.getText());
         if (u != null) {
