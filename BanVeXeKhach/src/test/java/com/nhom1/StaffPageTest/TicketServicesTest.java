@@ -205,7 +205,7 @@ public class TicketServicesTest {
     }
 
     //prepare data for all behind testing
-    private void insertTicketAfterTest(int ticketID, String status, String printDate) throws SQLException {
+    private void insertTicketBeforeTest(int ticketID, String status, String printDate) throws SQLException {
         PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?);");
         stm.setInt(1, ticketID);
@@ -229,7 +229,7 @@ public class TicketServicesTest {
     public void testUpdateTicketSuccessWithExistCustomer() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Empty", null);
+        insertTicketBeforeTest(ticketID, "Empty", null);
         int totalCustomer = CustomerServices.loadTrips().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
@@ -245,7 +245,7 @@ public class TicketServicesTest {
     public void testUpdateTicketSuccessWithNotExistCustomer() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Empty", null);
+        insertTicketBeforeTest(ticketID, "Empty", null);
         int totalCustomer = CustomerServices.loadTrips().size() + 1;
 
         listTicket.add(TicketServices.getTicketById(ticketID));
@@ -261,7 +261,7 @@ public class TicketServicesTest {
     public void testUpdateTicketFailure() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Recall", null);
+        insertTicketBeforeTest(ticketID, "Recall", null);
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Customer customer = CustomerServices.getCustomer("Adam", "0387746946");
@@ -276,7 +276,7 @@ public class TicketServicesTest {
     public void testRecallTicketSuccess() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Empty", null);
+        insertTicketBeforeTest(ticketID, "Empty", null);
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Assertions.assertTrue(TicketServices.recallTicket(listTicket));
@@ -289,7 +289,7 @@ public class TicketServicesTest {
     public void testRecallTicketFailure() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Reserved", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(ticketID, "Reserved", "2023-04-13 22:50:00");
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Assertions.assertFalse(TicketServices.recallTicket(listTicket));
@@ -303,7 +303,7 @@ public class TicketServicesTest {
     public void testResetTicketSuccess() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Reserved", null);
+        insertTicketBeforeTest(ticketID, "Reserved", null);
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Assertions.assertTrue(TicketServices.resetTicket(listTicket));
@@ -316,7 +316,7 @@ public class TicketServicesTest {
     public void testResetTicketFailureNo1() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Reserved", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(ticketID, "Reserved", "2023-04-13 22:50:00");
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Assertions.assertFalse(TicketServices.resetTicket(listTicket));
@@ -329,7 +329,7 @@ public class TicketServicesTest {
     public void testResetTicketFailureNo2() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Empty", null);
+        insertTicketBeforeTest(ticketID, "Empty", null);
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Assertions.assertFalse(TicketServices.resetTicket(listTicket));
