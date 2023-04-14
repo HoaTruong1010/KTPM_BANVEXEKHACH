@@ -62,7 +62,7 @@ public class CustomerServices {
             return false;
         }
     }
-    
+    //còn cần test
     public static boolean isExistCustomer(String name, String phone) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             PreparedStatement stm = conn.prepareStatement("SELECT id FROM customer WHERE name = ? && phone = ?;");

@@ -53,6 +53,26 @@ public class TicketServicesTest {
         }
     }
 
+    //prepare data for all behind testing
+    private void insertTicketAfterTest(int ticketID, String status, String printDate) throws SQLException {
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?);");
+        stm.setInt(1, ticketID);
+        stm.setString(2, "test");
+        stm.setString(3, status);
+        stm.setString(4, printDate);
+        stm.setInt(5, 1);
+        stm.setInt(6, 1);
+        stm.setInt(7, 1);
+        stm.executeUpdate();
+    }
+
+    private void deleteTicketAfterTest(int ticketID) throws SQLException {
+        PreparedStatement stm = conn.prepareStatement("DELETE FROM ticket WHERE id = ?");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+    }
+
     @ParameterizedTest
     @CsvFileSource(resources = "/searchTicketByIDData.csv", numLinesToSkip = 1)
     public void testSearchByID(String id, int quantity, boolean eptOutput) {
@@ -120,10 +140,11 @@ public class TicketServicesTest {
         }
     }
 
+    //Test mua vé rỗng thành công
     @Test
-    public void testSaleSuccessful() throws SQLException {
+    public void testSaleSuccessful1() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
-        for (int i = 246; i <= 249; i++) {
+        for (int i = 4; i <= 8; i++) {
             PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
             stm.setInt(1, i);
 
@@ -143,14 +164,14 @@ public class TicketServicesTest {
             boolean actual = ticketServices.saleTicket(tickets, cus, u3);
             Assertions.assertTrue(actual);
 
-            for (int i = 246; i <= 249; i++) {
+            for (int i = 4; i <= 8; i++) {
                 PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
                 stm.setInt(1, i);
 
                 ResultSet rs = stm.executeQuery();
                 Assertions.assertNotNull(rs.next());
                 Assertions.assertEquals("Sold", rs.getString("status"));
-                Assertions.assertEquals(4, rs.getInt("trip_id"));
+                Assertions.assertEquals(1, rs.getInt("trip_id"));
                 PreparedStatement stm1 = conn.prepareCall("UPDATE ticket SET status = 'Empty',"
                         + " customer_id = null, print_date = null, user_id = null WHERE id = ?");
                 stm1.setInt(1, i);
@@ -162,10 +183,11 @@ public class TicketServicesTest {
         }
     }
 
+    //Test mua vé đã có người đặt thành công (người đặt đúng là người mua)
     @Test
-    public void testSaleFail() throws SQLException {
+    public void testSaleSuccessful2() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
-        for (int i = 250; i <= 252; i++) {
+        for (int i = 1; i <= 3; i++) {
             PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
             stm.setInt(1, i);
 
@@ -179,22 +201,22 @@ public class TicketServicesTest {
             }
         }
         User u3 = new User(3, "u3", "1", "Employee", "Nguyen Van Hau");
-//        Customer cus1 = new Customer(3, "Smith", "0955478635");
-        Customer cus2 = new Customer(2, "Adam", "03877469461");
+        Customer cus = new Customer(2, "Adam", "0387746946");
 
         try {
-            boolean actual = ticketServices.saleTicket(tickets, cus2, u3);
-            Assertions.assertFalse(actual);
+            boolean actual = ticketServices.saleTicket(tickets, cus, u3);
+            Assertions.assertTrue(actual);
 
-            for (int i = 250; i <= 252; i++) {
+            for (int i = 1; i <= 3; i++) {
                 PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
                 stm.setInt(1, i);
 
                 ResultSet rs = stm.executeQuery();
                 Assertions.assertNotNull(rs.next());
-                Assertions.assertEquals(4, rs.getInt("trip_id"));
-                PreparedStatement stm1 = conn.prepareCall("UPDATE ticket SET status = 'Empty',"
-                        + " customer_id = null, print_date = null, user_id = null WHERE id = ?");
+                Assertions.assertEquals("Sold", rs.getString("status"));
+                Assertions.assertEquals(1, rs.getInt("trip_id"));
+                PreparedStatement stm1 = conn.prepareCall("UPDATE ticket SET status = 'Reserved',"
+                        + " customer_id = 2, print_date = null, user_id = null WHERE id = ?");
                 stm1.setInt(1, i);
 
                 stm1.executeUpdate();
@@ -204,24 +226,70 @@ public class TicketServicesTest {
         }
     }
 
-    //prepare data for all behind testing
-    private void insertTicketAfterTest(int ticketID, String status, String printDate) throws SQLException {
-        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?);");
-        stm.setInt(1, ticketID);
-        stm.setString(2, "test");
-        stm.setString(3, status);
-        stm.setString(4, printDate);
-        stm.setInt(5, 1);
-        stm.setInt(6, 1);
-        stm.setInt(7, 1);
-        stm.executeUpdate();
+    //Test mua vé đã có người đặt thất bại (người đặt không phải người mua)
+    @Test
+    public void testSaleFail1() throws SQLException {
+        List<Ticket> tickets = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
+            stm.setInt(1, i);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Ticket t = new Ticket(rs.getInt("id"), rs.getString("chair"),
+                        rs.getString("status"), rs.getString("print_date"),
+                        rs.getInt("trip_id"), rs.getInt("customer_id"),
+                        rs.getInt("user_id"));
+                tickets.add(t);
+            }
+        }
+        User u3 = new User(3, "u3", "1", "Employee", "Nguyen Van Hau");
+        Customer cus1 = new Customer(3, "Smith", "0955478635");
+//        Customer cus2 = new Customer(2, "Adam", "03877469461");
+
+        try {
+            boolean actual = ticketServices.saleTicket(tickets, cus1, u3);
+            Assertions.assertFalse(actual);
+
+            for (int i = 1; i <= 5; i++) {
+                PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
+                stm.setInt(1, i);
+
+                ResultSet rs = stm.executeQuery();
+                Assertions.assertNotNull(rs.next());
+                Assertions.assertEquals(0, rs.getInt("user_id"));
+                Assertions.assertEquals(1, rs.getInt("trip_id"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    private void deleteTicketAfterTest(int ticketID) throws SQLException {
-        PreparedStatement stm = conn.prepareStatement("DELETE FROM ticket WHERE id = ?");
-        stm.setInt(1, ticketID);
-        stm.executeUpdate();
+    //Test mua vé đã bán thất bại
+    @Test
+    public void testSaleFail2() throws SQLException {
+        List<Ticket> tickets = new ArrayList<>();
+        int id = TicketServices.getLastTicketId() + 1;
+        insertTicketAfterTest(id, "Sold", "2023-04-13 22:50:00");
+        tickets.add(TicketServices.getTicketById(id));
+        User u3 = new User(3, "u3", "1", "Employee", "Nguyen Van Hau");
+//        Customer cus1 = new Customer(3, "Smith", "0955478635");
+        Customer cus2 = new Customer(2, "Adam", "0387746946");
+
+        try {
+            boolean actual = ticketServices.saleTicket(tickets, cus2, u3);
+            Assertions.assertFalse(actual);
+
+            PreparedStatement stm = conn.prepareCall("SELECT * FROM ticket WHERE id=?");
+            stm.setInt(1, id);
+
+            ResultSet rs = stm.executeQuery();
+            Assertions.assertNotNull(rs.next());
+            Assertions.assertEquals(1, rs.getInt("trip_id"));
+            deleteTicketAfterTest(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     //Test updateTicket Method
@@ -246,7 +314,7 @@ public class TicketServicesTest {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
         insertTicketAfterTest(ticketID, "Empty", null);
-        int totalCustomer = CustomerServices.loadTrips().size() + 1;
+        int totalCustomer = CustomerServices.loadTrips().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "000000000");
@@ -338,4 +406,100 @@ public class TicketServicesTest {
         deleteTicketAfterTest(ticketID);
     }
 
+    @Test
+    public void testChangeTicketSuccess() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        int ticketID1 = TicketServices.getLastTicketId() + 2;
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+        insertTicketAfterTest(ticketID1, "Reserved", null);
+        Ticket t = TicketServices.getTicketById(ticketID);
+        Ticket t1 = TicketServices.getTicketById(ticketID1);
+        boolean actual = ticketServices.changeTicket(Integer.toString(t1.getId()), t);
+        Assertions.assertTrue(actual);
+        Assertions.assertEquals("Reserved", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals("Empty", TicketServices.getTicketById(ticketID1).getStatus());
+        deleteTicketAfterTest(ticketID);
+        deleteTicketAfterTest(ticketID1);
+    }
+    
+    //change fail với đầu vào là chọn vé đổi là rỗng
+    @Test
+    public void testChangeTicketFail1() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        int ticketID1 = TicketServices.getLastTicketId() + 2;
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+        insertTicketAfterTest(ticketID1, "Empty", null);
+        Ticket t = TicketServices.getTicketById(ticketID);
+        Ticket t1 = TicketServices.getTicketById(ticketID1);
+        boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
+        Assertions.assertFalse(actual);
+        Assertions.assertEquals("Empty", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals("Empty", TicketServices.getTicketById(ticketID1).getStatus());
+        deleteTicketAfterTest(ticketID);
+        deleteTicketAfterTest(ticketID1);
+    }
+    
+    //change fail với đầu vào là chọn vé đổi là đã bán
+    @Test
+    public void testChangeTicketFail2() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        int ticketID1 = TicketServices.getLastTicketId() + 2;
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+        insertTicketAfterTest(ticketID1, "Sold", "2023-04-13 22:50:00");
+        Ticket t = TicketServices.getTicketById(ticketID);
+        Ticket t1 = TicketServices.getTicketById(ticketID1);
+        boolean actual = ticketServices.changeTicket(Integer.toString(t1.getId()), t);
+        Assertions.assertFalse(actual);
+        Assertions.assertEquals("Empty", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals("Sold", TicketServices.getTicketById(ticketID1).getStatus());
+        deleteTicketAfterTest(ticketID);
+        deleteTicketAfterTest(ticketID1);
+    }
+    
+    //change fail với đầu vào là chọn vé được đổi là đã bán
+    @Test
+    public void testChangeTicketFail3() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        int ticketID1 = TicketServices.getLastTicketId() + 2;
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, 'A100', 'Reserved', null, 1, 1, null);");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+        insertTicketAfterTest(ticketID1, "Sold", "2023-04-13 22:50:00");
+        Ticket t = TicketServices.getTicketById(ticketID);
+        Ticket t1 = TicketServices.getTicketById(ticketID1);
+        boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
+        Assertions.assertFalse(actual);
+        Assertions.assertEquals("Reserved", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals("Sold", TicketServices.getTicketById(ticketID1).getStatus());
+        deleteTicketAfterTest(ticketID);
+        deleteTicketAfterTest(ticketID1);
+    }
+    @Test
+    public void testChangeTicketFail4() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        int ticketID1 = TicketServices.getLastTicketId() + 2;
+        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
+                + "VALUES(?, 'A100', 'Reserved', null, 1, 1, null);");
+        stm.setInt(1, ticketID);
+        stm.executeUpdate();
+        insertTicketAfterTest(ticketID1, "Reserved", null);
+        Ticket t = TicketServices.getTicketById(ticketID);
+        Ticket t1 = TicketServices.getTicketById(ticketID1);
+        boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
+        Assertions.assertFalse(actual);
+        Assertions.assertEquals(ticketID, TicketServices.getTicketById(ticketID).getId());
+        Assertions.assertEquals(ticketID1, TicketServices.getTicketById(ticketID1).getId());
+        deleteTicketAfterTest(ticketID);
+        deleteTicketAfterTest(ticketID1);
+    }
 }
