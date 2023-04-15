@@ -5,8 +5,11 @@
 package com.nhom1.banvexekhach;
 
 import com.nhom1.pojo.Ticket;
+import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
 import com.nhom1.services.TicketServices;
+import com.nhom1.services.TripServices;
+import com.nhom1.utils.CheckData;
 import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
@@ -181,7 +184,9 @@ public class ChangeTicketController implements Initializable {
                 if (selectedTicket.getStatus().contains("Empty")) {
                     TicketServices s = new TicketServices();
                     try {
-                        if (!s.isTimeOutToReservedTicket(tfTicketChange.getText())) {
+                        Ticket t = TicketServices.getTicketById(Integer.parseInt(tfTicketChange.getText()));
+                        Trip trip = TripServices.getTripById(t.getTrip_id());
+                        if (CheckData.isChoosing(trip.getDeparting_at(), (1000 * 60 * 60))) {
                             if (s.changeTicket(tfTicketChange.getText(), selectedTicket)) {
                                 Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé thành công", Alert.AlertType.INFORMATION);
                                 confirm.showAndWait().ifPresent(a -> {
@@ -194,6 +199,8 @@ public class ChangeTicketController implements Initializable {
                             } else {
                                 Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
                             }
+                        } else {
+                            Alert confirm = MessageBox.getBox("Đổi vé", "Vé đã hết thời gian để đổi", Alert.AlertType.WARNING);
                         }
 
                     } catch (SQLException ex) {

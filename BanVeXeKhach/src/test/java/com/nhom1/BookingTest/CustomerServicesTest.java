@@ -11,6 +11,8 @@ import com.nhom1.services.JDBCUtils;
 import com.nhom1.services.TripServices;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -19,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 /**
  *
@@ -26,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CustomerServicesTest {
     private static Connection conn;
+    CustomerServices cs = new CustomerServices();
     
     @BeforeAll
     public static void BeforeALL() throws SQLException {
@@ -55,5 +59,35 @@ public class CustomerServicesTest {
     public  void testNotExistCustomer() throws SQLException {
         boolean result = CustomerServices.isExistCustomer(new Customer("dfsf", "0217849658"));
         assertFalse(result);
+    }
+    
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 1)
+    public void testGetCustomer(int id, String name, String phone, boolean eptOutput) {
+        try {
+            Customer cus = cs.getCustomer(name, phone);
+            assertEquals(eptOutput, cus != null && cus.getId() == id);
+            if (cus != null) {
+                assertTrue(cus.getName().equals(name));
+                assertTrue(cus.getPhone().equals(phone));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @ParameterizedTest
+    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 1)
+    public void testGetCustomerByID(int id, String name, String phone, boolean eptOutput) {
+        try {
+            Customer cus = cs.getCustomerByID(id);
+            assertEquals(eptOutput, cus != null && cus.getId() == id); 
+            if (cus != null) {
+                assertTrue(cus.getName().equals(name));
+                assertTrue(cus.getPhone().equals(phone));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServicesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

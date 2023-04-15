@@ -258,10 +258,10 @@ public class TicketServices {
                 stm.setString(1, idtk1);
                 ResultSet rs = stm.executeQuery();
                 while (rs.next()) {
-                tk1 = new Ticket(rs.getInt("id"), rs.getString("chair"),
-                        rs.getString("status"), rs.getString("print_date"),
-                        rs.getInt("trip_id"), rs.getInt("customer_id"),
-                        rs.getInt("user_id"));
+                    tk1 = new Ticket(rs.getInt("id"), rs.getString("chair"),
+                            rs.getString("status"), rs.getString("print_date"),
+                            rs.getInt("trip_id"), rs.getInt("customer_id"),
+                            rs.getInt("user_id"));
                 }
                 if (!"Reserved".equals(tk1.getStatus()) || !"Empty".equals(tk2.getStatus())) {
                     return flag3;
@@ -293,25 +293,19 @@ public class TicketServices {
         }
     }
 
-    public void cancelTicket(int id) throws SQLException {
+    public boolean cancelTicket(int id) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             if (Integer.toString(id) != null && !Integer.toString(id).isEmpty()) {
-                String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ?";
-                PreparedStatement stm = conn.prepareCall(sql);
-                stm.setInt(1, id);
-                stm.executeUpdate();
-                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
+                Ticket t = TicketServices.getTicketById(id);
+                if ("Reserved".equals(t.getStatus())) {
+                    String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ? AND status = 'Reserved'";
+                    PreparedStatement stm = conn.prepareCall(sql);
+                    stm.setInt(1, id);
+                    stm.executeUpdate();
+                    return true;
+                }
             }
-        }
-    }
-
-    public boolean isTimeOutToReservedTicket(String id) throws SQLException {
-        try (Connection conn = JDBCUtils.createConn()) {
-            PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket "
-                    + "WHERE id = ? AND trip_id IN (SELECT id FROM trip WHERE departing_at < now() + INTERVAL 60 MINUTE)");
-            stm.setString(1, id);
-            ResultSet rs = stm.executeQuery();
-            return rs.next();
+            return false;
         }
     }
 

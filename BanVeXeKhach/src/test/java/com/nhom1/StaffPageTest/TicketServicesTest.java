@@ -502,4 +502,46 @@ public class TicketServicesTest {
         deleteTicketAfterTest(ticketID);
         deleteTicketAfterTest(ticketID1);
     }
+    
+    @Test
+    public void testCancelTicketSuccess() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        insertTicketAfterTest(ticketID, "Reserved", null);
+        
+        boolean actual = ticketServices.cancelTicket(ticketID);
+        Assertions.assertTrue(actual);
+        Ticket t = ticketServices.getTicketById(ticketID);
+        Assertions.assertEquals(ticketID, t.getId());
+        Assertions.assertEquals("Empty", t.getStatus());
+        
+        deleteTicketAfterTest(ticketID);
+    }
+    
+    @Test
+    public void testCancelTicketFail1() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        insertTicketAfterTest(ticketID, "Empty", null);
+        
+        boolean actual = ticketServices.cancelTicket(ticketID);
+        Assertions.assertFalse(actual);
+        Ticket t = ticketServices.getTicketById(ticketID);
+        Assertions.assertEquals(ticketID, t.getId());
+        Assertions.assertEquals("Empty", t.getStatus());
+        
+        deleteTicketAfterTest(ticketID);
+    }
+    
+    @Test
+    public void testCancelTicketFail2() throws SQLException {
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        insertTicketAfterTest(ticketID, "Sold", "2023-04-13 22:50:00");
+        
+        boolean actual = ticketServices.cancelTicket(ticketID);
+        Assertions.assertFalse(actual);
+        Ticket t = ticketServices.getTicketById(ticketID);
+        Assertions.assertEquals(ticketID, t.getId());
+        Assertions.assertEquals("Sold", t.getStatus());
+        
+        deleteTicketAfterTest(ticketID);
+    }
 }
