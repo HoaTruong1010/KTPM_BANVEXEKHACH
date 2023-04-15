@@ -248,10 +248,14 @@ public class StaffController implements Initializable {
                 } else {
                     try {
                         TicketServices tks = new TicketServices();
-                        tks.cancelTicket(t.getId());
-                        this.loadTableDataByID(null);
-                        Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy thành công***", Alert.AlertType.INFORMATION);
-                        confirm1.showAndWait();
+                        if (tks.cancelTicket(t.getId())) {
+                            this.loadTableDataByID(null);
+                            Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy thành công***", Alert.AlertType.INFORMATION);
+                            confirm1.showAndWait();
+                        } else {
+                            Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy không thành công***", Alert.AlertType.WARNING);
+                            confirm1.showAndWait();
+                        }
                     } catch (SQLException ex) {
                         Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -223,6 +223,9 @@ public class TicketServices {
 
             if (result > 0 && !CheckData.isSoldTicket(listTicket)) {
                 for (Ticket ticket : listTicket) {
+                    if ("Sold".equals(ticket.getStatus())) {
+                        return false;
+                    }
                     if ("Reserved".equals(ticket.getStatus())) {
                         if (customer.getId() != ticket.getCustomer_id()) {
                             return false;
@@ -260,56 +263,49 @@ public class TicketServices {
                             rs.getInt("trip_id"), rs.getInt("customer_id"),
                             rs.getInt("user_id"));
                 }
+                if (!"Reserved".equals(tk1.getStatus()) || !"Empty".equals(tk2.getStatus())) {
+                    return flag3;
+                }
                 flag1 = true;
             }
-            if (!"empty".equals(tk2.getStatus())) {
+
+            conn.setAutoCommit(false);
+            if ("Empty".equals(tk2.getStatus())) {
                 String sql = "UPDATE ticket SET status = ?, customer_id = ? WHERE id = ?";
                 PreparedStatement stm = conn.prepareCall(sql);
                 stm.setString(1, tk1.getStatus());
                 stm.setInt(2, tk1.getCustomer_id());
                 stm.setInt(3, tk2.getId());
                 stm.executeUpdate();
-                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
                 flag2 = true;
             }
-            if (!"Reserved".equals(tk2.getStatus())) {
-                String sql = "UPDATE ticket SET status = ?, customer_id = NULL WHERE id = ?";
+            if ("Reserved".equals(tk1.getStatus())) {
+                String sql = "UPDATE ticket SET status = 'Empty', customer_id = NULL WHERE id = ?";
                 PreparedStatement stm = conn.prepareCall(sql);
-                stm.setString(1, tk2.getStatus());
-                stm.setInt(2, tk1.getId());
+                stm.setInt(1, tk1.getId());
                 stm.executeUpdate();
-                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
                 if (flag1 && flag2) {
                     flag3 = true;
                 }
             }
+            conn.commit();
             return flag3;
         }
     }
 
-    public void cancelTicket(int id) throws SQLException {
+    public boolean cancelTicket(int id) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             if (Integer.toString(id) != null && !Integer.toString(id).isEmpty()) {
-                String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ?";
-                PreparedStatement stm = conn.prepareCall(sql);
-                stm.setInt(1, id);
-                stm.executeUpdate();
-                System.out.println("com.nhom1.services.TicketServices.changeTicket()");
+                Ticket t = TicketServices.getTicketById(id);
+                if ("Reserved".equals(t.getStatus())) {
+                    String sql = "UPDATE ticket SET status = 'Empty', customer_id = null WHERE id = ? AND status = 'Reserved'";
+                    PreparedStatement stm = conn.prepareCall(sql);
+                    stm.setInt(1, id);
+                    stm.executeUpdate();
+                    return true;
+                }
             }
-        }
-    }
-
-    public boolean isTimeOutToReservedTicket(String id) throws SQLException {
-        try (Connection conn = JDBCUtils.createConn()) {
-            PreparedStatement stm = conn.prepareStatement("SELECT * FROM ticket "
-                    + "WHERE id = ? AND trip_id IN (SELECT id FROM trip WHERE departing_at < now() + INTERVAL 60 MINUTE)");
-            stm.setString(1, id);
-            ResultSet rs = stm.executeQuery();
-            System.out.println(stm);
-            if (!rs.next()) {
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 
