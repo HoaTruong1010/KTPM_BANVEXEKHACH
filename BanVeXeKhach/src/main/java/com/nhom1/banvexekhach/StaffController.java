@@ -209,7 +209,7 @@ public class StaffController implements Initializable {
 
                     if (CheckData.isChoosing(trip.getDeparting_at(), (1000 * 60 * 60))) {
                         if (!t.getStatus().contains("Reserved")) {
-                            Alert confirm = MessageBox.getBox("Đổi vé", "Vé chưa đặt không thể đổi vé.\nVui lòng đặt!!!", Alert.AlertType.WARNING);
+                            Alert confirm = MessageBox.getBox("Đổi vé", "Vé chưa đặt hoặc đã bán. Không thể đổi!!!!.\n", Alert.AlertType.WARNING);
                             confirm.showAndWait();
                         } else {
                             try {

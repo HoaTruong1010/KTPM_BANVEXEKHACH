@@ -26,8 +26,7 @@ public class TicketServices {
     public List<Ticket> loadTicketByID(String ticket_id) throws SQLException {
         List<Ticket> list = new ArrayList<>();
         try (Connection conn = JDBCUtils.createConn()) {
-            String sql = "SELECT ticket.* FROM ticket, trip WHERE ticket.trip_id = trip.id "
-                    + "AND trip.departing_at > NOW() + INTERVAL 60 MINUTE ";
+            String sql = "SELECT ticket.* FROM ticket, trip WHERE ticket.trip_id = trip.id";
             if (ticket_id != null && !ticket_id.isEmpty()) {
                 sql += "AND ticket.id like concat('%', ?, '%')";
             }
@@ -54,7 +53,6 @@ public class TicketServices {
                     + " FROM ticket, trip, route"
                     + " WHERE ticket.trip_id = trip.id"
                     + " and trip.route_id = route.id"
-                    + " AND trip.departing_at > NOW() + INTERVAL 60 MINUTE"
                     + " and route.start like concat('%', ?, '%')"
                     + " and route.end like concat('%', ?, '%')"
                     + " and ticket.chair like concat('%', ?, '%')"
