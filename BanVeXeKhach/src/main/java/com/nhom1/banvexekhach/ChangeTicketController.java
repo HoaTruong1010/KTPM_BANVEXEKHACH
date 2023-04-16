@@ -186,23 +186,27 @@ public class ChangeTicketController implements Initializable {
                     try {
                         Ticket t = TicketServices.getTicketById(Integer.parseInt(tfTicketChange.getText()));
                         Trip trip = TripServices.getTripById(t.getTrip_id());
-                        if (CheckData.isChoosing(trip.getDeparting_at(), (1000 * 60 * 60))) {
-                            if (s.changeTicket(tfTicketChange.getText(), selectedTicket)) {
-                                Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé thành công", Alert.AlertType.INFORMATION);
-                                confirm.showAndWait().ifPresent(a -> {
-                                    try {
-                                        btnCloseHandler(e);
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                });
+                        Trip tripoftkchange = TripServices.getTripById(selectedTicket.getTrip_id());
+                        if (CheckData.isChoosing(tripoftkchange.getDeparting_at(), (1000 * 60 * 60))) {
+                            if (CheckData.isChoosing(trip.getDeparting_at(), (1000 * 60 * 60))) {
+                                if (s.changeTicket(tfTicketChange.getText(), selectedTicket)) {
+                                    Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé thành công", Alert.AlertType.INFORMATION);
+                                    confirm.showAndWait().ifPresent(a -> {
+                                        try {
+                                            btnCloseHandler(e);
+                                        } catch (IOException ex) {
+                                            Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    });
+                                } else {
+                                    Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
+                                }
                             } else {
-                                Alert confirm = MessageBox.getBox("Đổi vé", "Đổi vé không thành công", Alert.AlertType.WARNING);
+                                Alert confirm = MessageBox.getBox("Đổi vé", "Vé đã hết thời gian để đổi", Alert.AlertType.WARNING);
                             }
                         } else {
-                            Alert confirm = MessageBox.getBox("Đổi vé", "Vé đã hết thời gian để đổi", Alert.AlertType.WARNING);
+                            MessageBox.getBox("Error", "Vé đã quá thời gian cho phép đổi!", Alert.AlertType.ERROR).show();
                         }
-
                     } catch (SQLException ex) {
                         Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
                     }
