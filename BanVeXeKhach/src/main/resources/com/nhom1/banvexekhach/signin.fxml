@@ -65,7 +65,7 @@
             <Insets top="30.0" />
          </GridPane.margin>
       </Label>
-      <Button alignment="CENTER" mnemonicParsing="false" onAction="#btnSignin_Click" prefWidth="150.0" text="Đăng nhập" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+      <Button alignment="CENTER" mnemonicParsing="false" defaultButton="true" onAction="#btnSignin_Click" prefWidth="150.0" text="Đăng nhập" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <font>
             <Font name="Courier New Bold" size="18.0" />
          </font>
