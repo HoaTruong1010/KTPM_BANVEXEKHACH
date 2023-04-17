@@ -246,19 +246,25 @@ public class StaffController implements Initializable {
                     Alert confirm = MessageBox.getBox("Hủy vé", "Vé chưa đặt không thể hủy.!!!", Alert.AlertType.WARNING);
                     confirm.showAndWait();
                 } else {
-                    try {
-                        TicketServices tks = new TicketServices();
-                        if (tks.cancelTicket(t.getId())) {
-                            this.loadTableDataByID(null);
-                            Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy thành công***", Alert.AlertType.INFORMATION);
-                            confirm1.showAndWait();
-                        } else {
-                            Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy không thành công***", Alert.AlertType.WARNING);
-                            confirm1.showAndWait();
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setContentText("Bạn có chắc chắn hủy vé?");
+                    confirm.showAndWait().ifPresent((var res) -> {
+                        if (res == ButtonType.OK) {
+                            try {
+                                TicketServices tks = new TicketServices();
+                                if (tks.cancelTicket(t.getId())) {
+                                    this.loadTableDataByID(null);
+                                    Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy thành công***", Alert.AlertType.INFORMATION);
+                                    confirm1.showAndWait();
+                                } else {
+                                    Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy không thành công***", Alert.AlertType.WARNING);
+                                    confirm1.showAndWait();
+                                }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    });
                 }
             });
             TableCell cellCancel = new TableCell();
