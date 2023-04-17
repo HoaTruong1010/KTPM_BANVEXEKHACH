@@ -103,7 +103,28 @@ public class CheckDataTest {
         List<Ticket> list = new ArrayList<>();
         Ticket t1 = new Ticket(10, "11", "Empty",
                         null, 1, 1, 1);
+        Ticket t2 = new Ticket(11, "11", "Empty",
+                        null, 1, 1, 1);
         list.add(t1);
+        list.add(t2);
         assertTrue(CheckData.isEmptyTicket(list)); 
     }
+
+    @Test
+    public void testNotEmptyTicket() throws SQLException {
+        List<Ticket> list = new ArrayList<>();
+        Ticket t1 = new Ticket(10, "11", "Empty",
+                        null, 1, 1, 1);
+        Ticket t2 = new Ticket(1, "1", "Reserved",
+                        null, 1, 1, 1);
+        list.add(t1);
+        list.add(t2);
+        assertFalse(CheckData.isEmptyTicket(list)); 
+    }
+    
+//    @ParameterizedTest
+//    @CsvFileSource(resources = "/isChoosingData.csv", numLinesToSkip = 0)
+//    public void isChoosing(String tripDeparting, int second, boolean expResult) {
+//        assertEquals(expResult, CheckData.isChoosing(tripDeparting, second));
+//    }
 }

@@ -171,6 +171,7 @@ public class TicketServices {
     public static boolean updateTicket(List<Ticket> listTicket, Customer customer) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             conn.setAutoCommit(false);
+            boolean isExist = false;
             String sql;
             PreparedStatement stm;
             if (!CustomerServices.isExistCustomer(customer)) {
@@ -183,6 +184,7 @@ public class TicketServices {
                 stm.executeUpdate();
             } else {
                 customer = CustomerServices.getCustomer(customer.getName(), customer.getPhone());
+                isExist = true;
             }
 
             if (CheckData.isEmptyTicket(listTicket)) {
@@ -196,8 +198,14 @@ public class TicketServices {
                 }
                 conn.commit();
                 return true;
+            } 
+            
+            if(!isExist) {
+                sql = "DELETE FROM customer WHERE id = ? ";
+                stm = conn.prepareStatement(sql);
+                stm.setInt(1, customer.getId());
             }
-
+            
             return false;
         }
     }

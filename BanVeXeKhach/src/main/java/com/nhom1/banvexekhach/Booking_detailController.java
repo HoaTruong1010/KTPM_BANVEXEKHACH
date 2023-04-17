@@ -17,10 +17,7 @@ import com.nhom1.utils.MessageBox;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -32,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -202,7 +198,7 @@ public class Booking_detailController implements Initializable {
         if (name.isEmpty()) {
             MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
         } else {
-            if (CheckData.isInteger(phone) && phone.length() == 9 || phone.length() == 10) {
+            if (CheckData.isInteger(phone) && phone.length() == 10) {
                 if (!listSelectedTicket.isEmpty()) {
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setContentText("Bạn có chắc chắn đặt?");

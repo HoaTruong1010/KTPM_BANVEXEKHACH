@@ -6,7 +6,6 @@ package com.nhom1.StaffPageTest;
 
 import com.nhom1.pojo.Customer;
 import com.nhom1.pojo.Ticket;
-import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
 import com.nhom1.services.CustomerServices;
 import com.nhom1.services.JDBCUtils;
@@ -26,10 +25,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  *
@@ -54,7 +50,7 @@ public class TicketServicesTest {
     }
 
     //prepare data for all behind testing
-    private void insertTicketAfterTest(int ticketID, String status, String printDate) throws SQLException {
+    private void insertTicketBeforeTest(int ticketID, String status, String printDate) throws SQLException {
         PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?);");
         stm.setInt(1, ticketID);
@@ -264,26 +260,13 @@ public class TicketServicesTest {
             Logger.getLogger(TicketServicesTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    //prepare data for all behind testing
-    private void insertTicketBeforeTest(int ticketID, String status, String printDate) throws SQLException {
-        PreparedStatement stm = conn.prepareStatement("INSERT INTO ticket(id, chair, status, print_date, trip_id, customer_id, user_id) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?);");
-        stm.setInt(1, ticketID);
-        stm.setString(2, "test");
-        stm.setString(3, status);
-        stm.setString(4, printDate);
-        stm.setInt(5, 1);
-        stm.setInt(6, 1);
-        stm.setInt(7, 1);
-        stm.executeUpdate();
-    }
 
     //Test mua vé đã bán thất bại
     @Test
     public void testSaleFail2() throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
         int id = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(id, "Sold", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(id, "Sold", "2023-04-13 22:50:00");
         tickets.add(TicketServices.getTicketById(id));
         User u3 = new User(3, "u3", "1", "Employee", "Nguyen Van Hau");
 //        Customer cus1 = new Customer(3, "Smith", "0955478635");
@@ -311,13 +294,13 @@ public class TicketServicesTest {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
         insertTicketBeforeTest(ticketID, "Empty", null);
-        int totalCustomer = CustomerServices.loadTrips().size();
+        int totalCustomer = CustomerServices.loadCustomers().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Customer customer = CustomerServices.getCustomer("Adam", "0387746946");
         Assertions.assertTrue(TicketServices.updateTicket(listTicket, customer));
         Assertions.assertEquals("Reserved", TicketServices.getTicketById(ticketID).getStatus());
-        Assertions.assertEquals(totalCustomer, CustomerServices.loadTrips().size());
+        Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
 
         deleteTicketAfterTest(ticketID);
     }
@@ -327,27 +310,45 @@ public class TicketServicesTest {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
         insertTicketBeforeTest(ticketID, "Empty", null);
-        int totalCustomer = CustomerServices.loadTrips().size() + 1;
+        int totalCustomer = CustomerServices.loadCustomers().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "000000000");
         Assertions.assertTrue(TicketServices.updateTicket(listTicket, customer));
         Assertions.assertEquals("Reserved", TicketServices.getTicketById(ticketID).getStatus());
-        Assertions.assertEquals(totalCustomer, CustomerServices.loadTrips().size());
+        Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
 
         deleteTicketAfterTest(ticketID);
     }
 
     @Test
-    public void testUpdateTicketFailure() throws SQLException {
+    public void testUpdateTicketFailureWithExistCustomer() throws SQLException {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
         insertTicketBeforeTest(ticketID, "Recall", null);
+        int totalCustomer = CustomerServices.loadCustomers().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
         Customer customer = CustomerServices.getCustomer("Adam", "0387746946");
         Assertions.assertFalse(TicketServices.updateTicket(listTicket, customer));
         Assertions.assertEquals("Recall", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
+
+        deleteTicketAfterTest(ticketID);
+    }
+
+    @Test
+    public void testUpdateTicketFailureWithNotExistCustomer() throws SQLException {
+        List<Ticket> listTicket = new ArrayList<>();
+        int ticketID = TicketServices.getLastTicketId() + 1;
+        insertTicketBeforeTest(ticketID, "Recall", null);
+        int totalCustomer = CustomerServices.loadCustomers().size();
+
+        listTicket.add(TicketServices.getTicketById(ticketID));
+        Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "000000000");
+        Assertions.assertFalse(TicketServices.updateTicket(listTicket, customer));
+        Assertions.assertEquals("Recall", TicketServices.getTicketById(ticketID).getStatus());
+        Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
 
         deleteTicketAfterTest(ticketID);
     }
@@ -427,7 +428,7 @@ public class TicketServicesTest {
                 + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
         stm.setInt(1, ticketID);
         stm.executeUpdate();
-        insertTicketAfterTest(ticketID1, "Reserved", null);
+        insertTicketBeforeTest(ticketID1, "Reserved", null);
         Ticket t = TicketServices.getTicketById(ticketID);
         Ticket t1 = TicketServices.getTicketById(ticketID1);
         boolean actual = ticketServices.changeTicket(Integer.toString(t1.getId()), t);
@@ -447,7 +448,7 @@ public class TicketServicesTest {
                 + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
         stm.setInt(1, ticketID);
         stm.executeUpdate();
-        insertTicketAfterTest(ticketID1, "Empty", null);
+        insertTicketBeforeTest(ticketID1, "Empty", null);
         Ticket t = TicketServices.getTicketById(ticketID);
         Ticket t1 = TicketServices.getTicketById(ticketID1);
         boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
@@ -467,7 +468,7 @@ public class TicketServicesTest {
                 + "VALUES(?, 'A100', 'Empty', null, 1, null, null);");
         stm.setInt(1, ticketID);
         stm.executeUpdate();
-        insertTicketAfterTest(ticketID1, "Sold", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(ticketID1, "Sold", "2023-04-13 22:50:00");
         Ticket t = TicketServices.getTicketById(ticketID);
         Ticket t1 = TicketServices.getTicketById(ticketID1);
         boolean actual = ticketServices.changeTicket(Integer.toString(t1.getId()), t);
@@ -487,7 +488,7 @@ public class TicketServicesTest {
                 + "VALUES(?, 'A100', 'Reserved', null, 1, 1, null);");
         stm.setInt(1, ticketID);
         stm.executeUpdate();
-        insertTicketAfterTest(ticketID1, "Sold", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(ticketID1, "Sold", "2023-04-13 22:50:00");
         Ticket t = TicketServices.getTicketById(ticketID);
         Ticket t1 = TicketServices.getTicketById(ticketID1);
         boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
@@ -505,7 +506,7 @@ public class TicketServicesTest {
                 + "VALUES(?, 'A100', 'Reserved', null, 1, 1, null);");
         stm.setInt(1, ticketID);
         stm.executeUpdate();
-        insertTicketAfterTest(ticketID1, "Reserved", null);
+        insertTicketBeforeTest(ticketID1, "Reserved", null);
         Ticket t = TicketServices.getTicketById(ticketID);
         Ticket t1 = TicketServices.getTicketById(ticketID1);
         boolean actual = ticketServices.changeTicket(Integer.toString(t.getId()), t1);
@@ -519,7 +520,7 @@ public class TicketServicesTest {
     @Test
     public void testCancelTicketSuccess() throws SQLException {
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Reserved", null);
+        insertTicketBeforeTest(ticketID, "Reserved", null);
         
         boolean actual = ticketServices.cancelTicket(ticketID);
         Assertions.assertTrue(actual);
@@ -533,7 +534,7 @@ public class TicketServicesTest {
     @Test
     public void testCancelTicketFail1() throws SQLException {
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Empty", null);
+        insertTicketBeforeTest(ticketID, "Empty", null);
         
         boolean actual = ticketServices.cancelTicket(ticketID);
         Assertions.assertFalse(actual);
@@ -547,7 +548,7 @@ public class TicketServicesTest {
     @Test
     public void testCancelTicketFail2() throws SQLException {
         int ticketID = TicketServices.getLastTicketId() + 1;
-        insertTicketAfterTest(ticketID, "Sold", "2023-04-13 22:50:00");
+        insertTicketBeforeTest(ticketID, "Sold", "2023-04-13 22:50:00");
         
         boolean actual = ticketServices.cancelTicket(ticketID);
         Assertions.assertFalse(actual);

@@ -48,6 +48,12 @@ public class CustomerServicesTest {
 //        int cus = CustomerServices.getLastCustomerID();
 //        assertEquals(5, cus);
 //    }
+    
+    @Test
+    public  void testGetLastCustomerIDFail() throws SQLException {
+        int cus = CustomerServices.getLastCustomerID();
+        assertFalse(cus == 100);
+    }
         
     @Test
     public  void testExistCustomer() throws SQLException {
@@ -65,7 +71,7 @@ public class CustomerServicesTest {
     @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 0)
     public void testGetCustomer(int id, String name, String phone, boolean eptOutput) {
         try {
-            Customer cus = cs.getCustomer(name, phone);
+            Customer cus = CustomerServices.getCustomer(name, phone);
             assertEquals(eptOutput, cus != null && cus.getId() == id);
             if (cus != null) {
                 assertTrue(cus.getName().equals(name));

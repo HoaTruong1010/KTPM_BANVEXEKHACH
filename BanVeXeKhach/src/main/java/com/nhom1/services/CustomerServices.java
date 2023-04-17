@@ -11,14 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author HOA TRƯƠNG
  */
 public class CustomerServices {  
-    public static List<Customer> loadTrips() throws SQLException {
+    public static List<Customer> loadCustomers() throws SQLException {
         List<Customer> list = new ArrayList<>();
 
         try (Connection conn = JDBCUtils.createConn()) {
@@ -62,13 +61,14 @@ public class CustomerServices {
             return false;
         }
     }
+    
     //còn cần test
     public static boolean isExistCustomer(String name, String phone) throws SQLException {
         try (Connection conn = JDBCUtils.createConn()) {
             PreparedStatement stm = conn.prepareStatement("SELECT id FROM customer WHERE name = ? && phone = ?;");
             stm.setString(1, name);
             stm.setString(2, phone);
-
+    
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 return true;
