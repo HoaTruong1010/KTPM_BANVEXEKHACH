@@ -70,7 +70,7 @@ public class TicketServicesTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/searchTicketByIDData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/searchTicketByIDData.csv", numLinesToSkip = 0)
     public void testSearchByID(String id, int quantity, boolean eptOutput) {
         try {
             List<Ticket> tickets = ticketServices.loadTicketByID(id);
@@ -84,7 +84,7 @@ public class TicketServicesTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/searchTicketByInfoData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/searchTicketByInfoData.csv", numLinesToSkip = 0)
     public void testSearchByInfo(String chair, String start, String end, String startDate, String startTime, int quantity, boolean eptOutput) {
         try {
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -109,7 +109,7 @@ public class TicketServicesTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/getTicketByTripIDData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/getTicketByTripIDData.csv", numLinesToSkip = 0)
     public void testGetTicketByTripID(int tripID, int quantity, boolean expOutput) {
         try {
             List<Ticket> tickets = TicketServices.getTicketsByTripID(tripID);
@@ -123,7 +123,7 @@ public class TicketServicesTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/getTicketByTripIDData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/getTicketByTripIDData.csv", numLinesToSkip = 0)
     public void testGetTicketByStringTripID(String tripID, int quantity, boolean expOutput) {
         try {
             List<Ticket> tickets = TicketServices.getTicketsByStringTripID(tripID);

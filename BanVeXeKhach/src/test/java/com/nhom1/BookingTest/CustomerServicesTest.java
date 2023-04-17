@@ -68,7 +68,7 @@ public class CustomerServicesTest {
     }
     
     @ParameterizedTest
-    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 0)
     public void testGetCustomer(int id, String name, String phone, boolean eptOutput) {
         try {
             Customer cus = CustomerServices.getCustomer(name, phone);
@@ -83,7 +83,7 @@ public class CustomerServicesTest {
     }
     
     @ParameterizedTest
-    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/testCustomerData.csv", numLinesToSkip = 0)
     public void testGetCustomerByID(int id, String name, String phone, boolean eptOutput) {
         try {
             Customer cus = cs.getCustomerByID(id);
