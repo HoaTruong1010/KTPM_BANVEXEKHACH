@@ -4,9 +4,11 @@
  */
 package com.nhom1.banvexekhach;
 
+import com.nhom1.pojo.Route;
 import com.nhom1.pojo.Ticket;
 import com.nhom1.pojo.Trip;
 import com.nhom1.pojo.User;
+import com.nhom1.services.RouteServices;
 import com.nhom1.services.TicketServices;
 import com.nhom1.services.TripServices;
 import com.nhom1.utils.CheckData;
@@ -15,12 +17,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +38,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -40,6 +47,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -54,13 +63,7 @@ public class ChangeTicketController implements Initializable {
     @FXML
     private TableView<Ticket> tbChangeTicket;
     @FXML
-    private TextField tfStart;
-    @FXML
-    private TextField tfEnd;
-    @FXML
-    private DatePicker dpDate;
-    @FXML
-    private TextField tfTime;
+    private ComboBox<Trip> cbTrip;
     @FXML
     private TextField tfChair;
     @FXML
@@ -68,6 +71,10 @@ public class ChangeTicketController implements Initializable {
     @FXML
     private Label lbCurrentUsername;
     private User currentUser;
+    private String start;
+    private String end;
+    private LocalDate date;
+    private String time;
 
     /**
      * @return the currentUser
@@ -93,47 +100,49 @@ public class ChangeTicketController implements Initializable {
     public void getTripTicketChange(int t) {
         this.tfTripTicketChange.setText(Integer.toString(t));
         this.tfTripTicketChange.setEditable(false);
-        System.out.println(this.tfTripTicketChange.getText());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         this.loadTableTicketChange();
-        System.out.println(this.tfTripTicketChange.getText());
         this.tfTripTicketChange.textProperty().addListener(o -> {
             try {
                 this.loadTableDataChange(this.tfTripTicketChange.getText());
+                this.loadComboboxTrip(this.tfTripTicketChange.getText());
+                Trip trip = TripServices.getTripById(Integer.parseInt(this.tfTripTicketChange.getText()));
+                Route route = RouteServices.getRouteById(trip.getRoute_id());
+                this.start = route.getStart();
+                this.end = route.getEnd();
+                String dateStart = trip.getDeparting_at();
+                LocalDateTime dateTime = LocalDateTime.parse(dateStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                date = dateTime.toLocalDate();
+                time = dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+                this.cbTrip.getSelectionModel().select(trip);
+            } catch (SQLException ex) {
+                Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        this.cbTrip.valueProperty().addListener(o -> {
+            try {
+                Trip trip = cbTrip.getValue();
+                Route route = RouteServices.getRouteById(trip.getRoute_id());
+                this.start = route.getStart();
+                this.end = route.getEnd();
+                String dateStart = trip.getDeparting_at();
+                LocalDateTime dateTime = LocalDateTime.parse(dateStart, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                date = dateTime.toLocalDate();
+                time = dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+                this.loadTableDataChange(Integer.toString(trip.getId()));
             } catch (SQLException ex) {
                 Logger.getLogger(ChangeTicketController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         this.reload();
-
-        this.tfStart.textProperty().addListener(o -> {
-            this.searchTableDataChange(this.tfStart.getText(),
-                    this.tfEnd.getText(), this.tfChair.getText(), this.dpDate.getValue(),
-                    this.tfTime.getText());
-        });
-        this.tfEnd.textProperty().addListener(o -> {
-            this.searchTableDataChange(this.tfStart.getText(),
-                    this.tfEnd.getText(), this.tfChair.getText(), this.dpDate.getValue(),
-                    this.tfTime.getText());
-        });
         this.tfChair.textProperty().addListener(o -> {
-            this.searchTableDataChange(this.tfStart.getText(),
-                    this.tfEnd.getText(), this.tfChair.getText(), this.dpDate.getValue(),
-                    this.tfTime.getText());
-        });
-        this.dpDate.valueProperty().addListener(o -> {
-            this.searchTableDataChange(this.tfStart.getText(),
-                    this.tfEnd.getText(), this.tfChair.getText(), this.dpDate.getValue(),
-                    this.tfTime.getText());
-        });
-        this.tfTime.textProperty().addListener(o -> {
-            this.searchTableDataChange(this.tfStart.getText(),
-                    this.tfEnd.getText(), this.tfChair.getText(), this.dpDate.getValue(),
-                    this.tfTime.getText());
+            this.searchTableDataChange(start,
+                    end, this.tfChair.getText(), date,
+                    time);
         });
         btnClose.setOnAction(eh -> {
             try {
@@ -230,6 +239,15 @@ public class ChangeTicketController implements Initializable {
         List<Ticket> tkChange = null;
         tkChange = s1.getTicketsByStringTripID(str);
         this.tbChangeTicket.setItems(FXCollections.observableList(tkChange));
+    }
+
+    private void loadComboboxTrip(String tripId) throws SQLException {
+        TripServices s = new TripServices();
+        Trip t = s.getTripById(Integer.parseInt(tripId));
+        List<Trip> list = new ArrayList<>();
+        list = s.loadTrips(null, 0);
+        list = list.stream().filter(x -> x.getRoute_id() == t.getRoute_id()).collect(Collectors.toList());
+        this.cbTrip.setItems(FXCollections.observableList(list));
     }
 
     private TableView<Ticket> searchTableDataChange(String start, String end, String chair, LocalDate startDate, String startTime) {

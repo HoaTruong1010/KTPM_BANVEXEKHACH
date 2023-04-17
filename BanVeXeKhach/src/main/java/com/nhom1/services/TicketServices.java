@@ -54,7 +54,7 @@ public class TicketServices {
                     + " FROM ticket, trip, route"
                     + " WHERE ticket.trip_id = trip.id"
                     + " and trip.route_id = route.id"
-                    + " trip.departing_at > now()"
+                    + " and trip.departing_at > now()"
                     + " and route.start like concat('%', ?, '%')"
                     + " and route.end like concat('%', ?, '%')"
                     + " and ticket.chair like concat('%', ?, '%')"
@@ -217,7 +217,6 @@ public class TicketServices {
                 stm.setString(2, customer.getName());
                 stm.setString(3, customer.getPhone());
                 result = stm.executeUpdate();
-                System.out.println(stm);
 
             }
 
