@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
@@ -28,12 +29,12 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 public class TripServicesTest {
 
     private static Connection conn;
-    private static TripServices tripServies;
+    private static TripServices tripServices;
 
     @BeforeAll
     public static void BeforeALL() throws SQLException {
         conn = JDBCUtils.createConn();
-        tripServies = new TripServices();
+        tripServices = new TripServices();
     }
 
     @AfterAll
@@ -42,11 +43,17 @@ public class TripServicesTest {
             conn.close();
         }
     }
+    
+    @Test
+    public void testLoadCars() throws SQLException {
+        List<Trip> trips = tripServices.loadTrips(null, 1);
+        assertNotNull(trips);
+    }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/searchdata.csv", numLinesToSkip = 0)
     public void testSearch(String text, int routeID, boolean expResult) throws SQLException {
-        List<Trip> listSearch = tripServies.loadTrips(text, routeID);
+        List<Trip> listSearch = tripServices.loadTrips(text, routeID);
         boolean result = !listSearch.isEmpty();
         assertEquals(expResult, result);
     }
@@ -85,19 +92,19 @@ public class TripServicesTest {
     public void testAddTrip(Trip trip, int expResult) throws SQLException {
         int total = 0;
         if (expResult == 1) {
-            total = tripServies.loadTrips(null, 1).size() + 1;
+            total = tripServices.loadTrips(null, 1).size() + 1;
         }
         int numChair = CarServices.getCarById(trip.getCar_id()).getSumChair();
-        int result = tripServies.addTrip(trip, numChair);
+        int result = tripServices.addTrip(trip, numChair);
 
         assertEquals(expResult, result);
         if (expResult == 1) {
-            assertEquals(total, tripServies.loadTrips(null, 1).size());
+            assertEquals(total, tripServices.loadTrips(null, 1).size());
         }
     }
 
     public static Stream<Arguments> editTripData() throws SQLException {
-        int tripID = tripServies.getLastTripId();
+        int tripID = tripServices.getLastTripId();
         return Stream.of(
                 Arguments.arguments(new Trip(tripID, "2023-04-28 00:45:00",
                         "2023-04-28 04:15:00", 150, 4, 5), 1),
@@ -121,12 +128,12 @@ public class TripServicesTest {
     @ParameterizedTest
     @MethodSource("editTripData")
     public void testEditTrip(Trip trip, int expResult) throws SQLException {
-        int result = tripServies.editTrip(trip);
+        int result = tripServices.editTrip(trip);
         assertEquals(expResult, result);
     }
 
     public static Stream<Arguments> deleteTripData() throws SQLException {
-        int tripID = tripServies.getLastTripId();
+        int tripID = tripServices.getLastTripId();
         return Stream.of(
                 Arguments.arguments(new Trip(tripID, "2023-03-30 03:45:00",
                         "2023-03-30 05:45:00", 250, 3, 5), true),
@@ -140,12 +147,12 @@ public class TripServicesTest {
     public void testDeleteTrip(Trip trip, boolean expResult) throws SQLException {
         int total = 0;
         if (expResult) {
-            total = tripServies.loadTrips(null, 1).size() - 1;
+            total = tripServices.loadTrips(null, 1).size() - 1;
         }
-        boolean result = tripServies.deleteTrip(trip);
+        boolean result = tripServices.deleteTrip(trip);
         assertEquals(expResult, result);
         if (expResult) {
-            assertEquals(total, tripServies.loadTrips(null, 1).size());
+            assertEquals(total, tripServices.loadTrips(null, 1).size());
         }
     }
 }

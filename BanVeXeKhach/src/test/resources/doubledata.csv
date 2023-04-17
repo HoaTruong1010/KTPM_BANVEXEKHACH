@@ -2,5 +2,5 @@
 hello,false
 100,true
 0,true
--100,true
--150.5,true
+-100,false
+-150.5,false

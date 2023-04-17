@@ -35,8 +35,7 @@ public class CheckData {
 
     public static boolean isDouble(String text) {
         try {
-            Double.valueOf(text);
-            return true;
+            return Double.parseDouble(text) >= 0;
         } catch (NumberFormatException e) {
             return false;
         }
