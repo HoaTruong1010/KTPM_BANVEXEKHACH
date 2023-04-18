@@ -195,7 +195,7 @@ public class Booking_detailController implements Initializable {
         String name = this.txtName.getText();
         String phone = this.txtPhone.getText();
 
-        if (name.isEmpty() && CheckData.isValidName(name)) {
+        if (name.isEmpty() && !CheckData.isValidName(name)) {
             MessageBox.getBox("Error", "Tên khách hàng không hợp lệ!", Alert.AlertType.ERROR).show();
         } else {
             if (CheckData.isInteger(phone) && phone.length() == 10) {
