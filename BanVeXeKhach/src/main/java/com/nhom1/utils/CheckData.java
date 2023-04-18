@@ -42,9 +42,8 @@ public class CheckData {
     }
 
     public static boolean isInteger(String text) {
-        try {
-            Integer.valueOf(text);
-            return true;
+        try {            
+            return Integer.parseInt(text) >= 0;
         } catch (NumberFormatException e) {
             return false;
         }
