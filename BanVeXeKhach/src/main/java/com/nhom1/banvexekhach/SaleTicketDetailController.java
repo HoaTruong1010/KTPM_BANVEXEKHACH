@@ -104,7 +104,7 @@ public class SaleTicketDetailController extends Booking_detailController {
         String name = this.txtName.getText();
         String phone = this.txtPhone.getText();
         TicketServices tks = new TicketServices();
-        if (name.isEmpty()) {
+        if (name.isEmpty() && CheckData.isValidName(name)) {
             MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
         } else {
             if (CheckData.isInteger(phone) && phone.length() == 9 || phone.length() == 10) {

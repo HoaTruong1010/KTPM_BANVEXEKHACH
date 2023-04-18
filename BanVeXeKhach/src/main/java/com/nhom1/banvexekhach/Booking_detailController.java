@@ -195,8 +195,8 @@ public class Booking_detailController implements Initializable {
         String name = this.txtName.getText();
         String phone = this.txtPhone.getText();
 
-        if (name.isEmpty()) {
-            MessageBox.getBox("Error", "Cần phải nhập tên khách hàng!", Alert.AlertType.ERROR).show();
+        if (name.isEmpty() && CheckData.isValidName(name)) {
+            MessageBox.getBox("Error", "Tên khách hàng không hợp lệ!", Alert.AlertType.ERROR).show();
         } else {
             if (CheckData.isInteger(phone) && phone.length() == 10) {
                 if (!listSelectedTicket.isEmpty()) {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,6 +39,12 @@ public class CheckDataTest {
         assertEquals(expResult, result);
     }
 
+    @ParameterizedTest
+    @CsvSource({"@Hoa,false", "4Hoa,false", "Kim Hoa,true", "78888,false", "Trương Thị Kim Hoa,true"})
+    public void testIsValidName(String name, boolean expected) {
+        assertEquals(expected, CheckData.isValidName(name));
+    }
+
     /**
      * Test of isDouble method, of class CheckData.
      */
@@ -60,33 +67,34 @@ public class CheckDataTest {
 
     /**
      * Test of isValidTrip method, of class CheckData.
-     * @return 
+     *
+     * @return
      */
     public static Stream<Arguments> tripData() {
-        return Stream.of (
-                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00", 
+        return Stream.of(
+                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00",
                         "2023-03-30 05:45:00", 150, 4, 4), 1),
-                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00", 
+                Arguments.arguments(new Trip(15, "2023-03-30 03:45:00",
                         "2023-03-30 02:45:00", 150, 4, 4), -1),
-                Arguments.arguments(new Trip(15, "2023-04-28 00:00:00", 
+                Arguments.arguments(new Trip(15, "2023-04-28 00:00:00",
                         "2023-04-28 01:15:00", 150, 1, 3), -1),
-                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00", 
+                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00",
                         "2023-04-28 05:15:00", 150, 1, 3), -1),
-                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00", 
+                Arguments.arguments(new Trip(15, "2023-04-28 02:00:00",
                         "2023-04-28 03:15:00", 150, 1, 3), -1),
-                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00", 
+                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00",
                         "2023-04-28 09:15:00", 150, 5, 2), -2),
-                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00", 
+                Arguments.arguments(new Trip(2, "2023-04-28 05:45:00",
                         "2023-04-28 09:15:00", 150, 4, 2), 1),
-                Arguments.arguments(new Trip(1, "2023-04-28 00:30:00", 
+                Arguments.arguments(new Trip(1, "2023-04-28 00:30:00",
                         "2023-04-28 04:00:00", 150, 1, 4), 1),
-                Arguments.arguments(new Trip(1, "2023-04-28 04:00:00", 
+                Arguments.arguments(new Trip(1, "2023-04-28 04:00:00",
                         "2023-04-28 00:15:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(1, "2023-04-28 03:00:00", 
+                Arguments.arguments(new Trip(1, "2023-04-28 03:00:00",
                         "2023-04-28 09:00:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00", 
+                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00",
                         "2023-04-28 09:00:00", 150, 1, 4), -1),
-                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00", 
+                Arguments.arguments(new Trip(1, "2023-04-28 06:00:00",
                         "2023-04-28 10:00:00", 150, 1, 4), -1)
         );
     }
@@ -102,26 +110,26 @@ public class CheckDataTest {
     public void testEmptyTicket() throws SQLException {
         List<Ticket> list = new ArrayList<>();
         Ticket t1 = new Ticket(10, "11", "Empty",
-                        null, 1, 1, 1);
+                null, 1, 1, 1);
         Ticket t2 = new Ticket(11, "11", "Empty",
-                        null, 1, 1, 1);
+                null, 1, 1, 1);
         list.add(t1);
         list.add(t2);
-        assertTrue(CheckData.isEmptyTicket(list)); 
+        assertTrue(CheckData.isEmptyTicket(list));
     }
 
     @Test
     public void testNotEmptyTicket() throws SQLException {
         List<Ticket> list = new ArrayList<>();
         Ticket t1 = new Ticket(10, "11", "Empty",
-                        null, 1, 1, 1);
+                null, 1, 1, 1);
         Ticket t2 = new Ticket(1, "1", "Reserved",
-                        null, 1, 1, 1);
+                null, 1, 1, 1);
         list.add(t1);
         list.add(t2);
-        assertFalse(CheckData.isEmptyTicket(list)); 
+        assertFalse(CheckData.isEmptyTicket(list));
     }
-    
+
 //    @ParameterizedTest
 //    @CsvFileSource(resources = "/isChoosingData.csv", numLinesToSkip = 0)
 //    public void isChoosing(String tripDeparting, int second, boolean expResult) {
