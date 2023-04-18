@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -21,7 +22,7 @@ public class UserServices {
             String sql = "SELECT * FROM user WHERE username = ? and password = ?;";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, username);
-            stm.setString(2, password);
+            stm.setString(2, DigestUtils.md2Hex(password));
             
             ResultSet rs = stm.executeQuery();
             while(rs.next()) {

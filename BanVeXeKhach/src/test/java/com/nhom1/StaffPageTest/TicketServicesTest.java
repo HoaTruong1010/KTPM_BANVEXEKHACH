@@ -310,15 +310,18 @@ public class TicketServicesTest {
         List<Ticket> listTicket = new ArrayList<>();
         int ticketID = TicketServices.getLastTicketId() + 1;
         insertTicketBeforeTest(ticketID, "Empty", null);
-        int totalCustomer = CustomerServices.loadCustomers().size();
+        int totalCustomer = CustomerServices.loadCustomers().size() + 1;
 
         listTicket.add(TicketServices.getTicketById(ticketID));
-        Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "000000000");
+        Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "0000000000");
         Assertions.assertTrue(TicketServices.updateTicket(listTicket, customer));
         Assertions.assertEquals("Reserved", TicketServices.getTicketById(ticketID).getStatus());
         Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
 
         deleteTicketAfterTest(ticketID);
+        PreparedStatement stm = conn.prepareStatement("DELETE FROM customer WHERE id = ?");
+        stm.setInt(1, customer.getId());
+        stm.executeUpdate();
     }
 
     @Test
@@ -345,7 +348,7 @@ public class TicketServicesTest {
         int totalCustomer = CustomerServices.loadCustomers().size();
 
         listTicket.add(TicketServices.getTicketById(ticketID));
-        Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test", "000000000");
+        Customer customer = new Customer(CustomerServices.getLastCustomerID() + 1, "test1", "0000000010");
         Assertions.assertFalse(TicketServices.updateTicket(listTicket, customer));
         Assertions.assertEquals("Recall", TicketServices.getTicketById(ticketID).getStatus());
         Assertions.assertEquals(totalCustomer, CustomerServices.loadCustomers().size());
