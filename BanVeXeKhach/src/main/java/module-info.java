@@ -9,6 +9,7 @@ module com.nhom1.banvexekhach {
     requires com.google.protobuf;
     requires org.apache.pdfbox;
     requires javafx.swing;
+    requires org.apache.commons.codec;
 
     
 

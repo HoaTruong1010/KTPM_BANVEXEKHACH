@@ -40,10 +40,9 @@ public class UserServicesTest {
      */
     @Test
     public void testGetUserByUsernameSuccess() throws SQLException {
-        System.out.println("getUserByUsername");
         String username = "u1";
         String password = "1";
-        User expResult = new User(1, "u1", "1", "Admin", "Truong Thi Kim Hoa");
+        User expResult = new User(1, "u1", "c92c0babdc764d8674bcea14a55d867d", "Admin", "Truong Thi Kim Hoa");
         User result = UserServices.getUserByUsername(username, password);
         assertEquals(expResult.getId(), result.getId());
         assertEquals(expResult.getUsername(), result.getUsername());
@@ -54,7 +53,6 @@ public class UserServicesTest {
     
     @Test
     public void testGetUserByUsernameFailure() throws SQLException {
-        System.out.println("getNullUserByUsername");
         String username = "u10";
         String password = "1";
         User result = UserServices.getUserByUsername(username, password);
