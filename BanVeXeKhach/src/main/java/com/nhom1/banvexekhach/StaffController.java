@@ -257,7 +257,7 @@ public class StaffController implements Initializable {
                                     Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy thành công***", Alert.AlertType.INFORMATION);
                                     confirm1.showAndWait();
                                 } else {
-                                    Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy không thành công***", Alert.AlertType.WARNING);
+                                    Alert confirm1 = MessageBox.getBox("Hủy vé", "***Hủy không thành công (Có thể vé đã được thu hồi hoặc nguyên do khác)***", Alert.AlertType.WARNING);
                                     confirm1.showAndWait();
                                 }
                             } catch (SQLException ex) {
