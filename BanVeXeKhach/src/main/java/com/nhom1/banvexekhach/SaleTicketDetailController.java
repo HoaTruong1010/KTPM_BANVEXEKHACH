@@ -172,8 +172,15 @@ public class SaleTicketDetailController extends Booking_detailController {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         ExportTicketController bc = fxmlLoader.getController();
         bc.setCurrentUser(currentUser);
+
+        int j = 0;
         for (Ticket i : t) {
-            bc.setInfoInTicket(i, this.txtName.getText(), this.txtPhone.getText());
+            j++;
+            String s = " - ";
+            if (j == t.size()) {
+                s = "";
+            }
+            bc.setInfoInTicket(i, this.txtName.getText(), this.txtPhone.getText(), s);
         }
         stage.setScene(new Scene(booking));
     }
@@ -222,8 +229,8 @@ public class SaleTicketDetailController extends Booking_detailController {
                                     Customer cus = cs.getCustomerByID(selectedTicket.getCustomer_id());
                                     if (newValue) {
                                         listSelectedTicket.add(selectedTicket);
-                                        if (this.txtName.getText() != "" && this.txtPhone.getText() != "")
-                                            if (cus != null)
+                                        if (this.txtName.getText() != "" && this.txtPhone.getText() != "") {
+                                            if (cus != null) {
                                                 if (!cus.getName().equals(this.txtName.getText()) && !cus.getPhone().equals(this.txtPhone.getText())) {
                                                     MessageBox.getBox("Warning", "Khách đặt không trùng khớp!", Alert.AlertType.WARNING).show();
                                                     listSelectedTicket.remove(selectedTicket);
@@ -231,8 +238,10 @@ public class SaleTicketDetailController extends Booking_detailController {
                                                     cus.setName(this.txtName.getText());
                                                     cus.setPhone(this.txtPhone.getText());
                                                 }
-                                                
-                                        if (cus != null) {                          
+                                            }
+                                        }
+
+                                        if (cus != null) {
                                             this.txtName.setText(cus.getName());
                                             this.txtPhone.setText(cus.getPhone());
                                         }
