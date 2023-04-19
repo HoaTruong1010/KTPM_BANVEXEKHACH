@@ -101,8 +101,8 @@ public class SaleTicketDetailController extends Booking_detailController {
 
     @Override
     public void btnOK_Click(ActionEvent e) {
-        String name = this.txtName.getText();
-        String phone = this.txtPhone.getText();
+        String name = this.txtName.getText().trim();
+        String phone = this.txtPhone.getText().trim();
         TicketServices tks = new TicketServices();
         if (name.isEmpty() || !CheckData.isValidName(name)) {
             MessageBox.getBox("Error", "Tên khách hàng không hợp lệ!", Alert.AlertType.ERROR).show();
@@ -120,7 +120,7 @@ public class SaleTicketDetailController extends Booking_detailController {
                                         MessageBox.getBox("WARNING", "Vé đã được đặt bởi khách hàng khác!", Alert.AlertType.WARNING).show();
                                         return;
                                     }
-                                    cus = new Customer(CustomerServices.getLastCustomerID() + 1, name, phone);
+                                    cus = new Customer(CustomerServices.getLastCustomerID() + 1, name.trim(), phone.trim());
                                 } else {
                                     cus = CustomerServices.getCustomer(name, phone);
                                 }
@@ -180,7 +180,7 @@ public class SaleTicketDetailController extends Booking_detailController {
             if (j == t.size()) {
                 s = "";
             }
-            bc.setInfoInTicket(i, this.txtName.getText(), this.txtPhone.getText(), s);
+            bc.setInfoInTicket(i, this.txtName.getText().trim(), this.txtPhone.getText().trim(), s);
         }
         stage.setScene(new Scene(booking));
     }
