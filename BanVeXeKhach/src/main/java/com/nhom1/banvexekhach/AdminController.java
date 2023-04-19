@@ -280,7 +280,7 @@ public class AdminController implements Initializable {
                 MessageBox.getBox("Error", "Giá 1 vé/ghế không đúng định dạng!", Alert.AlertType.ERROR).show();
             }
         } else {
-            MessageBox.getBox("Error", "Thời gian khởi hành không đúng định dạng:\n năm-tháng-ngày giờ:phút:giây", Alert.AlertType.ERROR).show();
+            MessageBox.getBox("Error", "Thời gian không đúng định dạng:\n năm-tháng-ngày giờ:phút:giây", Alert.AlertType.ERROR).show();
         }
     }
 
