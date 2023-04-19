@@ -77,6 +77,7 @@ public class ExportTicketController implements Initializable {
     @FXML
     private Label lbCusPhone;
     private User currentUser;
+    private String chair = "";
 
     /**
      * @return the currentUser
@@ -103,13 +104,14 @@ public class ExportTicketController implements Initializable {
 
     }
 
-    public void setInfoInTicket(Ticket t, String name, String phone) throws SQLException, WriterException, IOException {
+    public void setInfoInTicket(Ticket t, String name, String phone, String s) throws SQLException, WriterException, IOException {
+        chair += t.getChair() + s;
         Trip tr = TripServices.getTripById(t.getTrip_id());
         Route r = RouteServices.getRouteById(tr.getRoute_id());
         Car c = CarServices.getCarById(tr.getCar_id());
         Customer cus = CustomerServices.getCustomer(name, phone);
         LocalDateTime date = LocalDateTime.now();
-        this.lbSeat.setText(t.getChair());
+        this.lbSeat.setText(chair);
         this.lbTicketID.setText(Integer.toString(t.getId()));
         this.lbBusNumber.setText(c.getLicensePlate());
         this.lbCusName.setText(cus.getName());
