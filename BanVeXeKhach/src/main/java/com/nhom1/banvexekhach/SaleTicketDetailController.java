@@ -105,9 +105,9 @@ public class SaleTicketDetailController extends Booking_detailController {
         String phone = this.txtPhone.getText();
         TicketServices tks = new TicketServices();
         if (name.isEmpty() || !CheckData.isValidName(name)) {
-            MessageBox.getBox("Error", "Cần phải nhập đúng tên khách hàng!", Alert.AlertType.ERROR).show();
+            MessageBox.getBox("Error", "Tên khách hàng không hợp lệ!", Alert.AlertType.ERROR).show();
         } else {
-            if (CheckData.isInteger(phone) && phone.length() == 9 || phone.length() == 10) {
+            if (CheckData.isInteger(phone) && phone.length() == 10) {
                 if (!listSelectedTicket.isEmpty()) {
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setContentText("Bạn có chắc chắn xuất vé?");
